@@ -23,3 +23,23 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+import { getStore } from './utils'
+
+Cypress.Commands.add(
+  'logInUser',
+
+  // Asignar username y password al objeto vacío del miembro derecho como valores default
+  // Si no se escribe {} en la parte derecha, la función tendría que ser invocada con algún parámetro
+  // En este caso, se puede invocar la función sin parámetros
+  ({ username = 'nulmete', password = 'Testpassword1' } = {}) => {
+    cy.location('pathname').then(pathname => {
+      if (pathname === 'blank') {
+        cy.visit('/')
+      }
+    })
+    getStore().then(store =>
+      store.dispatch('auth/logIn', { username, password })
+    )
+  }
+)

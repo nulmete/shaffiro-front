@@ -9,6 +9,6 @@
     min-height: 100vh;
     max-width: 120rem;
     margin: 0 auto;
-    padding: 3rem 0;
+    padding: 3rem 1.5rem;
   }
 </style>

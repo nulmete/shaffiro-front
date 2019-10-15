@@ -1,11 +1,11 @@
 <template>
   <Layout>
     <Form>
-      <h2 class="heading heading--secondary">
+      <h2 :class="$style.heading">
         Crear Usuario
       </h2>
 
-      <BaseForm @submit.prevent="createUser">
+      <BaseForm @submit.prevent="crearUsuario">
         <!-- Nombre de usuario -->
         <BaseFormGroup>
           <BaseInput
@@ -30,6 +30,7 @@
             v-model="selectedAuthorities"
             label="Tipo de Usuario"
             :options="authorities"
+            :multiple="true"
           />
         </BaseFormGroup>
 
@@ -46,6 +47,7 @@
 import Layout from '@/router/layouts/main'
 import Form from '@/router/layouts/form'
 import { required, email } from 'vuelidate/lib/validators'
+import { isUsernameValid } from '@/validators/validators'
 import axios from 'axios'
 
 export default {
@@ -59,13 +61,13 @@ export default {
       email: '',
       authorities: ['ROLE_ADMIN', 'ROLE_USER'],
       selectedAuthorities: [],
-      errors: {
 
-      }
+      // todo
+      errors: {}
     }
   },
   methods: {
-    async createUser () {
+    async crearUsuario () {
       const formData = {
         login: this.username,
         email: this.email,
@@ -74,8 +76,9 @@ export default {
 
       try {
         await axios.post('/api/users', formData)
-        this.$router.push({ name: 'abm' })
+        this.$router.push({ name: 'usuarios' })
       } catch (error) {
+        // todo
         console.log(error.response)
       }
     }
@@ -87,10 +90,16 @@ export default {
     },
     username: {
       required,
-      validLength (username) {
-        return username.length >= 8 && username.length <= 15
+      valid: function () {
+        return isUsernameValid(this.username)
       }
     }
   }
 }
 </script>
+
+<style lang="scss" module>
+  .heading {
+    @include heading(left);
+  }
+</style>

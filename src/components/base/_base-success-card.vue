@@ -13,7 +13,7 @@
   .success {
     background-color: rgba($color-secondary, .15);
     border-radius: $size-border-radius;
-    font-size: $font-size-lg;
+    font-size: $size-font-lg;
     margin-bottom: 2.5rem;
     padding: 2rem;
     text-align: center;

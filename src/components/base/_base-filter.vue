@@ -23,9 +23,8 @@ export default {
   .input {
     border: 1px solid $color-primary-medium;
     display: block;
-    flex-basis: 75%;
     font-family: inherit;
-    font-size: 1.35rem;
+    font-size: $size-font-md;
     padding: 1rem;
     margin-right: auto;
   }

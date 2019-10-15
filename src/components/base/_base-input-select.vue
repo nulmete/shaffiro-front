@@ -4,7 +4,7 @@
     <select
       v-model="selectedOptions"
       :class="$style.select"
-      multiple
+      :multiple="multiple"
       @change="$emit('change', selectedOptions)"
     >
       <option
@@ -13,7 +13,7 @@
         :class="$style.option"
         :value="option"
       >
-        {{ option | authorityFilter }}
+        {{ option }}
       </option>
     </select>
   </label>
@@ -27,7 +27,7 @@ export default {
   },
   props: {
     value: {
-      type: Array,
+      type: [Array, String],
       required: true
     },
     options: {
@@ -37,6 +37,10 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -49,7 +53,7 @@ export default {
 
 <style lang="scss" module>
   .label {
-    font-size: $font-size-lg;
+    @extend %font-input-label;
   }
 
   .select {

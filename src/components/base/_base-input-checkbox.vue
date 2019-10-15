@@ -28,7 +28,7 @@ export default {
 
 <style lang="scss" module>
   .label {
-    font-size: $font-size-lg;
+    @extend %font-input-label;
     display: flex;
     align-items: center;
 

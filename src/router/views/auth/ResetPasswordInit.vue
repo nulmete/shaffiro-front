@@ -10,8 +10,8 @@
     <BaseForm @submit.prevent="resetPasswordInit">
       <BaseFormGroup>
         <BaseInput
-          id="email"
           v-model="email"
+          name="email"
           label="E-mail"
           :v="$v.email"
         />

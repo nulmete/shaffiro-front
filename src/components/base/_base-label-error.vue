@@ -1,12 +1,12 @@
 <template>
-  <label :class="$style['label--error']">
+  <label :class="$style['label-error']">
     <slot />
   </label>
 </template>
 
 <style lang="scss" module>
-  .label--error {
+  .label-error {
+    @extend %font-input-label;
     color: $color-error-dark;
-    font-size: 1.35rem;
   }
 </style>

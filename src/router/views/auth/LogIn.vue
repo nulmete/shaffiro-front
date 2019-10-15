@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <Form>
-      <h2 class="heading heading--primary">
+      <h2 :class="$style.heading">
         Inicie sesión en Shaffiro
       </h2>
 
@@ -148,6 +148,10 @@ export default {
 </script>
 
 <style lang="scss" module>
+  .heading {
+    @include heading(center);
+  }
+
   .error {
     background-color: $color-error-dark;
     color: $color-primary-light;

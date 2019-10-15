@@ -1,11 +1,11 @@
 <template>
   <Layout>
     <Form>
-      <h2 class="heading heading--secondary">
-        Editar Usuario
+      <h2 :class="$style.heading">
+        Editar usuario
       </h2>
 
-      <BaseForm @submit.prevent="editUser">
+      <BaseForm @submit.prevent="editarUsuario">
         <BaseFormGroup>
           <BaseInput
             v-model="id"
@@ -46,6 +46,7 @@
             v-model="authorities"
             label="Tipo de Usuario"
             :options="authoritiesOptions"
+            :multiple="true"
           />
         </BaseFormGroup>
 
@@ -62,6 +63,7 @@
 import Layout from '@/router/layouts/main'
 import Form from '@/router/layouts/form'
 import { required, email } from 'vuelidate/lib/validators'
+import { isUsernameValid } from '@/validators/validators'
 import axios from 'axios'
 
 export default {
@@ -70,23 +72,41 @@ export default {
     Form
   },
   props: {
-    user: {
-      type: Object,
+    login: {
+      type: String,
       required: true
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      const { id, login, email, activated, authorities } = vm.$store.getters['users/getUser']
+
+      vm.id = id.toString()
+      vm.username = login
+      vm.email = email
+      vm.activated = activated
+      vm.authorities = authorities
+    })
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('users/setCurrentUser', {})
+    next()
+  },
   data () {
     return {
-      id: this.user.id.toString(),
-      username: this.user.login,
-      email: this.user.email,
-      activated: this.user.activated,
-      authorities: this.user.authorities,
-      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER']
+      id: '',
+      username: '',
+      email: '',
+      authorities: [],
+      activated: false,
+      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER'],
+
+      // todo
+      errors: {}
     }
   },
   methods: {
-    async editUser () {
+    async editarUsuario () {
       const formData = {
         id: parseInt(this.id),
         login: this.username,
@@ -97,8 +117,9 @@ export default {
 
       try {
         await axios.put('/api/users', formData)
-        this.$router.push({ name: 'abm' })
+        this.$router.push({ name: 'usuarios' })
       } catch (error) {
+        // todo
         console.log(error.response)
       }
     }
@@ -113,10 +134,16 @@ export default {
     },
     username: {
       required,
-      validLength (username) {
-        return username.length >= 8 && username.length <= 15
+      valid: function () {
+        return isUsernameValid(this.username)
       }
     }
   }
 }
 </script>
+
+<style lang="scss" module>
+  .heading {
+    @include heading(left);
+  }
+</style>

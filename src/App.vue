@@ -95,7 +95,7 @@ a:visited {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.3s ease;
+  transition: all $duration-animation-base ease;
 }
 
 .fade-enter,

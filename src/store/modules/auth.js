@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getSavedState, saveState } from '../helpers'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser')
@@ -19,7 +20,9 @@ export const getters = {
   },
 
   isAdmin (state, getters) {
-    return !!getters.loggedIn && !!state.currentUser.authorities && !!state.currentUser.authorities.includes('ROLE_ADMIN')
+    return !!getters.loggedIn &&
+      !!state.currentUser.authorities &&
+      !!state.currentUser.authorities.includes('ROLE_ADMIN')
   }
 }
 
@@ -36,14 +39,14 @@ export const actions = {
       axios.get('/api/account')
     ])
       .then(([firstResponse, secondResponse]) => {
-        const user = firstResponse.data
+        const username = firstResponse.data
         const authorities = secondResponse.data.authorities
         const token = state.currentUser.token
-        commit('setCurrentUser', { user, token, authorities })
-        return user
+        commit('setCurrentUser', { username, token, authorities })
+        return token
       })
       .catch(error => {
-        console.log(error.response)
+        console.warn(error)
         commit('setCurrentUser', null)
         return null
       })
@@ -51,9 +54,9 @@ export const actions = {
 
   // Registro
   async signUp ({ commit }, formData) {
-    const { login: user, email } = formData
+    const { login: username, email } = formData
     await axios.post('/api/register', formData)
-    commit('setCurrentUser', { user, email })
+    commit('setCurrentUser', { username, email })
   },
 
   // Activar usuario
@@ -62,15 +65,14 @@ export const actions = {
   },
 
   // Login
-  async logIn ({ commit }, formData) {
-    const response = await axios.post('/api/authenticate', formData)
+  async logIn ({ commit }, { username, password } = {}) {
+    const response = await axios.post('/api/authenticate', { username, password })
     const token = response.data.id_token
-    commit('setCurrentUser', { token })
+    commit('setCurrentUser', { username, token })
   },
 
   // Cierra la sesión de un usuario logeado
   async logOut ({ commit }) {
-    console.log('logout!!')
     commit('setCurrentUser', null)
   },
 
@@ -97,16 +99,6 @@ export const actions = {
 // ==========
 // Helpers
 // ==========
-
-// Obtener estado guardado en localStorage
-function getSavedState (key) {
-  return JSON.parse(window.localStorage.getItem(key))
-}
-
-// Guardar estado en localStorage
-function saveState (key, state) {
-  window.localStorage.setItem(key, JSON.stringify(state))
-}
 
 // Si hay un usuario logeado, setear el header 'Authorization' a 'Bearer <token>'
 function setDefaultAuthHeaders (state) {

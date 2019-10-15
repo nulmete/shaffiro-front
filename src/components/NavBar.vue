@@ -3,12 +3,12 @@
     <ul>
       <NavBarRoutes :routes="persistentNavRoutes" />
       <NavBarRoutes
-        v-if="loggedIn"
-        :routes="loggedInNavRoutes"
-      />
-      <NavBarRoutes
         v-if="isAdmin"
         :routes="adminNavRoutes"
+      />
+      <NavBarRoutes
+        v-if="loggedIn"
+        :routes="loggedInNavRoutes"
       />
       <NavBarRoutes
         v-if="!loggedIn"
@@ -39,7 +39,7 @@ export default {
       loggedInNavRoutes: [
         {
           name: 'profile',
-          title: () => 'Logeado como ' + this.user
+          title: () => 'Logeado como ' + this.username
         },
         {
           name: 'logout',
@@ -53,14 +53,18 @@ export default {
           title: 'Registrarse'
         },
         {
-          name: 'signin',
+          name: 'login',
           title: 'Iniciar sesión'
         }
       ],
       adminNavRoutes: [
         {
-          name: 'abm',
-          title: 'ABM'
+          name: 'dispositivos',
+          title: 'Dispositivos'
+        },
+        {
+          name: 'usuarios',
+          title: 'Usuarios'
         }
       ]
     }
@@ -73,7 +77,7 @@ export default {
       return this.$store.getters['auth/isAdmin']
     },
     ...mapState('auth', {
-      user: state => state.currentUser.user
+      username: state => state.currentUser.username
     })
   }
 }
@@ -84,7 +88,7 @@ export default {
   align-items: center;
   background-color: $color-primary-dark;
   display: flex;
-  font-size: 1.5rem;
+  font-size: $size-font-xl;
 
   > ul {
     display: flex;

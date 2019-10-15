@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { cpus } from 'os'
 
 export const state = {
   users: [],
-  userBeingEdited: getSavedState('users.userBeingEdited')
+  currentUser: {}
 }
 
 export const mutations = {
@@ -10,9 +11,8 @@ export const mutations = {
     state.users = newValue
   },
 
-  setUserBeingEdited (state, newValue) {
-    state.userBeingEdited = newValue
-    saveState('users.userBeingEdited', newValue)
+  setCurrentUser (state, newValue) {
+    state.currentUser = newValue
   }
 }
 
@@ -34,29 +34,25 @@ export const getters = {
     }
   },
 
-  getUserBeingEdited (state) {
-    return state.userBeingEdited
+  getUser (state) {
+    return state.currentUser
   }
 }
 
 export const actions = {
-  async getAllUsers ({ commit }) {
-    const allUsers = await axios.get('/api/users')
-    commit('setAllUsers', allUsers.data)
-    return allUsers
+  getAllUsers ({ commit }) {
+    return axios
+      .get('/api/users')
+      .then(response => {
+        const users = response.data
+        commit('setAllUsers', users)
+        return users
+      })
   },
 
-  async createUser ({ commit }, formData) {
-    await axios.post('/api/users')
+  async getUser ({ commit }, username) {
+    const user = await axios.get(`/api/users/${username}`)
+    commit('setCurrentUser', user.data)
+    return user
   }
-}
-
-// Guardar estado en localStorage
-function saveState (key, state) {
-  window.localStorage.setItem(key, JSON.stringify(state))
-}
-
-// Obtener estado guardado en localStorage
-function getSavedState (key) {
-  return JSON.parse(window.localStorage.getItem(key))
 }

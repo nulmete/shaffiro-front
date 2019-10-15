@@ -39,7 +39,8 @@ export default {
     },
     v: {
       type: Object,
-      required: true
+      required: false,
+      default: null
     }
   },
   computed: {
@@ -48,11 +49,12 @@ export default {
         return this.value
       },
       set (newValue) {
-        this.v.$touch()
+        if (this.v) this.v.$touch()
         this.$emit('input', newValue)
       }
     },
     hasError () {
+      if (!this.v) return
       return !!this.v.$error
     }
   }
@@ -61,15 +63,15 @@ export default {
 
 <style lang="scss" module>
 .label {
-  font-size: $font-size-lg;
+  @extend %font-input-label;
 }
 
 .input {
   border: 1px solid #ccc;
-  border-radius: 2px;
+  border-radius: $size-border-radius;
   display: block;
   font-family: inherit;
-  font-size: $font-size-md;
+  font-size: $size-font-md;
   padding: 1rem 1.25rem;
   width: 100%;
 

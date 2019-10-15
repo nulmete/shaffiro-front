@@ -14,9 +14,16 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
-new Vue({
+const app = new Vue({
   router,
   store,
   i18n,
   render: h => h(App)
 }).$mount('#app')
+
+window.app = app
+
+// Exponer app al testear con Cypress
+if (window.Cypress) {
+  window.__app__ = app
+}

@@ -11,12 +11,12 @@
   .button {
     background: none;
     border: 2px solid $color-secondary;
-    border-radius: 2px;
+    border-radius: $size-border-radius;
     color: $color-secondary;
     cursor: pointer;
     display: block;
     font-family: inherit;
-    font-size: $font-size-md;
+    font-size: $size-font-md;
     font-weight: 700;
     padding: 1.25rem 1.5rem;
     text-transform: uppercase;

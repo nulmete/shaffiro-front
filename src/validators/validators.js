@@ -1,7 +1,9 @@
+// Nombre de usuario
 export function isUsernameValid (username) {
   return username.length >= 8 && username.length <= 15
 }
 
+// Contraseña
 export function isPasswordStrong (password) {
   return (
     // Verificar que tenga al menos un número

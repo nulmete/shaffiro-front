@@ -125,7 +125,7 @@ export default {
       }
     },
     redirectToLogin () {
-      this.$router.push({ name: 'signin' })
+      this.$router.push({ name: 'login' })
     }
   },
   validations: {

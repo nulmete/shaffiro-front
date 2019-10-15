@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <Form>
-      <h2 class="heading heading--primary">
+      <h2 :class="$style.heading">
         Regístrese en Shaffiro
       </h2>
 
@@ -90,7 +90,7 @@
 
       <p class="form-footer">
         ¿Ya tiene una cuenta?
-        <BaseLink :to="{ name: 'signin' }">
+        <BaseLink :to="{ name: 'login' }">
           Inicie sesión
         </BaseLink>
       </p>
@@ -170,10 +170,12 @@ export default {
         switch (responseError) {
           // Si el usuario ingresado ya existe
           case 'userexists':
+            console.log('userexists')
             this.errors.username = true
             break
           // Si el e-mail ingresado ya existe
           case 'emailexists':
+            console.log('emailexists')
             this.errors.email = true
             break
           default:
@@ -184,3 +186,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" module>
+  .heading {
+    @include heading(center);
+  }
+</style>
