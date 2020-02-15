@@ -6,12 +6,18 @@
     Por ejemplo '/profile/:username', siendo username un parámetro variable,
     Crear el componente nuevamente con el parámetro 'key'
     -->
-    <transition
-      name="fade"
-      mode="out-in"
-    >
-      <RouterView :key="$route.fullPath" />
-    </transition>
+    <main>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <RouterView :key="$route.fullPath" />
+      </transition>
+    </main>
+
+    <!-- <footer class="footer">
+      Cátedra IdS 2019 - Grupo 1
+    </footer> -->
   </div>
 </template>
 
@@ -45,6 +51,9 @@ export default {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 
   > nav.fixed {
     position: fixed;
@@ -67,20 +76,19 @@ html {
   font-size: 62.5%; // 1rem = 10px
 
   @media screen and (min-width: 87.5em) {
-    // 1100px
-    font-size: 68.75%; // 1rem = 11px
+    // at 1100px, 1rem = 11px
+    font-size: 68.75%;
   }
 
   @media screen and (max-width: 43.75em) {
-    // 700px
-    font-size: 56.25%; // 1rem = 9px
+    // at 700px, 1rem = 9px
+    font-size: 56.25%;
   }
 }
 
 body {
-  font-family: "Merriweather Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 400;
-  line-height: 1.6;
   color: $color-primary-dark;
 }
 
@@ -95,7 +103,7 @@ a:visited {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all $duration-animation-base ease;
+  transition: all .3s ease;
 }
 
 .fade-enter,

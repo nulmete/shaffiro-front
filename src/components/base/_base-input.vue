@@ -1,24 +1,16 @@
 <template>
-  <label :class="$style.label">
-    {{ label }}
-    <input
-      v-model="computedValue"
-      v-bind="$attrs"
-      :type="type"
-      :class="[hasError ? $style['input-error'] : '' , $style.input]"
-    >
-  </label>
+  <input
+    v-model="computedValue"
+    :type="type"
+    :name="id"
+    :class="['form__input', { 'error': hasError }]"
+  >
 </template>
 
 <script>
 export default {
-  inheritAttrs: false,
   props: {
     value: {
-      type: String,
-      required: true
-    },
-    label: {
       type: String,
       required: true
     },
@@ -37,10 +29,19 @@ export default {
         ].includes(value)
       }
     },
+    id: {
+      type: String,
+      required: true
+    },
     v: {
       type: Object,
       required: false,
       default: null
+    },
+    serverError: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   computed: {
@@ -54,29 +55,15 @@ export default {
       }
     },
     hasError () {
-      if (!this.v) return
-      return !!this.v.$error
+      if (!this.v && !this.serverError) return
+      return !!this.v.$error || !!this.serverError
     }
   }
 }
 </script>
 
-<style lang="scss" module>
-.label {
-  @extend %font-input-label;
-}
-
-.input {
-  border: 1px solid #ccc;
-  border-radius: $size-border-radius;
-  display: block;
-  font-family: inherit;
-  font-size: $size-font-md;
-  padding: 1rem 1.25rem;
-  width: 100%;
-
-  &-error {
-    border: 1px solid $color-error-dark;
+<style lang="scss" scoped>
+  .error {
+    border: 1px solid $color-error-dark !important;
   }
-}
 </style>

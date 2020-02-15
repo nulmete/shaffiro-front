@@ -11,44 +11,33 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authRequired = to.matched.some(route => route.meta.authRequired)
-  const loggedIn = store.getters['auth/loggedIn']
+  const isAuthRequired = to.matched.some(route => route.meta.requiresAuth)
+  const isGuestRequired = to.matched.some(route => route.meta.requiresGuest)
+  const isLoggedIn = store.getters['auth/isLoggedIn']
 
-  if (loggedIn) {
-    console.log('validate')
-    return store.dispatch('auth/validate').then(validUser => {
-      // Si el token del usuario es válido, continuar
-      // Si no lo es, redireccionar a login
-      validUser ? next() : redirectToLogin()
-    })
-  } else if (authRequired && !loggedIn) {
-    redirectToLogin()
+  if (isAuthRequired) {
+    if (!isLoggedIn) {
+      redirectToLogin()
+    } else {
+      return store.dispatch('auth/validate')
+        .then(validUser => {
+          validUser ? next() : redirectToLogin()
+        })
+    }
+  } else if (isGuestRequired) {
+    if (isLoggedIn) {
+      next({
+        name: 'dispositivos'
+      })
+    } else {
+      next()
+    }
   } else {
     next()
   }
-  // if (authRequired && !loggedIn) {
-  //   // Si la ruta requiere autenticación y el usuario no está logeado
-  //   // Redireccionar a login
-  //   redirectToLogin()
-  // } else if (authRequired && loggedIn) {
-  //   console.log('validate')
-  //   // Si la ruta requiere autenticación y el usuario está logeado
-  //   // Validar el token del usuario
-  //   return store.dispatch('auth/validate').then(validUser => {
-  //     // Si el token del usuario es válido, continuar
-  //     // Si no lo es, redireccionar a login
-  //     validUser ? next() : redirectToLogin()
-  //   })
-  // } else if (!authRequired && loggedIn) {
-  //   // Si la ruta no requiere autenticación y el usuario está logeado
-  //   // Si la ruta destino es 'home', permitir el acceso
-  //   // Si la ruta destino no es 'home', quedarse en la ruta anterior
-  //   return (to.name === 'home') ? next() : next()
-  // } else {
-  //   next()
-  // }
 
   function redirectToLogin () {
+    console.log('redirectToLogin()')
     next({ name: 'login', query: { redirectFrom: to.fullPath } })
   }
 })

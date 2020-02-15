@@ -8,9 +8,8 @@
   </a>
   <RouterLink
     v-else
-    :to="to"
+    :to="routerLinkTo"
     v-bind="$attrs"
-    :class="$style.link"
   >
     <slot />
   </RouterLink>
@@ -22,26 +21,23 @@ export default {
   props: {
     href: {
       type: String,
+      required: false,
       default: ''
     },
     to: {
       type: Object,
+      required: false,
       default: null
+    }
+  },
+  computed: {
+    routerLinkTo ({ name, params }) {
+      return {
+        name,
+        params,
+        ...(this.to || {})
+      }
     }
   }
 }
 </script>
-
-<style lang="scss" module>
-  .link {
-    &:link,
-    &:visited {
-        color: $color-secondary;
-    }
-
-    &:hover,
-    &:active {
-        color: darken($color-secondary, 6);
-    }
-  }
-</style>

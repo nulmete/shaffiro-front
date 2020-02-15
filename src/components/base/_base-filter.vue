@@ -1,7 +1,7 @@
 <template>
   <input
     :value="value"
-    :class="$style.input"
+    class="input-filter"
     type="text"
     placeholder="Buscar..."
     @input="$emit('input', $event.target.value)"
@@ -19,13 +19,27 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
-  .input {
+<style lang="scss" scoped>
+  .input-filter {
+    background-color: $color-primary-light;
     border: 1px solid $color-primary-medium;
+    border-radius: $default-border-radius;
+    color: darken($color-primary-medium, 25%);
     display: block;
     font-family: inherit;
-    font-size: $size-font-md;
+    font-size: 1.5rem;
     padding: 1rem;
-    margin-right: auto;
+    width: 100%; // applies if not inside flex-container
+    transition: all .2s;
+
+    &:focus {
+      background-color: #fff;
+      color: $color-primary-dark;
+      outline: none;
+
+      &::placeholder {
+        color: transparent;
+      }
+    }
   }
 </style>

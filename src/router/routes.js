@@ -1,58 +1,48 @@
 import store from '@/store/store'
 
-// Se importan los componentes de esta forma para hacer lazy-loading
-// Es decir, los componentes van a ser cargados solo cuando se los necesite
-const Home = () => import('@/router/views/Home.vue')
-const SignUp = () => import('@/router/views/auth/SignUp.vue')
-const Activate = () => import('@/router/views/auth/Activate.vue')
-const LogIn = () => import('@/router/views/auth/LogIn.vue')
-const ResetPasswordInit = () => import('@/router/views/auth/ResetPasswordInit.vue')
-const ResetPasswordFinish = () => import('@/router/views/auth/ResetPasswordFinish.vue')
-const Dashboard = () => import('@/router/views/Dashboard.vue')
-const UserProfile = () => import('@/router/views/usuarios/UserProfile.vue')
-const ChangePassword = () => import('@/router/views/auth/ChangePassword.vue')
-const ListarUsuarios = () => import('@/router/views/usuarios/ListarUsuarios.vue')
-const CrearUsuario = () => import('@/router/views/usuarios/CrearUsuario.vue')
-const EditarUsuario = () => import('@/router/views/usuarios/EditarUsuario.vue')
-const ListarDispositivos = () => import('@/router/views/dispositivos/ListarDispositivos.vue')
-const EditarDispositivo = () => import('@/router/views/dispositivos/EditarDispositivo.vue')
-const DetectarDispositivos = () => import('@/router/views/dispositivos-no-asociados/DetectarDispositivos.vue')
-const AsociarDispositivo = () => import('@/router/views/dispositivos-no-asociados/AsociarDispositivo.vue')
-
 export default [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: () => import('@/router/views/Home.vue')
   },
   {
     path: '/signup',
     name: 'signup',
-    component: SignUp
+    component: () => import('@/router/views/auth/Signup.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
-    path: '/signup/activate',
+    path: '/activate',
     name: 'activate',
-    component: Activate
+    component: () => import('@/router/views/auth/Activate.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/login',
     name: 'login',
-    component: LogIn
+    component: () => import('@/router/views/auth/Login.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/logout',
     name: 'logout',
     meta: {
-      authRequired: true,
+      requiresAuth: true,
       beforeResolve: (routeTo, routeFrom, next) => {
         // Ejecutar la acción 'logOut' en store/modules/auth
         store.dispatch('auth/logOut')
 
         // Verificar si la ruta en la que estaba justo antes de cerrar sesión
-        // requería autenticación (estar logeado)
+        // requería estar logeado
         const authRequiredOnPreviousRoute = routeFrom.matched.some(
-          route => route.meta.authRequired
+          route => route.meta.requiresAuth
         )
 
         // Redireccionar a 'home' si la ruta anterior requería autenticación
@@ -64,91 +54,117 @@ export default [
   {
     path: '/reset-password-init/',
     name: 'resetPasswordInit',
-    component: ResetPasswordInit
+    component: () => import('@/router/views/auth/ResetPasswordInit.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/reset-password-finish',
     name: 'resetPasswordFinish',
-    component: ResetPasswordFinish
+    component: () => import('@/router/views/auth/ResetPasswordFinish.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
-    meta: { authRequired: true }
-  },
+  // {
+  //   path: '/dashboard',
+  //   name: 'dashboard',
+  //   component: () => import('@/router/views/Dashboard.vue'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // },
   {
     path: '/profile',
     name: 'profile',
-    component: UserProfile,
-    meta: { authRequired: true },
+    component: () => import('@/router/views/usuarios/UserProfile.vue'),
+    meta: {
+      requiresAuth: true
+    },
     props: (route) => ({ currentUser: store.state.auth.currentUser || {} })
   },
   {
     path: '/change-password',
     name: 'changePassword',
-    component: ChangePassword,
-    meta: { authRequired: true }
+    component: () => import('@/router/views/auth/ChangePassword.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/usuarios',
     name: 'usuarios',
-    component: ListarUsuarios,
-    meta: { authRequired: true }
+    component: () => import('@/router/views/usuarios/ListarUsuarios.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/usuarios/crear',
     name: 'crearUsuario',
-    component: CrearUsuario,
-    meta: { authRequired: true }
+    component: () => import('@/router/views/usuarios/CrearUsuario.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
-    path: '/usuarios/editar/:login',
+    path: '/usuarios/editar/:identificador',
     name: 'editarUsuario',
-    component: EditarUsuario,
-    meta: { authRequired: true },
-    props: true,
-    beforeEnter: (to, from, next) => {
-      store.dispatch('users/getUser', to.params.login)
-      next()
-    }
+    component: () => import('@/router/views/usuarios/EditarUsuario.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true
   },
   {
     path: '/dispositivos',
     name: 'dispositivos',
-    component: ListarDispositivos,
-    meta: { authRequired: true }
+    component: () => import('@/router/views/dispositivos/ListarDispositivos.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
-    path: '/dispositivos/editar/:dispositivoId',
+    path: '/dispositivos/editar/:identificador',
     name: 'editarDispositivo',
-    component: EditarDispositivo,
-    meta: { authRequired: true },
-    props: true,
-    beforeEnter: (to, from, next) => {
-      store.dispatch('dispositivos/getDispositivo', to.params.dispositivoId)
-      next()
-    }
+    component: () => import('@/router/views/dispositivos/EditarDispositivo.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true
   },
   {
     path: '/dispositivos/detectar',
     name: 'detectarDispositivos',
-    component: DetectarDispositivos,
-    meta: { authRequired: true },
-    beforeEnter: (to, from, next) => {
-      store.dispatch('dispositivosNoAsociados/getAllDispositivosNoAsociados')
-      next()
+    component: () => import('@/router/views/dispositivos-no-asociados/DetectarDispositivos.vue'),
+    meta: {
+      requiresAuth: true
     }
   },
   {
-    path: '/dispositivos/detectar/asociar/:dispositivoId',
+    path: '/dispositivos/detectar/asociar/:identificador',
     name: 'asociarDispositivo',
-    component: AsociarDispositivo,
-    meta: { authRequired: true },
-    props: true,
-    beforeEnter: (to, from, next) => {
-      store.dispatch('dispositivosNoAsociados/getDispositivo', to.params.dispositivoId)
-      next()
+    component: () => import('@/router/views/dispositivos-no-asociados/AsociarDispositivo.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true
+  },
+  {
+    path: '/reglas',
+    name: 'reglas',
+    component: () => import('@/router/views/reglas/Reglas.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/reglas/crear',
+    name: 'crearRegla',
+    component: () => import('@/router/views/reglas/CrearRegla.vue'),
+    meta: {
+      requiresAuth: true
     }
   },
   {

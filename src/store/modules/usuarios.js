@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { cpus } from 'os'
+import { getSavedState, saveState } from '../helpers'
 
 export const state = {
   users: [],
-  currentUser: {}
+  currentUser: getSavedState('users.currentUser')
 }
 
 export const mutations = {
@@ -13,11 +13,19 @@ export const mutations = {
 
   setCurrentUser (state, newValue) {
     state.currentUser = newValue
+    saveState('users.currentUser', newValue)
+  },
+
+  modificarEstado (state, usuarioModificado) {
+    const index = state.users.findIndex(usuario => usuario.id === usuarioModificado.id)
+    state.users.splice(index, 1, usuarioModificado)
   }
 }
 
 export const getters = {
   getAllUsers (state) {
+    // const fields = ['id', 'login', 'email', 'activated', 'authorities']
+
     return (fields) => {
       return state.users.map(user => {
         const filtered = Object.keys(user)
@@ -54,5 +62,11 @@ export const actions = {
     const user = await axios.get(`/api/users/${username}`)
     commit('setCurrentUser', user.data)
     return user
+  },
+
+  async modificarEstado ({ commit }, usuarioModificado) {
+    const respuesta = await axios.put('/api/users', usuarioModificado)
+    commit('modificarEstado', respuesta.data)
+    return respuesta
   }
 }

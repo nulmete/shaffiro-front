@@ -1,16 +1,16 @@
 <template>
-  <div class="home">
+  <Layout>
     <h1>Home</h1>
-
-    <h2>Modo: {{ modo }}</h2>
-  </div>
+  </Layout>
 </template>
 
 <script>
+import Layout from '@/router/layouts/main'
 export default {
+  components: { Layout },
   data () {
     return {
-      modo: process.env.VUE_APP_MODO
+      // modo: process.env.VUE_APP_MODO
     }
   }
 }

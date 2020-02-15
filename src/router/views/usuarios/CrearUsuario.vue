@@ -1,69 +1,69 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Crear Usuario
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Crear usuario</h2>
 
-      <BaseForm @submit.prevent="crearUsuario">
-        <!-- Nombre de usuario -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="username"
-            label="Nombre de Usuario"
-            :v="$v.username"
-          />
-        </BaseFormGroup>
+    <form @submit.prevent="crearUsuario" class="form">
+      <div class="form__group">
+        <label class="form__label" for="username">Nombre de usuario</label>
+        <BaseInput
+          class="form__input"
+          v-model="username"
+          id="username"
+        />
+      </div>
 
-        <!-- E-mail -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="email"
-            label="E-mail"
-            type="email"
-            :v="$v.email"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="email">E-mail</label>
+        <BaseInput
+          v-model="email"
+          type="email"
+          id="email"
+        />
+      </div>
 
-        <BaseFormGroup>
-          <BaseInputSelect
-            v-model="selectedAuthorities"
-            label="Tipo de Usuario"
-            :options="authorities"
-            :multiple="true"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label">Tipo de Usuario</label>
+        <BaseInputSelect
+          v-model="selectedAuthorities"
+          :options="authoritiesOptions"
+          :optionsLabels="authoritiesOptionsSpanish"
+          :multiple="true"
+        />
+      </div>
 
-        <!-- Submit -->
-        <BaseButton type="submit">
-          Crear usuario
-        </BaseButton>
-      </BaseForm>
-    </Form>
-  </Layout>
+      <BaseButton type="submit">
+        Crear usuario
+      </BaseButton>
+    </form>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
 import axios from 'axios'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   data () {
     return {
       username: '',
       email: '',
-      authorities: ['ROLE_ADMIN', 'ROLE_USER'],
-      selectedAuthorities: [],
-
-      // todo
-      errors: {}
+      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER'],
+      selectedAuthorities: []
+    }
+  },
+  computed: {
+    authoritiesOptionsSpanish () {
+      return this.authoritiesOptions.map(el => {
+        switch (el) {
+          case 'ROLE_ADMIN':
+            return 'Administrador'
+          case 'ROLE_USER':
+            return 'Cliente'
+          default:
+            return el
+        }
+      })
     }
   },
   methods: {
@@ -97,9 +97,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-  .heading {
-    @include heading(left);
-  }
-</style>

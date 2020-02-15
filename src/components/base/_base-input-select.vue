@@ -1,27 +1,31 @@
 <template>
-  <label :class="$style.label">
-    {{ label }}
-    <select
-      v-model="selectedOptions"
-      :class="$style.select"
-      :multiple="multiple"
-      @change="$emit('change', selectedOptions)"
+  <select
+    v-model="inputValue"
+    :class="['form__select-input', { 'form__select-input--single': !multiple }]"
+    :multiple="multiple"
+  >
+    <option
+      v-if="!multiple"
+      disabled
+      selected
+      value
+      class="form__select-option"
     >
-      <option
-        v-for="(option, index) in options"
-        :key="index"
-        :class="$style.option"
-        :value="option"
-      >
-        {{ option }}
-      </option>
-    </select>
-  </label>
+      Seleccionar
+    </option>
+    <option
+      v-for="(option, index) in options"
+      :key="index"
+      class="form__select-option"
+      :value="option"
+    >
+      {{ labelValue[index] }}
+    </option>
+  </select>
 </template>
 
 <script>
 export default {
-  inheritAttrs: false,
   model: {
     event: 'change'
   },
@@ -34,35 +38,29 @@ export default {
       type: Array,
       required: true
     },
-    label: {
-      type: String,
-      required: true
-    },
     multiple: {
       type: Boolean,
       default: false
+    },
+    optionsLabels: {
+      type: Array,
+      required: false
+    }
+  },
+  computed: {
+    inputValue: {
+      get () {
+        return this.value
+      },
+      set (newValue) {
+        this.$emit('change', newValue)
+      }
     }
   },
   data () {
     return {
-      selectedOptions: this.value
+      labelValue: this.optionsLabels || this.options
     }
   }
 }
 </script>
-
-<style lang="scss" module>
-  .label {
-    @extend %font-input-label;
-  }
-
-  .select {
-    display: block;
-    font-family: inherit;
-    width: 100%;
-  }
-
-  .option {
-    padding: .5rem;
-  }
-</style>

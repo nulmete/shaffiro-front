@@ -1,0 +1,93 @@
+.form {
+  font-size: 1.5rem;
+
+  &__group {
+    &:not(:last-of-type) {
+      margin-bottom: 2.5rem;
+    }
+
+    &:last-of-type {
+      margin-bottom: 3.5rem;
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: .5rem;
+  }
+
+  &__input {
+    border: 1px solid $color-primary-medium;
+    border-radius: $default-border-radius;
+    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 1rem 1.25rem;
+    width: 100%;
+  }
+
+  // class for span element below an input element when there's an error
+  .input-error {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $color-error-dark;
+  }
+
+  &__checkbox-group {
+    display: flex;
+    align-items: center;
+  }
+
+  &__checkbox-input {
+    display: none;
+  }
+
+  &__checkbox-label {
+    cursor: pointer;
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  &__checkbox-button {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    height: 2rem;
+    width: 2rem;
+    border: 2px solid $color-primary-medium;
+    border-radius: $default-border-radius;
+
+    &::after {
+      content: "";
+      display: block;
+      height: 1.2rem;
+      width: 1.2rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $color-secondary-light;
+      opacity: 0;
+      transition: all .2s;
+    }
+  }
+
+  &__checkbox-input:checked ~ &__checkbox-label &__checkbox-button::after {
+    opacity: 1;
+  }
+
+  &__select-input {
+    display: block;
+    font-size: inherit;
+    font-family: inherit;
+    width: 100%;
+    
+    &--single {
+      padding: .5rem;
+    }
+  }
+
+  &__select-option {
+    padding: .5rem;
+  }
+}

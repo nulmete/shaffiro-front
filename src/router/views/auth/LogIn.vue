@@ -1,102 +1,69 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Inicie sesión en Shaffiro
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Inicie sesión en Shaffiro</h2>
 
-      <div
-        v-if="errors.credentials"
-        :class="$style.error"
-      >
-        Nombre de usuario o contraseña incorrectos
+    <BaseCard v-if="credentialsError" :error="credentialsError">
+      <template v-slot:paragraph>
+        Nombre de usuario o contraseña incorrectos.
+      </template>
+    </BaseCard>
+
+    <BaseCard v-if="activationError" :error="activationError">
+      <template v-slot:paragraph>
+        El usuario ingresado no se encuentra habilitado.<br>
+        Haga click
+        <BaseLink :to="{ name: 'activate' }" class="activate">
+          aquí
+        </BaseLink>
+        para activar su cuenta.
+      </template>
+    </BaseCard>
+
+    <form @submit.prevent="login" class="form">
+      <div class="form__group">
+        <label class="form__label" for="username">Nombre de usuario</label>
+        <BaseInput
+          v-model="username"
+          id="username"
+          :v="$v.username"
+        />
+        <span v-if="$v.username.$error" class="input-error">Por favor, ingrese su nombre de usuario</span>
       </div>
 
-      <div
-        v-if="errors.activation"
-        :class="$style.error"
-      >
-        El usuario ingresado no está activado.<br>
-        Para ingresar, primero debe
-        <BaseLink
-          :to="{ name: 'activate' }"
-          :class="$style.activate"
-        >
-          activarse
-        </BaseLink>
+      <div class="form__group">
+        <label class="form__label" for="password">Contraseña</label>
+        <BaseInput
+          v-model="password"
+          type="password"
+          id="password"
+          :v="$v.password"
+        />
+        <span v-if="$v.password.$error" class="input-error">Por favor, ingrese su contraseña</span>
       </div>
 
-      <BaseForm @submit.prevent="logIn">
-        <!-- Nombre de usuario -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="username"
-            name="username"
-            label="Nombre de Usuario"
-            :v="$v.username"
-          />
-          <BaseLabelError
-            v-if="$v.username.$error"
-            :v="$v.username"
-          >
-            Por favor, ingrese su nombre de usuario
-          </BaseLabelError>
-        </BaseFormGroup>
+      <BaseButton :disabled="$v.$invalid" type="submit">
+        Iniciar sesión
+      </BaseButton>
+    </form>
 
-        <!-- Contraseña -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="password"
-            name="password"
-            label="Contraseña"
-            type="password"
-            :v="$v.password"
-          />
-          <BaseLabelError
-            v-if="$v.password.$error"
-            :v="$v.password"
-          >
-            Por favor, ingrese su contraseña
-          </BaseLabelError>
-        </BaseFormGroup>
-
-        <!-- Submit -->
-        <BaseButton
-          class="align-center"
-          :disabled="$v.$invalid"
-          type="submit"
-        >
-          Iniciar sesión
-        </BaseButton>
-      </BaseForm>
-
-      <p class="form-footer">
-        <BaseLink :to="{ name: 'resetPasswordInit' }">
-          ¿Olvidó su contraseña?
-        </BaseLink>
-      </p>
-    </Form>
-  </Layout>
+    <p class="auth__footer">
+      <BaseLink :to="{ name: 'resetPasswordInit' }">
+        ¿Olvidó su contraseña?
+      </BaseLink>
+    </p>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   data () {
     return {
       username: '',
       password: '',
-      errors: {
-        activation: false,
-        credentials: false
-      }
+      credentialsError: false,
+      activationError: false
     }
   },
   validations: {
@@ -108,35 +75,31 @@ export default {
     }
   },
   methods: {
-    async logIn () {
-      // Resetear errores
-      this.errors.activation = false
-      this.errors.credentials = false
+    async login () {
+      this.credentialsError = false
+      this.activationError = false
 
-      // Objeto esperado por el endpoint /api/authenticate
-      const formData = {
+      const data = {
         username: this.username,
         password: this.password,
         rememberMe: false
       }
 
       try {
-        // Ejecutar la acción 'logIn'
-        await this.$store.dispatch('auth/logIn', formData)
+        await this.$store.dispatch('auth/login', data)
 
-        // Redireccionar a la ruta solicitada originalmente, o a /dashboard por defecto
-        this.$router.push(this.$route.query.redirectFrom || { name: 'dashboard' })
+        // Redireccionar a la ruta en la que estaba antes de hacer el login
+        // o a Home por defecto.
+        this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
       } catch (error) {
         const responseError = error.response.data.detail
 
         switch (responseError) {
-          // Si el usuario no está activado
           case `User ${this.username} was not activated`:
-            this.errors.activation = true
+            this.activationError = true
             break
-          // Si el usuario o la contraseña son incorrectos
           case 'Bad credentials':
-            this.errors.credentials = true
+            this.credentialsError = true
             break
           default:
             break
@@ -147,22 +110,10 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
-  .heading {
-    @include heading(center);
-  }
-
-  .error {
-    background-color: $color-error-dark;
-    color: $color-primary-light;
-    margin-bottom: 1.5rem;
-    padding: 1.25rem;
-    text-align: center;
-
-    .activate {
-      color: $color-primary-light;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
+<style lang="scss" scoped>
+  .activate {
+    color: $color-primary-dark;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 </style>

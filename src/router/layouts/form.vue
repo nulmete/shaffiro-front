@@ -6,7 +6,7 @@
 
 <style lang="scss" module>
   .form {
-    margin: 0 auto;
+    // margin: 0 auto;
     width: 60%;
 
     @media screen and (max-width: 43.75em) {

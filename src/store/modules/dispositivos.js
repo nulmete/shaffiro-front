@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { getSavedState, saveState } from '../helpers'
 
 export const state = {
   dispositivos: [],
-  dispositivoActual: {}
+  dispositivoActual: getSavedState('dispositivos.dispositivoActual')
 }
 
 export const mutations = {
@@ -12,6 +13,12 @@ export const mutations = {
 
   setDispositivoActual (state, newValue) {
     state.dispositivoActual = newValue
+    saveState('dispositivos.dispositivoActual', newValue)
+  },
+
+  modificarEstado (state, dispositivoModificado) {
+    const index = state.dispositivos.findIndex(dispositivo => dispositivo.id === dispositivoModificado.id)
+    state.dispositivos.splice(index, 1, dispositivoModificado)
   }
 }
 
@@ -27,6 +34,7 @@ export const getters = {
 
 export const actions = {
   async getAllDispositivos ({ commit }) {
+    console.log('getdispositivos')
     const dispositivos = await axios.get('/api/dispositivos')
     commit('setAllDispositivos', dispositivos.data)
     return dispositivos
@@ -36,5 +44,11 @@ export const actions = {
     const dispositivo = await axios.get(`/api/dispositivos/${id}`)
     commit('setDispositivoActual', dispositivo.data)
     return dispositivo
+  },
+
+  async modificarEstado ({ commit }, dispositivoModificado) {
+    const respuesta = await axios.put('/api/dispositivos', dispositivoModificado)
+    commit('modificarEstado', respuesta.data)
+    return respuesta
   }
 }

@@ -1,82 +1,53 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Editar dispositivo
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Editar dispositivo</h2>
 
-      <BaseForm @submit.prevent="editarDispositivo">
-        <!-- ID -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="id"
-            label="Id"
-            type="text"
-          />
-        </BaseFormGroup>
+    <form @submit.prevent="editarDispositivo" class="form">
+      <div class="form__group">
+        <label class="form__label" for="id">ID</label>
+        <BaseInput
+          v-model="id"
+          id="id"
+        />
+      </div>
 
-        <!-- Nombre -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="nombre"
-            label="Nombre del dispositivo"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="nombre">Nombre</label>
+        <BaseInput
+          v-model="nombre"
+          id="nombre"
+        />
+      </div>
 
-        <!-- Tipo de dispositivo -->
-        <BaseFormGroup>
-          <BaseInputSelect
-            v-model="tipo"
-            label="Tipo de dispositivo"
-            :options="tiposPosibles"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <BaseInputCheckbox
+          v-model="activo"
+          :label="'Habilitado'"
+          :id="'device-state'"
+        />
+      </div>
 
-        <!-- Estado -->
-        <BaseFormGroup>
-          <BaseInputCheckbox
-            v-model="activo"
-            label="Habilitado"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label">Tipo</label>
+        <BaseInputSelect
+          v-model="tipo"
+          :options="tiposPosibles"
+        />
+      </div>
 
-        <!-- Regla -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="regla"
-            label="Reglas"
-          />
-        </BaseFormGroup>
-
-        <!-- Configuracion -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="configuracion"
-            label="Configuración"
-          />
-        </BaseFormGroup>
-
-        <!-- Submit -->
-        <BaseButton type="submit">
-          Guardar
-        </BaseButton>
-      </BaseForm>
-    </Form>
-  </Layout>
+      <BaseButton type="submit">
+        Guardar
+      </BaseButton>
+    </form>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import axios from 'axios'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   props: {
-    dispositivoId: {
+    identificador: {
       type: String,
       required: true
     }
@@ -104,11 +75,7 @@ export default {
       tipo: '',
       activo: false,
       configuracion: '',
-      regla: '',
-      tiposPosibles: ['SENSOR', 'ACTUADOR'],
-
-      // todo
-      errors: {}
+      tiposPosibles: ['SENSOR', 'ACTUADOR']
     }
   },
   methods: {
@@ -133,9 +100,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-  .heading {
-    @include heading(left);
-  }
-</style>

@@ -1,11 +1,4 @@
-%font-input-label {
-  font-size: $size-font-lg;
-}
-
-@mixin heading($position) {
-  font-family: 'Quicksand', sans-serif;
-  font-size: $size-font-heading;
+.heading-secondary {
+  font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: $position;
 }

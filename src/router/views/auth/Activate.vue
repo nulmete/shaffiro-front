@@ -1,127 +1,106 @@
 <template>
-  <Layout>
-    <Form>
-      <h2>Active su usuario</h2>
+  <div class="auth">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Activar usuario</h2>
 
-      <template v-if="!activated">
-        <BaseSuccessCard>
-          <template v-slot:title>
-            Usuario registrado con éxito
-          </template>
-          <template v-slot:paragraph>
-            Se ha enviado un código a {{ currentUser.email }} que debe ingresar aquí para activar su usuario
-          </template>
-        </BaseSuccessCard>
+    <!-- Mostrar si no se activó el usuario -->
+    <template v-if="!activated">
+      <BaseCard>
+        <template v-slot:title>
+          Usuario registrado con éxito
+        </template>
+        <template v-slot:paragraph>
+          Ingrese el código enviado a <strong>{{ email }}</strong> para activar su usuario.
+        </template>
+      </BaseCard>
 
-        <BaseForm @submit.prevent="activate">
-          <BaseFormGroup>
-            <BaseInput
-              v-model="code"
-              label="Código"
-              type="number"
-              :v="$v.code"
-            />
-            <BaseLabelError>
-              <template v-if="$v.code.$dirty && !$v.code.required">
-                Por favor, ingrese el código recibido en su e-mail
-              </template>
-              <template v-else-if="errors.code">
-                El código ingresado no es correcto
-              </template>
-            </BaseLabelError>
-          </BaseFormGroup>
+      <form @submit.prevent="activate" class="form">
+        <div class="form__group">
+          <label class="form__label" for="code">Código</label>
+          <BaseInput
+            v-model="code"
+            label="Código"
+            type="number"
+            id="code"
+            :serverError="codeError"
+            :v="$v.code"
+          />
+          <span v-if="$v.code.$dirty && !$v.code.required" class="input-error">Por favor, ingrese el código recibido en su e-mail</span>
+          <span v-else-if="codeError" class="input-error">El código ingresado no es correcto</span>
+        </div>
 
-          <BaseButton
-            :disabled="$v.$invalid"
-            type="submit"
-          >
-            Activar
-          </BaseButton>
-        </BaseForm>
-      </template>
-
-      <template v-else>
-        <BaseSuccessCard>
-          <template v-slot:title>
-            Usuario activado con éxito
-          </template>
-          <template v-slot:paragraph>
-            Ahora puede iniciar sesión en Shaffiro
-          </template>
-        </BaseSuccessCard>
-
-        <!--
-          Se usa BaseButton en vez de BaseLink por cuestiones de estilo
-          Para poder hacer la redirección, se define el método redirectToLogin
-          Es necesario agregar v-on="$listeners" en BaseButton para que herede
-          el event listener de este componente padre
-          -->
-        <BaseButton
-          type="button"
-          @click="redirectToLogin"
-        >
-          Iniciar sesión
+        <BaseButton :disabled="$v.$invalid" type="submit">
+          Activar
         </BaseButton>
-      </template>
-    </Form>
-  </Layout>
+      </form>
+    </template>
+
+    <!-- Mostrar si se activó el usuario -->
+    <template v-else>
+      <BaseCard>
+        <template v-slot:title>
+          Usuario activado con éxito
+        </template>
+        <template v-slot:paragraph>
+          Ahora puede iniciar sesión en Shaffiro
+        </template>
+      </BaseCard>
+
+      <BaseButton type="button" @click="redirectToLogin">
+        Iniciar sesión
+      </BaseButton>
+    </template>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
+import axios from 'axios'
 import { required } from 'vuelidate/lib/validators'
-import { mapState } from 'vuex'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
-  // Antes de pasar a otra url
+  // Antes de pasar a otra URL
   beforeRouteLeave (to, from, next) {
     if (!this.activated) {
       // Si el usuario no activó su cuenta
-      const answer = window.confirm(
-        'Todavía no activó su cuenta. ¿Está seguro que quiere salir?'
-      )
+      const answer = window.confirm('Todavía no activó su cuenta. ¿Está seguro que quiere salir?')
 
       if (answer) {
-        // Si el usuario clickea "Sí" en la ventana de confirmación
-        this.$store.commit('auth/setCurrentUser', null)
+        // Si el usuario clickea "Sí" en la ventana de confirmación, sale de la página
+        localStorage.removeItem('activated')
+        this.$store.commit('auth/setActivationEmail', null)
+        localStorage.removeItem('auth.activationEmail')
         next()
       } else {
-        // Si el usuario clickea "No" en la ventana de confirmación
+        // Si el usuario clickea "No" en la ventana de confirmación, permanecer en la página
         next(false)
       }
     } else {
-      // El usuario activó su cuenta
-      this.$store.commit('auth/setCurrentUser', null)
+      // El usuario activó su cuenta y sale de la página
       localStorage.removeItem('activated')
+      this.$store.commit('auth/setActivationEmail', null)
+      localStorage.removeItem('auth.activationEmail')
       next()
     }
   },
   data () {
     return {
       code: '',
-      errors: {
-        code: false
-      },
+      codeError: false,
       activated: localStorage.getItem('activated') || false
     }
   },
   computed: {
-    ...mapState('auth', ['currentUser'])
+    email () {
+      return this.$store.getters['auth/getActivationEmail']
+    }
   },
   methods: {
     async activate () {
       try {
-        // Ejecutar la acción 'activate'
-        await this.$store.dispatch('auth/activate', this.code)
+        await axios.get(`/api/activate?key=${this.code}`)
         this.activated = true
         localStorage.setItem('activated', this.activated)
       } catch (error) {
-        this.errors.code = true
+        this.codeError = true
       }
     },
     redirectToLogin () {

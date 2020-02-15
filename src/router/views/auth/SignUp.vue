@@ -1,124 +1,85 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Regístrese en Shaffiro
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Regístrese en Shaffiro</h2>
 
-      <BaseForm @submit.prevent="signUp">
-        <BaseFormGroup>
-          <BaseInput
-            v-model="email"
-            type="email"
-            label="E-mail"
-            :v="$v.email"
-          />
-          <BaseLabelError>
-            <template v-if="$v.email.$dirty && !$v.email.required">
-              Por favor, ingrese su e-mail
-            </template>
-            <template v-else-if="$v.email.$dirty && !$v.email.email">
-              Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i>
-            </template>
-            <template v-else-if="errors.email">
-              El e-mail ingresado ya está en uso
-            </template>
-          </BaseLabelError>
-        </BaseFormGroup>
+    <form @submit.prevent="signup" class="form">
+      <div class="form__group">
+        <label class="form__label" for="email">E-mail</label>
+        <BaseInput
+          v-model="email"
+          type="email"
+          id="email"
+          :serverError="emailError"
+          :v="$v.email"
+        />
+        <span v-if="$v.email.$dirty && !$v.email.required" class="input-error">Por favor, ingrese su e-mail</span>
+        <span v-else-if="$v.email.$dirty && !$v.email.email" class="input-error">Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i></span>
+        <span v-else-if="emailError" class="input-error">El e-mail ingresado ya está en uso</span>
+      </div>
 
-        <BaseFormGroup>
-          <BaseInput
-            v-model="username"
-            label="Nombre de usuario"
-            :v="$v.username"
-          />
-          <BaseLabelError>
-            <template v-if="$v.username.$dirty && !$v.username.required">
-              Por favor, ingrese su nombre de usuario
-            </template>
-            <template v-else-if="$v.username.$dirty && !$v.username.valid">
-              Use entre 8 y 15 caracteres
-            </template>
-            <template v-else-if="errors.username">
-              El nombre de usuario ingresado ya está en uso
-            </template>
-          </BaseLabelError>
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="username">Nombre de usuario</label>
+        <BaseInput
+          v-model="username"
+          id="username"
+          :serverError="usernameError"
+          :v="$v.username"
+        />
+        <span v-if="$v.username.$dirty && !$v.username.required" class="input-error">Por favor, ingrese su nombre de usuario</span>
+        <span v-else-if="$v.username.$dirty && !$v.username.valid" class="input-error">Use entre 8 y 15 caracteres</span>
+        <span v-else-if="usernameError" class="input-error">El nombre de usuario ingresado ya está en uso</span>
+      </div>
 
-        <BaseFormGroup>
-          <BaseInput
-            v-model="password"
-            type="password"
-            label="Contraseña"
-            :v="$v.password"
-          />
-          <BaseLabelError>
-            <template v-if="$v.password.$dirty && !$v.password.required">
-              Por favor, ingrese su contraseña
-            </template>
-            <template v-else-if="$v.password.$dirty && !$v.password.valid">
-              Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número
-            </template>
-          </BaseLabelError>
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="password">Contraseña</label>
+        <BaseInput
+          v-model="password"
+          type="password"
+          id="password"
+          :v="$v.password"
+        />
+        <span v-if="$v.password.$dirty && !$v.password.required" class="input-error">Por favor, ingrese su contraseña</span>
+        <span v-else-if="$v.password.$dirty && !$v.password.valid" class="input-error">Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número</span>
+      </div>
 
-        <BaseFormGroup>
-          <BaseInput
-            v-model="confirmPassword"
-            type="password"
-            label="Confirmar Contraseña"
-            :v="$v.confirmPassword"
-          />
-          <BaseLabelError>
-            <template v-if="$v.confirmPassword.$dirty && !$v.confirmPassword.required">
-              Por favor, confirme su contraseña
-            </template>
-            <template v-else-if="$v.confirmPassword.$dirty && !$v.confirmPassword.sameAs">
-              Las contraseñas no coinciden
-            </template>
-          </BaseLabelError>
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="confirm-password">Confirmar contraseña</label>
+        <BaseInput
+          v-model="confirmPassword"
+          type="password"
+          id="confirm-password"
+          :v="$v.confirmPassword"
+        />
+        <span v-if="$v.confirmPassword.$dirty && !$v.confirmPassword.required" class="input-error">Por favor, confirme su contraseña</span>
+        <span v-else-if="$v.confirmPassword.$dirty && !$v.confirmPassword.sameAs" class="input-error">Las contraseñas no coinciden</span>
+      </div>
 
-        <BaseButton
-          class="align-center"
-          :disabled="$v.$invalid"
-          type="submit"
-        >
-          Registrarse
-        </BaseButton>
-      </BaseForm>
+      <BaseButton :disabled="$v.$invalid" type="submit">
+        Registrarse
+      </BaseButton>
+    </form>
 
-      <p class="form-footer">
-        ¿Ya tiene una cuenta?
-        <BaseLink :to="{ name: 'login' }">
-          Inicie sesión
-        </BaseLink>
-      </p>
-    </Form>
-  </Layout>
+    <p class="auth__footer">
+      ¿Ya tiene una cuenta?
+      <BaseLink :to="{ name: 'login' }">Inicie sesión</BaseLink>
+    </p>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
 import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
+import axios from 'axios'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   data () {
     return {
       email: '',
       username: '',
       password: '',
       confirmPassword: '',
-      errors: {
-        email: false,
-        username: false
-      }
+      emailError: false,
+      usernameError: false
     }
   },
   validations: {
@@ -146,13 +107,11 @@ export default {
     }
   },
   methods: {
-    async signUp () {
-      // Resetear errores
-      this.errors.email = false
-      this.errors.username = false
+    async signup () {
+      this.emailError = false
+      this.usernameError = false
 
-      // Objeto esperado por el endpoint /api/register
-      const formData = {
+      const data = {
         email: this.email,
         login: this.username,
         password: this.password,
@@ -160,23 +119,18 @@ export default {
       }
 
       try {
-        // Ejecutar la acción 'signup'
-        await this.$store.dispatch('auth/signUp', formData)
-        // Redireccionar a /signup/activate
+        await axios.post('/api/register', data)
+        this.$store.commit('auth/setActivationEmail', data.email)
         this.$router.push({ name: 'activate' })
       } catch (error) {
         const responseError = error.response.data.errorKey
 
         switch (responseError) {
-          // Si el usuario ingresado ya existe
           case 'userexists':
-            console.log('userexists')
-            this.errors.username = true
+            this.usernameError = true
             break
-          // Si el e-mail ingresado ya existe
           case 'emailexists':
-            console.log('emailexists')
-            this.errors.email = true
+            this.emailError = true
             break
           default:
             break
@@ -186,9 +140,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-  .heading {
-    @include heading(center);
-  }
-</style>

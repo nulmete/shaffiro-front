@@ -2,7 +2,8 @@ import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 export const state = {
-  currentUser: getSavedState('auth.currentUser')
+  currentUser: getSavedState('auth.currentUser'),
+  activationEmail: getSavedState('auth.activationEmail')
 }
 
 export const mutations = {
@@ -10,32 +11,39 @@ export const mutations = {
     state.currentUser = newValue
     saveState('auth.currentUser', newValue)
     setDefaultAuthHeaders(state)
+  },
+
+  setActivationEmail (state, email) {
+    state.activationEmail = email
+    saveState('auth.activationEmail', email)
   }
 }
 
 export const getters = {
-  // Verifica si el usuario está logeado
-  loggedIn (state) {
+  isLoggedIn (state) {
     return !!state.currentUser && !!state.currentUser.token
   },
 
   isAdmin (state, getters) {
-    return !!getters.loggedIn &&
-      !!state.currentUser.authorities &&
-      !!state.currentUser.authorities.includes('ROLE_ADMIN')
+    return !!getters.isLoggedIn && !!state.currentUser.authorities.includes('ROLE_ADMIN')
+  },
+
+  getActivationEmail (state) {
+    return state.activationEmail
   }
 }
 
 export const actions = {
-  // Validar usuario
   async validate ({ commit, state }) {
     // Si no hay usuario logeado, retornar
     if (!state.currentUser) return Promise.resolve(null)
-
+    // Setear header Authorization para poder hacer las calls a la API
     setDefaultAuthHeaders(state)
 
     return Promise.all([
+      // Retorna username
       axios.get('/api/authenticate'),
+      // Retorna toda la info del usuario, lo que importa son las authorities
       axios.get('/api/account')
     ])
       .then(([firstResponse, secondResponse]) => {
@@ -46,37 +54,33 @@ export const actions = {
         return token
       })
       .catch(error => {
+        // Fallan las 2 requests al server porque el usuario no está logeado
+        // o expiró su token
         console.warn(error)
         commit('setCurrentUser', null)
         return null
       })
   },
 
-  // Registro
-  async signUp ({ commit }, formData) {
-    const { login: username, email } = formData
-    await axios.post('/api/register', formData)
-    commit('setCurrentUser', { username, email })
+  async login ({ commit }, { username, password } = {}) {
+    // Obtener token
+    const responseAuth = await axios.post('/api/authenticate', { username, password })
+    const token = responseAuth.data.id_token
+
+    // Obtener authorities
+    const responseAcc = await axios.get('/api/account', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    const authorities = responseAcc.data.authorities
+
+    commit('setCurrentUser', { username, token, authorities })
   },
 
-  // Activar usuario
-  async activate (context, activationKey) {
-    await axios.get(`/api/activate?key=${activationKey}`)
-  },
-
-  // Login
-  async logIn ({ commit }, { username, password } = {}) {
-    const response = await axios.post('/api/authenticate', { username, password })
-    const token = response.data.id_token
-    commit('setCurrentUser', { username, token })
-  },
-
-  // Cierra la sesión de un usuario logeado
   async logOut ({ commit }) {
     commit('setCurrentUser', null)
   },
 
-  // Iniciar restablecimiento de contraseña
+  // Recuperar contraseña
   async resetPasswordInit (context, email) {
     await axios.post('/api/account/reset-password/init', email, {
       headers: {
@@ -85,7 +89,6 @@ export const actions = {
     })
   },
 
-  // Terminar restablecimiento de contraseña
   async resetPasswordFinish (context, formData) {
     await axios.post('/api/account/reset-password/finish', formData)
   },

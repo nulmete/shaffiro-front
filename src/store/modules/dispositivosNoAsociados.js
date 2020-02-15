@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { getSavedState, saveState } from '../helpers'
 
 export const state = {
   dispositivosNoAsociados: [],
-  dispositivoNoAsociadoActual: {}
+  dispositivoNoAsociadoActual: getSavedState('dispositivosNoAsociados.dispositivoNoAsociadoActual')
 }
 
 export const mutations = {
@@ -12,6 +13,7 @@ export const mutations = {
 
   setDispositivoNoAsociadoActual (state, newValue) {
     state.dispositivoNoAsociadoActual = newValue
+    saveState('dispositivosNoAsociados.dispositivoNoAsociadoActual', newValue)
   }
 }
 

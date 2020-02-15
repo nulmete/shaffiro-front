@@ -1,107 +1,105 @@
 <template>
-  <nav :class="$style.nav">
-    <ul>
-      <NavBarRoutes :routes="persistentNavRoutes" />
-      <NavBarRoutes
-        v-if="isAdmin"
-        :routes="adminNavRoutes"
-      />
-      <NavBarRoutes
-        v-if="loggedIn"
-        :routes="loggedInNavRoutes"
-      />
-      <NavBarRoutes
-        v-if="!loggedIn"
-        :routes="loggedOutNavRoutes"
-      />
-    </ul>
-  </nav>
+  <header class="header">
+    <div class="container">
+      <div class="header__logo-box">
+        <img class="header__logo" src="../assets/logo.png" alt="logo">
+      </div>
+      <nav class="nav">
+        <ul class="nav__list">
+          <template v-if="isAdmin">
+            <li>
+              <BaseLink :to="{ name: 'dispositivos' }" class="nav__link">Dispositivos</BaseLink>
+            </li>
+            <li>
+              <BaseLink :to="{ name: 'reglas' }" class="nav__link">Reglas</BaseLink>
+            </li>
+            <li>
+              <BaseLink :to="{ name: 'usuarios' }" class="nav__link">Usuarios</BaseLink>
+            </li>
+          </template>
+          <template v-if="isLoggedIn">
+            <li>
+              <BaseLink :to="{ name: 'profile' }" class="nav__link">Perfil</BaseLink>
+            </li>
+            <li>
+              <BaseLink :to="{ name: 'logout' }" class="nav__link">Cerrar sesión</BaseLink>
+            </li>
+          </template>
+          <template v-if="!isLoggedIn">
+            <li>
+              <BaseLink :to="{ name: 'signup' }" class="nav__link">Registrarse</BaseLink>
+            </li>
+            <li>
+              <BaseLink :to="{ name: 'login' }" class="nav__link">Iniciar sesión</BaseLink>
+            </li>
+          </template>
+        </ul>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import NavBarRoutes from './NavBarRoutes'
 
 export default {
-  components: {
-    NavBarRoutes
-  },
-  data () {
-    return {
-      // Rutas comunes para todo tipo de usuario
-      persistentNavRoutes: [
-        {
-          name: 'home',
-          title: 'Home'
-        }
-      ],
-      // Rutas visibles para usuarios logeados
-      loggedInNavRoutes: [
-        {
-          name: 'profile',
-          title: () => 'Logeado como ' + this.username
-        },
-        {
-          name: 'logout',
-          title: 'Cerrar sesión'
-        }
-      ],
-      // Rutas visibles para usuarios no logeados
-      loggedOutNavRoutes: [
-        {
-          name: 'signup',
-          title: 'Registrarse'
-        },
-        {
-          name: 'login',
-          title: 'Iniciar sesión'
-        }
-      ],
-      adminNavRoutes: [
-        {
-          name: 'dispositivos',
-          title: 'Dispositivos'
-        },
-        {
-          name: 'usuarios',
-          title: 'Usuarios'
-        }
-      ]
-    }
-  },
   computed: {
-    loggedIn () {
-      return this.$store.getters['auth/loggedIn']
+    isLoggedIn () {
+      return this.$store.getters['auth/isLoggedIn']
     },
     isAdmin () {
       return this.$store.getters['auth/isAdmin']
-    },
-    ...mapState('auth', {
-      username: state => state.currentUser.username
-    })
+    }
   }
 }
 </script>
 
-<style lang="scss" module>
-.nav {
-  align-items: center;
+<style lang="scss" scoped>
+.header {
   background-color: $color-primary-dark;
-  display: flex;
-  font-size: $size-font-xl;
+  border-bottom: 1px solid #eee;
+  padding: 1.2rem 0;
 
-  > ul {
+  .container {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo-box {
+    margin-right: auto;
+  }
+
+  &__logo {
+    display: block;
+    height: 4rem;
+    width: 4rem;
+  }
+}
+
+.nav {
+  font-size: 1.6rem;
+
+  &__list {
     display: flex;
     flex: 1;
-    list-style: none;
+  }
 
-    > li {
-      padding: 1rem 1.5rem;
-
-      &:first-child {
-        margin-right: auto;
-      }
+  &__link {
+    &:link,
+    &:visited {
+      display: block;
+      color: $color-primary-light;
+      padding: 1rem 2rem;
     }
+
+    &:hover,
+    &:active {
+      color: $color-secondary-light;
+    }
+  }
+
+  .router-link-active,
+  .router-link-exact-active {
+    color: $color-secondary-light;
   }
 }
 </style>

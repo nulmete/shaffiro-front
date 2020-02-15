@@ -32,12 +32,25 @@
         </BaseFormGroup>
 
         <!-- Regla -->
-        <BaseFormGroup>
+        <!-- <BaseFormGroup>
           <BaseInput
             v-model="regla"
             label="Reglas"
           />
+        </BaseFormGroup> -->
+
+        <!-- Regla ID -->
+        <!-- <BaseFormGroup>
+          <BaseInputSelect
+            v-model="regla"
+            label="Regla"
+            :options="reglasLogica"
+          />
         </BaseFormGroup>
+
+        {{ regla }}
+
+        {{ reglacompleta }} -->
 
         <!-- Configuracion -->
         <BaseFormGroup>
@@ -47,11 +60,21 @@
           />
         </BaseFormGroup>
 
+        <BaseFormGroup>
+          <BaseInputSelect
+            v-model="magnitud"
+            label="Magnitud a medir"
+            :options="magnitudesPosibles"
+          />
+        </BaseFormGroup>
+
         <!-- Submit -->
         <BaseButton type="submit">
           Asociar
         </BaseButton>
       </BaseForm>
+
+      {{ mac }}
     </Form>
   </Layout>
 </template>
@@ -67,7 +90,7 @@ export default {
     Form
   },
   props: {
-    dispositivoId: {
+    identificador: {
       type: String,
       required: true
     }
@@ -77,7 +100,9 @@ export default {
       const { id, mac, uuid } = vm.$store.getters['dispositivosNoAsociados/getDispositivoNoAsociado']
 
       vm.id = id
-      vm.configuracion = `${mac}+${uuid}`
+      vm.mac = mac
+      vm.uuid = uuid
+      vm.configuracion = ''
     })
   },
   beforeRouteLeave (to, from, next) {
@@ -89,26 +114,51 @@ export default {
       id: '',
       nombre: '',
       tipo: '',
+      tiposPosibles: ['SENSOR', 'ACTUADOR'],
       activo: false,
       configuracion: '',
       regla: '',
-      tiposPosibles: ['SENSOR', 'ACTUADOR'],
+      magnitud: '',
+      magnitudesPosibles: ['Intensidad de corriente', 'Temperatura', 'Movimiento'],
 
-      // todo
-      errors: {}
+      // prueba
+      uuid: '',
+      mac: ''
     }
+  },
+  computed: {
+    reglas () {
+      return this.$store.getters['reglas/getAllReglas']
+    },
+    reglasLogica () {
+      return this.reglas.map(regla => regla.logica)
+    },
+    reglacompleta () {
+      return this.reglas.find(r => r.logica === this.regla)
+    }
+  },
+  created () {
+    this.$store.dispatch('reglas/getAllReglas')
   },
   methods: {
     async asociarDispositivo () {
+      const pair = [{
+        id: '2',
+        pin: '2',
+        mode: 'OUTPUT',
+        type: 'proximidad'
+      }]
+
       const formData = {
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
         configuracion: this.configuracion,
-        regla: this.regla
+        // regla: this.reglacompleta.id
+        reglaId: null
       }
-
       try {
+        await axios.post(`/api/pair/${this.mac}`, pair)
         await axios.post('/api/dispositivos', formData)
         await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
         this.$router.push({ name: 'dispositivos' })
@@ -120,9 +170,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-  .heading {
-    @include heading(left);
-  }
-</style>

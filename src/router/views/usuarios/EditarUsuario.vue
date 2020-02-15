@@ -1,86 +1,74 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Editar usuario
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Editar usuario</h2>
 
-      <BaseForm @submit.prevent="editarUsuario">
-        <BaseFormGroup>
-          <BaseInput
-            v-model="id"
-            label="Id"
-            type="text"
-            :v="$v.id"
-          />
-        </BaseFormGroup>
+    <form @submit.prevent="editarUsuario" class="form">
+      <div class="form__group">
+        <label class="form__label" for="id">ID</label>
+        <BaseInput
+          v-model="id"
+          type="text"
+          id="id"
+        />
+      </div>
 
-        <!-- Nombre de usuario -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="username"
-            label="Nombre de Usuario"
-            :v="$v.username"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="username">Nombre de usuario</label>
+        <BaseInput
+          v-model="username"
+          id="username"
+        />
+      </div>
 
-        <!-- E-mail -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="email"
-            label="E-mail"
-            type="email"
-            :v="$v.email"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label" for="email">E-mail</label>
+        <BaseInput
+          v-model="email"
+          type="email"
+          id="email"
+        />
+      </div>
 
-        <BaseFormGroup>
-          <BaseInputCheckbox
-            v-model="activated"
-            label="Habilitado"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <BaseInputCheckbox
+          v-model="activated"
+          :label="'Habilitado'"
+          :id="'user-state'"
+        />
+      </div>
 
-        <BaseFormGroup>
-          <BaseInputSelect
-            v-model="authorities"
-            label="Tipo de Usuario"
-            :options="authoritiesOptions"
-            :multiple="true"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label">Tipo de Usuario</label>
+        <BaseInputSelect
+          v-model="authorities"
+          :options="authoritiesOptions"
+          :optionsLabels="authoritiesOptionsSpanish"
+          :multiple="true"
+        />
+      </div>
 
-        <!-- Submit -->
-        <BaseButton type="submit">
-          Guardar
-        </BaseButton>
-      </BaseForm>
-    </Form>
-  </Layout>
+      <BaseButton type="submit">
+        Guardar
+      </BaseButton>
+    </form>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
 import axios from 'axios'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   props: {
-    login: {
+    identificador: {
       type: String,
       required: true
     }
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      const { id, login, email, activated, authorities } = vm.$store.getters['users/getUser']
-
+      const { id, login, email, activated, authorities } = vm.$store.getters['usuarios/getUser']
       vm.id = id.toString()
       vm.username = login
       vm.email = email
@@ -89,7 +77,7 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.commit('users/setCurrentUser', {})
+    this.$store.commit('usuarios/setCurrentUser', {})
     next()
   },
   data () {
@@ -99,15 +87,26 @@ export default {
       email: '',
       authorities: [],
       activated: false,
-      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER'],
-
-      // todo
-      errors: {}
+      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER']
+    }
+  },
+  computed: {
+    authoritiesOptionsSpanish () {
+      return this.authoritiesOptions.map(el => {
+        switch (el) {
+          case 'ROLE_ADMIN':
+            return 'Administrador'
+          case 'ROLE_USER':
+            return 'Cliente'
+          default:
+            return el
+        }
+      })
     }
   },
   methods: {
     async editarUsuario () {
-      const formData = {
+      const formulario = {
         id: parseInt(this.id),
         login: this.username,
         email: this.email,
@@ -116,7 +115,7 @@ export default {
       }
 
       try {
-        await axios.put('/api/users', formData)
+        await axios.put('/api/users', formulario)
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
         // todo
@@ -141,9 +140,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-  .heading {
-    @include heading(left);
-  }
-</style>

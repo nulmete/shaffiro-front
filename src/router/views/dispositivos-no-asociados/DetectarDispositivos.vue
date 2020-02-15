@@ -1,29 +1,40 @@
 <template>
   <List
-    :data="dispositivosNoAsociados"
-    :fields="fields"
-    :actions="actions"
+    :campos="campos"
+    :contenido="dispositivosNoAsociados"
   >
-    <template v-slot:header>
-      Dispositivos no asociados
+    <template v-slot:titulo>
+      Dispositivos detectados
+    </template>
+    <!-- <template v-slot:crear>
+      <BaseButton @click="detectar">
+        Detectar dispositivo
+      </BaseButton>
+    </template> -->
+    <template v-slot:botones="{ index }">
+      <!-- <ButtonEdit
+        @click="asociar(dispositivosNoAsociados[index])"
+      >
+        Asociar
+      </ButtonEdit> -->
+      <!-- <ButtonModify
+        :activo="dispositivos[index].activo"
+        @click="modificarEstado(dispositivos[index])"
+      /> -->
     </template>
   </List>
 </template>
 
 <script>
 import List from '@/components/List'
+// import ButtonEdit from '@/components/ButtonEdit'
 
 export default {
   components: { List },
   data () {
     return {
-      fields: ['id', 'mac', 'uuid'],
-      actions: [
-        {
-          name: 'asociar',
-          param: 'id'
-        }
-      ]
+      // campos: ['ID', 'MAC', 'UUID', 'Acciones'],
+      campos: ['ID', 'MAC', 'UUID', 'Acciones']
     }
   },
   computed: {
@@ -35,17 +46,15 @@ export default {
     this.$store.dispatch('dispositivosNoAsociados/getAllDispositivosNoAsociados')
   },
   methods: {
-    asociar () {
-      this.$router.push({ name: 'asociarDispositivo' })
+    asociar (dispositivo) {
+      this.$store.commit('dispositivosNoAsociados/setDispositivoNoAsociadoActual', dispositivo)
+      this.$router.push({ name: 'asociarDispositivo', params: { identificador: dispositivo.id.toString() } })
     }
   }
 }
 </script>
 
 <style lang="scss" module>
-  .heading {
-    @include heading(left);
-  }
 
   .wrap {
     display: flex;
