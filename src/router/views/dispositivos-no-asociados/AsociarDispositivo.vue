@@ -1,94 +1,43 @@
 <template>
-  <Layout>
-    <Form>
-      <h2 :class="$style.heading">
-        Asociar dispositivo
-      </h2>
+  <div class="auth container">
+    <h2 class="heading-secondary text-center margin-bottom-medium">Asociar dispositivo</h2>
 
-      <BaseForm @submit.prevent="asociarDispositivo">
-        <!-- Nombre -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="nombre"
-            label="Nombre del dispositivo"
-          />
-        </BaseFormGroup>
+    <form @submit.prevent="asociarDispositivo" class="form">
+      <div class="form__group">
+        <label class="form__label" for="nombre">Nombre</label>
+        <BaseInput
+          v-model="nombre"
+          id="nombre"
+        />
+      </div>
 
-        <!-- Tipo de dispositivo -->
-        <BaseFormGroup>
-          <BaseInputSelect
-            v-model="tipo"
-            label="Tipo de dispositivo"
-            :options="tiposPosibles"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <label class="form__label">Tipo</label>
+        <BaseInputSelect
+          v-model="tipo"
+          :options="tiposPosibles"
+        />
+      </div>
 
-        <!-- Estado -->
-        <BaseFormGroup>
-          <BaseInputCheckbox
-            v-model="activo"
-            label="Habilitado"
-          />
-        </BaseFormGroup>
+      <div class="form__group">
+        <BaseInputCheckbox
+          v-model="activo"
+          :label="'Habilitado'"
+          :id="'device-state'"
+        />
+      </div>
 
-        <!-- Regla -->
-        <!-- <BaseFormGroup>
-          <BaseInput
-            v-model="regla"
-            label="Reglas"
-          />
-        </BaseFormGroup> -->
-
-        <!-- Regla ID -->
-        <!-- <BaseFormGroup>
-          <BaseInputSelect
-            v-model="regla"
-            label="Regla"
-            :options="reglasLogica"
-          />
-        </BaseFormGroup>
-
-        {{ regla }}
-
-        {{ reglacompleta }} -->
-
-        <!-- Configuracion -->
-        <BaseFormGroup>
-          <BaseInput
-            v-model="configuracion"
-            label="Configuración"
-          />
-        </BaseFormGroup>
-
-        <BaseFormGroup>
-          <BaseInputSelect
-            v-model="magnitud"
-            label="Magnitud a medir"
-            :options="magnitudesPosibles"
-          />
-        </BaseFormGroup>
-
-        <!-- Submit -->
-        <BaseButton type="submit">
-          Asociar
-        </BaseButton>
-      </BaseForm>
-
-      {{ mac }}
-    </Form>
-  </Layout>
+      <BaseButton type="submit">
+        Asociar
+      </BaseButton>
+    </form>
+  </div>
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
-import Form from '@/router/layouts/form'
 import axios from 'axios'
 
 export default {
-  components: {
-    Layout,
-    Form
-  },
   props: {
     identificador: {
       type: String,
@@ -112,54 +61,38 @@ export default {
   data () {
     return {
       id: '',
+      mac: '',
+      uuid: '',
       nombre: '',
       tipo: '',
       tiposPosibles: ['SENSOR', 'ACTUADOR'],
       activo: false,
-      configuracion: '',
-      regla: '',
-      magnitud: '',
-      magnitudesPosibles: ['Intensidad de corriente', 'Temperatura', 'Movimiento'],
-
-      // prueba
-      uuid: '',
-      mac: ''
+      configuracion: ''
     }
-  },
-  computed: {
-    reglas () {
-      return this.$store.getters['reglas/getAllReglas']
-    },
-    reglasLogica () {
-      return this.reglas.map(regla => regla.logica)
-    },
-    reglacompleta () {
-      return this.reglas.find(r => r.logica === this.regla)
-    }
-  },
-  created () {
-    this.$store.dispatch('reglas/getAllReglas')
   },
   methods: {
     async asociarDispositivo () {
-      const pair = [{
-        id: '2',
-        pin: '2',
-        mode: 'OUTPUT',
-        type: 'proximidad'
-      }]
+      // const pair = [{
+      //   id: '2',
+      //   pin: '2',
+      //   mode: 'OUTPUT',
+      //   type: 'proximidad'
+      // }]
 
       const formData = {
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
-        configuracion: this.configuracion,
-        // regla: this.reglacompleta.id
-        reglaId: null
+        configuracion: this.configuracion
       }
+
       try {
-        await axios.post(`/api/pair/${this.mac}`, pair)
+        // hacer pair
+        // await axios.post(`/api/pair/${this.mac}`, pair)
+
+        // crear dispositivo
         await axios.post('/api/dispositivos', formData)
+        // eliminar dispositivo de la tabla de dispositivos no asociados
         await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {

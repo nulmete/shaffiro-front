@@ -2,7 +2,7 @@
   <div class="auth container">
     <h2 class="heading-secondary text-center margin-bottom-medium">Regístrese en Shaffiro</h2>
 
-    <form @submit.prevent="signup" class="form">
+    <form @submit.prevent="signup" class="form margin-bottom-medium">
       <div class="form__group">
         <label class="form__label" for="email">E-mail</label>
         <BaseInput
@@ -54,7 +54,7 @@
         <span v-else-if="$v.confirmPassword.$dirty && !$v.confirmPassword.sameAs" class="input-error">Las contraseñas no coinciden</span>
       </div>
 
-      <BaseButton :disabled="$v.$invalid" type="submit">
+      <BaseButton :disabled="$v.$invalid" type="submit" class="w-100">
         Registrarse
       </BaseButton>
     </form>

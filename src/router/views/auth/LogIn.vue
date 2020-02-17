@@ -19,7 +19,7 @@
       </template>
     </BaseCard>
 
-    <form @submit.prevent="login" class="form">
+    <form @submit.prevent="login" class="form margin-bottom-medium">
       <div class="form__group">
         <label class="form__label" for="username">Nombre de usuario</label>
         <BaseInput
@@ -41,7 +41,7 @@
         <span v-if="$v.password.$error" class="input-error">Por favor, ingrese su contraseña</span>
       </div>
 
-      <BaseButton :disabled="$v.$invalid" type="submit">
+      <BaseButton :disabled="$v.$invalid" type="submit" class="w-100">
         Iniciar sesión
       </BaseButton>
     </form>

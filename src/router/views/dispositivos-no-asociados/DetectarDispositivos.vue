@@ -1,40 +1,32 @@
 <template>
-  <List
-    :campos="campos"
-    :contenido="dispositivosNoAsociados"
-  >
-    <template v-slot:titulo>
-      Dispositivos detectados
-    </template>
-    <!-- <template v-slot:crear>
-      <BaseButton @click="detectar">
-        Detectar dispositivo
-      </BaseButton>
-    </template> -->
-    <template v-slot:botones="{ index }">
-      <!-- <ButtonEdit
-        @click="asociar(dispositivosNoAsociados[index])"
-      >
-        Asociar
-      </ButtonEdit> -->
-      <!-- <ButtonModify
-        :activo="dispositivos[index].activo"
-        @click="modificarEstado(dispositivos[index])"
-      /> -->
-    </template>
-  </List>
+  <div class="list-wrapper container">
+    <h2 class="heading-secondary margin-bottom-medium">Dispositivos no asociados</h2>
+
+    <List :fields="fields" :content="dispositivosNoAsociados">
+      <template v-slot:body="{ row, field }">
+        <ListItem :row="row" :field="field" />
+      </template>
+      <template v-slot:botones="{ index }">
+        <ListButtonEdit @click="asociar(dispositivosNoAsociados[index])">Asociar</ListButtonEdit>
+      </template>
+    </List>
+  </div>
 </template>
 
 <script>
 import List from '@/components/List'
-// import ButtonEdit from '@/components/ButtonEdit'
+import ListItem from '@/components/ListItem'
+import ListButtonEdit from '@/components/ListButtonEdit'
 
 export default {
-  components: { List },
+  components: {
+    List,
+    ListItem,
+    ListButtonEdit
+  },
   data () {
     return {
-      // campos: ['ID', 'MAC', 'UUID', 'Acciones'],
-      campos: ['ID', 'MAC', 'UUID', 'Acciones']
+      fields: ['id', 'mac', 'uuid']
     }
   },
   computed: {
@@ -53,23 +45,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" module>
-
-  .wrap {
-    display: flex;
-    width: 100%;
-    margin-bottom: 2rem;
-
-    > input {
-      flex-basis: 75%;
-    }
-  }
-
-  @media screen and (max-width: 43.75em) {
-    // 700px
-    .wrap input {
-      flex-basis: 65%;
-    }
-  }
-</style>

@@ -12,16 +12,17 @@
         </tr>
       </thead>
       <tbody>
+        <!-- row = objeto -->
+        <!-- field = propiedad del objeto -->
+        <!-- prop = indice de la propiedad del objeto -->
         <tr v-for="(row, index) in content" :key="index" class="table-row">
           <td v-for="(field, prop) in fields" :key="prop" class="table-cell">
             <slot name="body" :row="row" :field="field" />
           </td>
           <td class="table-cell">
-            <!-- <OverflowMenu :index="index"> -->
             <div class="buttons-container">
               <slot name="botones" :index="index" />
             </div>
-            <!-- </OverflowMenu> -->
           </td>
         </tr>
       </tbody>
@@ -30,10 +31,7 @@
 </template>
 
 <script>
-// import OverflowMenu from '@/components/OverflowMenu'
-
 export default {
-  // components: { OverflowMenu },
   props: {
     fields: {
       type: Array,

@@ -44,7 +44,7 @@ export default {
   },
   data () {
     return {
-      fields: ['id', 'nombre', 'tipo', 'activo', 'configuracion'],
+      fields: ['nombre', 'tipo', 'activo', 'reglas'],
       search: ''
     }
   },
