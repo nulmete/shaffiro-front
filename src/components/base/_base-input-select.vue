@@ -32,7 +32,7 @@ export default {
   props: {
     value: {
       type: [Object, Array, String, Number],
-      default: null
+      default: () => []
     },
     options: {
       type: Array,
@@ -45,7 +45,7 @@ export default {
     optionsLabels: {
       type: Array,
       required: false,
-      default: () => []
+      default: null
     }
   },
   data () {
