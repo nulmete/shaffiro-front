@@ -104,7 +104,7 @@ export default {
   },
   data () {
     return {
-      headings: ['Sensor', 'Estado', 'Reglas', 'Actuador', 'Acciones'],
+      headings: ['Dispositivo', 'Estado', 'Reglas', 'Actuador', 'Acciones'],
       fields: ['nombre', 'activo', 'reglasParseadas'],
       search: '',
       actuadoresElegidos: JSON.parse(localStorage.getItem('actuadoresElegidos')) || []

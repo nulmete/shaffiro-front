@@ -1,12 +1,17 @@
-import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { expect } from 'chai'
+import { mount, createLocalVue } from '@vue/test-utils'
+import SignUp from '@/router/views/auth/SignUp.vue'
+import Vuelidate from 'vuelidate'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
-    })
-    expect(wrapper.text()).toMatch(msg)
+const localVue = createLocalVue()
+localVue.use(Vuelidate)
+
+const wrapper = mount(SignUp, {
+  localVue
+})
+
+describe('SignUp.vue', () => {
+  it('renders correctly', () => {
+    expect(wrapper.find('div > h2').text()).equal('Regístrese en Shaffiro')
   })
 })

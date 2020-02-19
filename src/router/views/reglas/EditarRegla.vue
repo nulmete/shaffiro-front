@@ -16,8 +16,13 @@
         <BaseInput
           id="nombre"
           v-model="nombre"
+          :v="$v.nombre"
           class="form__input"
         />
+        <span
+          v-if="$v.nombre.$dirty && !$v.nombre.required"
+          class="input-error"
+        >Por favor, ingrese el nombre de la regla</span>
       </div>
 
       <div class="form__group">
@@ -54,11 +59,19 @@
           id="valor"
           v-model="valor"
           type="number"
+          :v="$v.valor"
           class="form__input"
         />
+        <span
+          v-if="$v.valor.$dirty && !$v.valor.required"
+          class="input-error"
+        >Por favor, ingrese el valor de la regla</span>
       </div>
 
-      <BaseButton type="submit">
+      <BaseButton
+        :disabled="$v.invalid || !dispositivoAsociado || !unidad || !operador"
+        type="submit"
+      >
         Guardar
       </BaseButton>
     </form>
@@ -66,6 +79,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 import store from '@/store/store'
 
@@ -136,6 +150,14 @@ export default {
         // todo
         console.log(error.response)
       }
+    }
+  },
+  validations: {
+    nombre: {
+      required
+    },
+    valor: {
+      required
     }
   }
 }

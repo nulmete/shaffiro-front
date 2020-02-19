@@ -12,11 +12,16 @@
         <label
           class="form__label"
           for="nombre"
-        >Nombre</label>
+        >Nombre del dispositivo</label>
         <BaseInput
           id="nombre"
           v-model="nombre"
+          :v="$v.nombre"
         />
+        <span
+          v-if="$v.nombre.$dirty && !$v.nombre.required"
+          class="input-error"
+        >Por favor, ingrese el nombre del dispositivo</span>
       </div>
 
       <div class="form__group">
@@ -28,14 +33,17 @@
       </div>
 
       <div class="form__group">
-        <label class="form__label">Tipo</label>
+        <label class="form__label">Tipo de dispositivo</label>
         <BaseInputSelect
           v-model="tipo"
           :options="tiposPosibles"
         />
       </div>
 
-      <BaseButton type="submit">
+      <BaseButton
+        :disabled="$v.$invalid"
+        type="submit"
+      >
         Guardar
       </BaseButton>
     </form>
@@ -43,6 +51,7 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
 export default {
@@ -96,6 +105,11 @@ export default {
         // todo
         console.log(error.response)
       }
+    }
+  },
+  validations: {
+    nombre: {
+      required
     }
   }
 }
