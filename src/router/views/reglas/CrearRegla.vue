@@ -72,7 +72,7 @@
         :disabled="$v.$invalid || !dispositivoAsociado || !unidad || !operador"
         type="submit"
       >
-        Crear regla
+        Crear condicion
       </BaseButton>
     </form>
   </div>
@@ -96,7 +96,7 @@ export default {
       nombre: '',
       dispositivoAsociado: '',
       unidad: '',
-      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERE'],
+      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERES'],
       operador: '',
       operadoresPosibles: ['>', '<', '>=', '<='],
       valor: ''

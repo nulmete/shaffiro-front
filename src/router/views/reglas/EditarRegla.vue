@@ -116,7 +116,7 @@ export default {
       id: '',
       nombre: '',
       unidad: '',
-      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERE'],
+      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERES'],
       operador: '',
       operadoresPosibles: ['>', '<', '>=', '<='],
       valor: '',
