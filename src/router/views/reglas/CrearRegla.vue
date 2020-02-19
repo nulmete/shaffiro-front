@@ -24,8 +24,8 @@
         <label class="form__label">Dispositivo asociado</label>
         <BaseInputSelect
           v-model="dispositivoAsociado"
-          :options="dispositivos"
-          :options-labels="dispositivosLabels"
+          :options="sensores"
+          :options-labels="sensoresLabels"
         />
       </div>
 
@@ -89,13 +89,12 @@ export default {
     }
   },
   computed: {
-    dispositivos () {
-      return this.$store.getters['dispositivos/getAllDispositivos']
+    sensores () {
+      const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
     },
-    dispositivosLabels () {
-      return this.dispositivos.map(dispositivo => `
-        Nombre: ${dispositivo.nombre} | Tipo: ${dispositivo.tipo}
-      `)
+    sensoresLabels () {
+      return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)
     }
   },
   methods: {
