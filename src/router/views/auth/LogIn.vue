@@ -1,47 +1,77 @@
 <template>
   <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Inicie sesión en Shaffiro</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Inicie sesión en Shaffiro
+    </h2>
 
-    <BaseCard v-if="credentialsError" :error="credentialsError">
+    <BaseCard
+      v-if="credentialsError"
+      :error="credentialsError"
+    >
       <template v-slot:paragraph>
         Nombre de usuario o contraseña incorrectos.
       </template>
     </BaseCard>
 
-    <BaseCard v-if="activationError" :error="activationError">
+    <BaseCard
+      v-if="activationError"
+      :error="activationError"
+    >
       <template v-slot:paragraph>
         El usuario ingresado no se encuentra habilitado.<br>
         Haga click
-        <BaseLink :to="{ name: 'activate' }" class="activate">
+        <BaseLink
+          :to="{ name: 'activate' }"
+          class="activate"
+        >
           aquí
         </BaseLink>
         para activar su cuenta.
       </template>
     </BaseCard>
 
-    <form @submit.prevent="login" class="form margin-bottom-medium">
+    <form
+      class="form margin-bottom-medium"
+      @submit.prevent="login"
+    >
       <div class="form__group">
-        <label class="form__label" for="username">Nombre de usuario</label>
+        <label
+          class="form__label"
+          for="username"
+        >Nombre de usuario</label>
         <BaseInput
-          v-model="username"
           id="username"
+          v-model="username"
           :v="$v.username"
         />
-        <span v-if="$v.username.$error" class="input-error">Por favor, ingrese su nombre de usuario</span>
+        <span
+          v-if="$v.username.$error"
+          class="input-error"
+        >Por favor, ingrese su nombre de usuario</span>
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="password">Contraseña</label>
+        <label
+          class="form__label"
+          for="password"
+        >Contraseña</label>
         <BaseInput
+          id="password"
           v-model="password"
           type="password"
-          id="password"
           :v="$v.password"
         />
-        <span v-if="$v.password.$error" class="input-error">Por favor, ingrese su contraseña</span>
+        <span
+          v-if="$v.password.$error"
+          class="input-error"
+        >Por favor, ingrese su contraseña</span>
       </div>
 
-      <BaseButton :disabled="$v.$invalid" type="submit" class="w-100">
+      <BaseButton
+        :disabled="$v.$invalid"
+        type="submit"
+        class="w-100"
+      >
         Iniciar sesión
       </BaseButton>
     </form>

@@ -17,16 +17,11 @@
   }
 
   &__input {
-    border: 1px solid $color-primary-medium;
-    border-radius: $default-border-radius;
-    display: block;
-    font-family: inherit;
-    font-size: inherit;
-    padding: 1rem 1.25rem;
-    width: 100%;
+    @include default-input-styling;
+    padding: $default-input-padding;
   }
 
-  // class for span element below an input element when there's an error
+  // clase para <span> debajo de un <input> al existir un error
   .input-error {
     font-size: 1.4rem;
     font-weight: 700;
@@ -77,13 +72,10 @@
   }
 
   &__select-input {
-    display: block;
-    font-size: inherit;
-    font-family: inherit;
-    width: 100%;
+    @include default-input-styling;
     
     &--single {
-      padding: .5rem;
+      padding: $default-input-padding;
     }
   }
 

@@ -1,22 +1,82 @@
 <template>
   <div class="list-wrapper container">
-    <h2 class="heading-secondary margin-bottom-medium">ABM de dispositivos</h2>
+    <h2 class="heading-secondary margin-bottom-medium">
+      ABM de dispositivos
+    </h2>
 
     <div class="flex-container margin-bottom-medium">
       <BaseFilter v-model="search" />
 
-      <BaseButton type="button" @click="detectar">
+      <BaseButton
+        type="button"
+        @click="detectar"
+      >
         Detectar dispositivos
       </BaseButton>
     </div>
 
-    <List :fields="fields" :content="dispositivosFiltrados">
+    <List
+      :headings="headings"
+      :fields="fields"
+      :content="dispositivosFiltrados"
+    >
       <template v-slot:body="{ row, field }">
-        <ListItem :row="row" :field="field" />
+        <template v-if="Array.isArray(row[field])">
+          <div
+            v-for="(value, index) in row[field]"
+            :key="index"
+            :class="{ 'flex-cell': field === 'reglasParseadas' }"
+          >
+            <template v-if="field === 'reglasParseadas'">
+              <span class="margin-right-small">
+                {{ value }}
+              </span>
+              <button
+                class="btn btn--small btn--edit"
+                @click="editarRegla(row.reglas[index])"
+              >
+                <svg class="flex-svg">
+                  <use xlink:href="@/assets/sprite.svg#icon-edit-pencil" />
+                </svg>
+              </button>
+            </template>
+            <template v-else>
+              {{ value }}
+            </template>
+          </div>
+        </template>
+        <template v-else>
+          {{ row[field] }}
+        </template>
       </template>
-      <template v-slot:botones="{ index }">
-        <ListButtonEdit @click="editar(dispositivos[index])">Editar</ListButtonEdit>
-        <ListButtonToggle @click="modificarEstado(dispositivos[index])" :active="dispositivos[index].activo">
+
+      <!-- Slot hardcodeado -->
+      <template v-slot:actuadores="{ row, index }">
+        <td
+          v-if="row.tipo === 'SENSOR'"
+          class="list__cell"
+        >
+          <BaseInputSelect
+            v-model="actuadoresElegidos[index]"
+            :options="actuadores"
+            :options-labels="nombreActuadores"
+            @change="elegirActuador"
+          />
+        </td>
+        <td v-else>
+          &nbsp;
+        </td>
+      </template>
+      <!-- End slot hardcodeado -->
+
+      <template v-slot:buttons="{ index }">
+        <ListButtonEdit @click="editar(dispositivos[index])">
+          Editar
+        </ListButtonEdit>
+        <ListButtonToggle
+          :active="dispositivos[index].activo"
+          @click="modificarEstado(dispositivos[index])"
+        >
           <template v-if="dispositivos[index].activo">
             Deshabilitar
           </template>
@@ -31,31 +91,39 @@
 
 <script>
 import List from '@/components/List'
-import ListItem from '@/components/ListItem'
 import ListButtonEdit from '@/components/ListButtonEdit'
 import ListButtonToggle from '@/components/ListButtonToggle'
+
+import { searchFilter } from '@/searchFilter.js'
 
 export default {
   components: {
     List,
-    ListItem,
     ListButtonEdit,
     ListButtonToggle
   },
   data () {
     return {
-      fields: ['nombre', 'tipo', 'activo', 'reglas'],
-      search: ''
+      headings: ['Sensor', 'Estado', 'Reglas', 'Actuador', 'Acciones'],
+      fields: ['nombre', 'activo', 'reglasParseadas'],
+      search: '',
+      actuadoresElegidos: JSON.parse(localStorage.getItem('actuadoresElegidos')) || []
     }
   },
   computed: {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
-    dispositivosTraducidos () {
+    actuadores () {
+      return this.dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
+    },
+    nombreActuadores () {
+      return this.actuadores.map(actuador => actuador.nombre)
+    },
+    dispositivosToSpanish () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
-          .filter(key => ['activo'].includes(key))
+          .filter(key => ['activo', 'reglas'].includes(key))
           .reduce((obj, key) => {
             return {
               ...obj,
@@ -68,30 +136,31 @@ export default {
 
       const activo = props.map(prop => prop.activo ? 'Habilitado' : 'Deshabilitado')
 
+      const regla = props.map(prop => {
+        return prop.reglas.map(innerProp => {
+          return `
+            Encender si ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
+          `
+        })
+      })
+
       const dispositivos = this.dispositivos.map((el, index) => {
-        return { ...el, activo: activo[index] }
+        return { ...el, activo: activo[index], reglasParseadas: regla[index] }
       })
 
       return dispositivos
     },
     dispositivosFiltrados () {
-      const lowerCaseSearch = this.search.toLowerCase().trim()
-
-      return this.dispositivosTraducidos.filter(element => {
-        return Object.values(element).some(value => {
-          return String(value).toLowerCase().includes(lowerCaseSearch)
-        })
-      })
+      return searchFilter(this.search, this.dispositivosToSpanish)
     }
   },
   created () {
     this.$store.dispatch('dispositivos/getAllDispositivos')
   },
-  beforeRouteLeave (to, from, next) {
-    this.$store.commit('dispositivos/setAllDispositivos', [])
-    next()
-  },
   methods: {
+    elegirActuador (value) {
+      localStorage.setItem('actuadoresElegidos', JSON.stringify(this.actuadoresElegidos))
+    },
     detectar () {
       this.$router.push({ name: 'detectarDispositivos' })
     },
@@ -107,7 +176,39 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    findMagnitud (unidad) {
+      switch (unidad) {
+        case 'CELSIUS':
+          return 'Temperatura'
+        case 'AMPERES':
+          return 'Intensidad de corriente'
+        case 'LUMENES':
+          return 'Flujo luminoso'
+      }
+    },
+    editarRegla (regla) {
+      this.$store.commit('reglas/setReglaActual', { ...regla, dispositivoId: regla.dispositivo.id })
+      this.$router.push({ name: 'editarRegla', params: { identificador: regla.id.toString() } })
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .flex-cell {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .flex-svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    fill: #fff;
+  }
+</style>

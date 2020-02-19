@@ -1,27 +1,48 @@
 <template>
-  <div class="table-container">
-    <table class="table">
-      <thead>
+  <div class="list-container">
+    <table class="list">
+      <thead class="list__head">
         <tr>
-          <th v-for="(field, index) in fields" :key="index" class="table-heading">
-            {{ field | headingsFilter }}
-          </th>
-          <th class="table-heading">
-            Acciones
+          <th
+            v-for="(heading, index) in headings"
+            :key="index"
+            class="list__heading"
+          >
+            {{ heading }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <!-- row = objeto -->
-        <!-- field = propiedad del objeto -->
-        <!-- prop = indice de la propiedad del objeto -->
-        <tr v-for="(row, index) in content" :key="index" class="table-row">
-          <td v-for="(field, prop) in fields" :key="prop" class="table-cell">
-            <slot name="body" :row="row" :field="field" />
+        <tr
+          v-for="(row, index) in content"
+          :key="index"
+          class="list__row"
+        >
+          <td
+            v-for="(field, prop) in fields"
+            :key="prop"
+            class="list__cell"
+          >
+            <slot
+              name="body"
+              :row="row"
+              :field="field"
+            />
           </td>
-          <td class="table-cell">
-            <div class="buttons-container">
-              <slot name="botones" :index="index" />
+
+          <!-- Slot extra para selección de actuadores (hardcodeado) -->
+          <slot
+            name="actuadores"
+            :row="row"
+            :index="index"
+          />
+
+          <td class="list__cell list__cell--buttons">
+            <div>
+              <slot
+                name="buttons"
+                :index="index"
+              />
             </div>
           </td>
         </tr>
@@ -33,6 +54,10 @@
 <script>
 export default {
   props: {
+    headings: {
+      type: Array,
+      required: true
+    },
     fields: {
       type: Array,
       required: true
@@ -45,64 +70,51 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  .table-container {
+<style lang="scss">
+  .list-container {
     overflow-x: auto;
     box-shadow:
       0 3px 6px rgba($color-primary-dark, 0.16),
       0 3px 6px rgba($color-primary-dark, 0.23);
   }
 
-  .table {
+  .list {
     border-collapse: collapse;
     border-radius: $default-border-radius;
     font-size: 1.5rem;
     overflow: hidden;
     width: 100%;
 
-    &-heading {
+    &__head {
       background-color: $color-secondary;
       color: $color-primary-light;
+    }
+
+    &__heading {
       font-weight: 400;
       padding: 1rem;
       text-align: left;
+      text-transform: capitalize;
     }
 
-    &-row:hover {
+    &__row:hover {
       background-color: darken($color-primary-light, 5);
     }
 
-    &-cell {
-      height: 7rem;
+    &__cell {
       padding: 1rem;
-    }
-  }
 
-  .buttons-container {
-    display: flex;
-  }
+      &-item {
 
-  .btn {
-    display: block;
-    border: none;
-    border-radius: 2px;
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-    flex: 1;
-    padding: 1rem .5rem;
+      }
 
-    &--edit {
-      background-color: #3949ab;
-    }
+      &--buttons div {
+        display: flex;
 
-    &--enable {
-      background-color: $color-secondary;
-    }
-
-    &--disable {
-      background-color: #c62828;
+        & > * {
+          flex: 1;
+        }
+      }
     }
   }
 </style>

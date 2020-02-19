@@ -1,12 +1,12 @@
 <template>
   <div class="auth container">
     <h2 class="heading-secondary text-center margin-bottom-medium">
-      Crear regla
+      Editar regla
     </h2>
 
     <form
       class="form"
-      @submit.prevent="crearRegla"
+      @submit.prevent="editarRegla"
     >
       <div class="form__group">
         <label
@@ -24,8 +24,8 @@
         <label class="form__label">Dispositivo asociado</label>
         <BaseInputSelect
           v-model="dispositivoAsociado"
-          :options="dispositivos"
-          :options-labels="dispositivosLabels"
+          :options="sensores"
+          :options-labels="sensoresLabels"
         />
       </div>
 
@@ -59,7 +59,7 @@
       </div>
 
       <BaseButton type="submit">
-        Crear regla
+        Guardar
       </BaseButton>
     </form>
   </div>
@@ -70,46 +70,67 @@ import axios from 'axios'
 import store from '@/store/store'
 
 export default {
+  props: {
+    identificador: {
+      type: String,
+      required: true
+    }
+  },
   beforeRouteEnter (to, from, next) {
-    store.dispatch('dispositivos/getAllDispositivos').then(res => next())
+    store.dispatch('dispositivos/getAllDispositivos')
+      .then(res => {
+        return next(vm => {
+          const { id, nombre, unidad, operador, valor, dispositivoId } = vm.$store.getters['reglas/getRegla']
+
+          vm.id = id.toString()
+          vm.nombre = nombre
+          vm.unidad = unidad
+          vm.operador = operador
+          vm.valor = valor
+
+          const dispositivoAsociadoActual = res.data.find(dispositivo => dispositivo.id === dispositivoId)
+          vm.dispositivoAsociado = dispositivoAsociadoActual
+        })
+      })
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.commit('dispositivos/setAllDispositivos', [])
+    this.$store.commit('reglas/setReglaActual', {})
     next()
   },
   data () {
     return {
+      id: '',
       nombre: '',
-      dispositivoAsociado: '',
       unidad: '',
       unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERE'],
       operador: '',
       operadoresPosibles: ['>', '<', '>=', '<='],
-      valor: ''
+      valor: '',
+      dispositivoAsociado: ''
     }
   },
   computed: {
-    dispositivos () {
-      return this.$store.getters['dispositivos/getAllDispositivos']
+    sensores () {
+      const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
     },
-    dispositivosLabels () {
-      return this.dispositivos.map(dispositivo => `
-        Nombre: ${dispositivo.nombre} | Tipo: ${dispositivo.tipo}
-      `)
+    sensoresLabels () {
+      return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)
     }
   },
   methods: {
-    async crearRegla () {
+    async editarRegla () {
       const formData = {
-        dispositivoId: this.dispositivoAsociado.id,
+        id: parseInt(this.id),
         nombre: this.nombre,
-        operador: this.operador,
         unidad: this.unidad,
-        valor: this.valor
+        operador: this.operador,
+        valor: this.valor,
+        dispositivoId: this.dispositivoAsociado.id
       }
 
       try {
-        await axios.post('/api/reglas', formData)
+        await axios.put('/api/reglas', formData)
         this.$router.push({ name: 'reglas' })
       } catch (error) {
         // todo

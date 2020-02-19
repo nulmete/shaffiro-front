@@ -17,9 +17,6 @@ export const mutations = {
   },
 
   modificarEstado (state, dispositivoModificado) {
-    // const index = state.dispositivos.findIndex(dispositivo => dispositivo.id === dispositivoModificado.id)
-    // state.dispositivos.splice(index, 1, dispositivoModificado)
-
     const dispositivo = state.dispositivos.find(dispositivo => dispositivo.id === dispositivoModificado.id)
     dispositivo.activo = dispositivoModificado.activo
   }
@@ -37,7 +34,6 @@ export const getters = {
 
 export const actions = {
   async getAllDispositivos ({ commit }) {
-    console.log('getdispositivos')
     const dispositivos = await axios.get('/api/dispositivos')
     commit('setAllDispositivos', dispositivos.data)
     return dispositivos
@@ -51,9 +47,7 @@ export const actions = {
 
   async modificarEstado ({ commit }, dispositivoModificado) {
     const respuesta = await axios.put('/api/dispositivos', dispositivoModificado)
-    console.log(dispositivoModificado)
     commit('modificarEstado', respuesta.data)
-    console.log(respuesta.data)
     return respuesta
   }
 }

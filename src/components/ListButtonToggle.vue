@@ -1,5 +1,8 @@
 <template>
-  <button :class="['btn', this.active ? 'btn--disable' : 'btn--enable']" v-on="$listeners">
+  <button
+    :class="['btn', active ? 'btn--disable' : 'btn--enable']"
+    v-on="$listeners"
+  >
     {{ text }}
   </button>
 </template>

@@ -1,39 +1,41 @@
 <template>
   <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Editar usuario</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Editar usuario
+    </h2>
 
-    <form @submit.prevent="editarUsuario" class="form">
+    <form
+      class="form"
+      @submit.prevent="editarUsuario"
+    >
       <div class="form__group">
-        <label class="form__label" for="id">ID</label>
+        <label
+          class="form__label"
+          for="username"
+        >Nombre de usuario</label>
         <BaseInput
-          v-model="id"
-          type="text"
-          id="id"
-        />
-      </div>
-
-      <div class="form__group">
-        <label class="form__label" for="username">Nombre de usuario</label>
-        <BaseInput
-          v-model="username"
           id="username"
+          v-model="username"
         />
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="email">E-mail</label>
+        <label
+          class="form__label"
+          for="email"
+        >E-mail</label>
         <BaseInput
+          id="email"
           v-model="email"
           type="email"
-          id="email"
         />
       </div>
 
       <div class="form__group">
         <BaseInputCheckbox
+          :id="'user-state'"
           v-model="activated"
           :label="'Habilitado'"
-          :id="'user-state'"
         />
       </div>
 
@@ -42,7 +44,7 @@
         <BaseInputSelect
           v-model="authorities"
           :options="authoritiesOptions"
-          :optionsLabels="authoritiesOptionsSpanish"
+          :options-labels="authoritiesOptionsSpanish"
           :multiple="true"
         />
       </div>
@@ -57,6 +59,7 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
+import { translateAuthorities } from '@/translations.js'
 import axios from 'axios'
 
 export default {
@@ -92,16 +95,7 @@ export default {
   },
   computed: {
     authoritiesOptionsSpanish () {
-      return this.authoritiesOptions.map(el => {
-        switch (el) {
-          case 'ROLE_ADMIN':
-            return 'Administrador'
-          case 'ROLE_USER':
-            return 'Cliente'
-          default:
-            return el
-        }
-      })
+      return this.authoritiesOptions.map(value => translateAuthorities(value))
     }
   },
   methods: {

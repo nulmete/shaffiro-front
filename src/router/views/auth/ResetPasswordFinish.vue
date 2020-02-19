@@ -1,8 +1,7 @@
 <template>
-  <Layout>
-    <h2>Restablecer contraseña</h2>
+  <h2>Restablecer contraseña</h2>
 
-    <template v-if="!resetted">
+  <!-- <template v-if="!resetted">
       <p>
         Ingrese el <strong>código</strong> recibido en su e-mail y una nueva <strong>contraseña</strong>.
       </p>
@@ -59,31 +58,28 @@
         <template v-slot:paragraph>
           Ahora puede iniciar sesión en Shaffiro
         </template>
-      </BaseSuccessCard>
+      </BaseSuccessCard> -->
 
-      <!--
+  <!--
       Se usa BaseButton en vez de BaseLink por cuestiones de estilo
       Para poder hacer la redirección, se define el método redirectToLogin
       Es necesario agregar v-on="$listeners" en BaseButton para que herede
       el event listener de este componente padre
       -->
-      <BaseButton
+  <!-- <BaseButton
         type="button"
         @click="redirectToLogin"
       >
         Iniciar sesión
       </BaseButton>
-    </template>
-  </Layout>
+    </template> -->
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
 import { required } from 'vuelidate/lib/validators'
 import { isPasswordStrong } from '@/validators/validators'
 
 export default {
-  components: { Layout },
   beforeRouteLeave (to, from, next) {
     localStorage.removeItem('resetted')
     next()

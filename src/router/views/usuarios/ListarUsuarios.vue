@@ -1,22 +1,47 @@
 <template>
   <div class="list-wrapper container">
-    <h2 class="heading-secondary margin-bottom-medium">ABM de usuarios</h2>
+    <h2 class="heading-secondary margin-bottom-medium">
+      ABM de usuarios
+    </h2>
 
     <div class="flex-container margin-bottom-medium">
       <BaseFilter v-model="search" />
 
-      <BaseButton type="button" @click="crear">
+      <BaseButton
+        type="button"
+        @click="crear"
+      >
         Crear un nuevo usuario
       </BaseButton>
     </div>
 
-    <List :fields="fields" :content="filteredUsers">
+    <List
+      :headings="headings"
+      :fields="fields"
+      :content="filteredUsers"
+    >
       <template v-slot:body="{ row, field }">
-        <ListItem :row="row" :field="field" />
+        <template v-if="Array.isArray(row[field])">
+          <div
+            v-for="(value, index) in row[field]"
+            :key="index"
+          >
+            {{ value }}
+          </div>
+        </template>
+        <template v-else>
+          {{ row[field] }}
+        </template>
       </template>
-      <template v-slot:botones="{ index }">
-        <ListButtonEdit @click="editar(usuarios[index])">Editar</ListButtonEdit>
-        <ListButtonToggle @click="modificarEstado(usuarios[index])" :active="usuarios[index].activated">
+
+      <template v-slot:buttons="{ index }">
+        <ListButtonEdit @click="editar(usuarios[index])">
+          Editar
+        </ListButtonEdit>
+        <ListButtonToggle
+          :active="usuarios[index].activated"
+          @click="modificarEstado(usuarios[index])"
+        >
           <template v-if="usuarios[index].activated">
             Deshabilitar
           </template>
@@ -31,26 +56,36 @@
 
 <script>
 import List from '@/components/List'
-import ListItem from '@/components/ListItem'
 import ListButtonEdit from '@/components/ListButtonEdit'
 import ListButtonToggle from '@/components/ListButtonToggle'
+
+import { translateAuthorities } from '@/translations.js'
+import { searchFilter } from '@/searchFilter.js'
 
 export default {
   components: {
     List,
-    ListItem,
     ListButtonEdit,
     ListButtonToggle
   },
   data () {
     return {
-      fields: ['id', 'login', 'email', 'activated', 'authorities'],
+      headings: ['Nombre', 'E-mail', 'Estado', 'Tipo', 'Acciones'],
+      fields: ['login', 'email', 'activated', 'authorities'],
       search: ''
     }
   },
   computed: {
     usuarios () {
-      return this.$store.getters['usuarios/getAllUsers'](this.fields)
+      const usuarios = this.$store.getters['usuarios/getAllUsers']
+
+      return usuarios.map(usuario => ({
+        id: usuario.id,
+        login: usuario.login,
+        email: usuario.email,
+        activated: usuario.activated,
+        authorities: usuario.authorities
+      }))
     },
     usersToSpanish () {
       const props = this.usuarios.map(user => {
@@ -66,19 +101,12 @@ export default {
         return filtered
       })
 
+      // Traducir a español el estado de todos los usuarios
       const activated = props.map(prop => prop.activated ? 'Habilitado' : 'Deshabilitado')
 
+      // Traducir a español los roles de todos los usuario
       const authorities = props.map(prop => {
-        return prop.authorities.map(value => {
-          switch (value) {
-            case 'ROLE_USER':
-              return 'Cliente'
-            case 'ROLE_ADMIN':
-              return 'Administrador'
-            default:
-              return value
-          }
-        })
+        return prop.authorities.map(value => translateAuthorities(value))
       })
 
       const usuarios = this.usuarios.map((el, index) => {
@@ -88,13 +116,7 @@ export default {
       return usuarios
     },
     filteredUsers () {
-      const lowerCaseSearch = this.search.toLowerCase().trim()
-
-      return this.usersToSpanish.filter(element => {
-        return Object.values(element).some(value => {
-          return String(value).toLowerCase().includes(lowerCaseSearch)
-        })
-      })
+      return searchFilter(this.search, this.usersToSpanish)
     }
   },
   created () {

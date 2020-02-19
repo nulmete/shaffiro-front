@@ -1,8 +1,7 @@
 <template>
-  <Layout>
-    <h2>Restablecer contraseña</h2>
+  <h2>Restablecer contraseña</h2>
 
-    <p>
+  <!-- <p>
       Ingrese el <strong>e-mail</strong> con el que se registró.
       Enviaremos un correo electrónico con un código para restablecer su contraseña.
     </p>
@@ -34,16 +33,13 @@
       >
         Enviar
       </BaseButton>
-    </BaseForm>
-  </Layout>
+    </BaseForm> -->
 </template>
 
 <script>
-import Layout from '@/router/layouts/main'
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
-  components: { Layout },
   data () {
     return {
       email: '',

@@ -31,8 +31,8 @@ export default {
   },
   props: {
     value: {
-      type: [Array, String],
-      required: true
+      type: [Object, Array, String, Number],
+      default: null
     },
     options: {
       type: Array,
@@ -44,7 +44,13 @@ export default {
     },
     optionsLabels: {
       type: Array,
-      required: false
+      required: false,
+      default: () => []
+    }
+  },
+  data () {
+    return {
+      labelValue: this.optionsLabels || this.options
     }
   },
   computed: {
@@ -55,11 +61,6 @@ export default {
       set (newValue) {
         this.$emit('change', newValue)
       }
-    }
-  },
-  data () {
-    return {
-      labelValue: this.optionsLabels || this.options
     }
   }
 }

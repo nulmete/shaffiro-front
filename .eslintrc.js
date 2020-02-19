@@ -5,13 +5,14 @@ module.exports = {
   },
   'extends': [
     'plugin:vue/essential',
-    // 'plugin:vue/strongly-recommended',
-    // 'plugin:vue/recommended',
+    'plugin:vue/strongly-recommended',
+    'plugin:vue/recommended',
     '@vue/standard'
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-mixed-operators': 0,
     'vue/array-bracket-spacing': 'error',
     'vue/arrow-spacing': 'error',
     'vue/block-spacing': 'error',

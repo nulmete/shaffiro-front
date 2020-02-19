@@ -1,6 +1,8 @@
 <template>
   <div class="auth">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Activar usuario</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Activar usuario
+    </h2>
 
     <!-- Mostrar si no se activó el usuario -->
     <template v-if="!activated">
@@ -13,22 +15,37 @@
         </template>
       </BaseCard>
 
-      <form @submit.prevent="activate" class="form">
+      <form
+        class="form"
+        @submit.prevent="activate"
+      >
         <div class="form__group">
-          <label class="form__label" for="code">Código</label>
+          <label
+            class="form__label"
+            for="code"
+          >Código</label>
           <BaseInput
+            id="code"
             v-model="code"
             label="Código"
             type="number"
-            id="code"
-            :serverError="codeError"
+            :server-error="codeError"
             :v="$v.code"
           />
-          <span v-if="$v.code.$dirty && !$v.code.required" class="input-error">Por favor, ingrese el código recibido en su e-mail</span>
-          <span v-else-if="codeError" class="input-error">El código ingresado no es correcto</span>
+          <span
+            v-if="$v.code.$dirty && !$v.code.required"
+            class="input-error"
+          >Por favor, ingrese el código recibido en su e-mail</span>
+          <span
+            v-else-if="codeError"
+            class="input-error"
+          >El código ingresado no es correcto</span>
         </div>
 
-        <BaseButton :disabled="$v.$invalid" type="submit">
+        <BaseButton
+          :disabled="$v.$invalid"
+          type="submit"
+        >
           Activar
         </BaseButton>
       </form>
@@ -45,7 +62,10 @@
         </template>
       </BaseCard>
 
-      <BaseButton type="button" @click="redirectToLogin">
+      <BaseButton
+        type="button"
+        @click="redirectToLogin"
+      >
         Iniciar sesión
       </BaseButton>
     </template>

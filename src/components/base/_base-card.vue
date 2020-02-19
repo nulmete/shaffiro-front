@@ -1,9 +1,16 @@
 <template>
-  <div class="card margin-bottom-large" :class="[error ? 'error' : 'success']">
+  <div
+    class="card margin-bottom-large"
+    :class="[error ? 'error' : 'success']"
+  >
     <h3 class="card__heading">
       <slot name="title">
-        <template v-if="error">Error</template>
-        <template v-else>Éxito</template>
+        <template v-if="error">
+          Error
+        </template>
+        <template v-else>
+          Éxito
+        </template>
       </slot>
     </h3>
     <p>
@@ -16,6 +23,7 @@
 export default {
   props: {
     error: {
+      type: Boolean,
       required: false,
       default: false
     }

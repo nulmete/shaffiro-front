@@ -1,15 +1,18 @@
 <template>
   <div class="form__checkbox-group">
     <input
+      :id="id"
       class="form__checkbox-input"
       type="checkbox"
       v-bind="$attrs"
-      :id="id"
       :checked="value"
       @change="$emit('input', $event.target.checked)"
     >
-    <label class="form__checkbox-label" :for="id">
-      <span class="form__checkbox-button"></span>
+    <label
+      class="form__checkbox-label"
+      :for="id"
+    >
+      <span class="form__checkbox-button" />
       {{ label }}
     </label>
   </div>

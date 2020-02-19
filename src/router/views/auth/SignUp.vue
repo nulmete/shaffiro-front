@@ -1,67 +1,120 @@
 <template>
   <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Regístrese en Shaffiro</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Regístrese en Shaffiro
+    </h2>
 
-    <form @submit.prevent="signup" class="form margin-bottom-medium">
+    <form
+      class="form margin-bottom-medium"
+      @submit.prevent="signup"
+    >
       <div class="form__group">
-        <label class="form__label" for="email">E-mail</label>
+        <label
+          class="form__label"
+          for="email"
+        >E-mail</label>
         <BaseInput
+          id="email"
           v-model="email"
           type="email"
-          id="email"
-          :serverError="emailError"
+          :server-error="emailError"
           :v="$v.email"
         />
-        <span v-if="$v.email.$dirty && !$v.email.required" class="input-error">Por favor, ingrese su e-mail</span>
-        <span v-else-if="$v.email.$dirty && !$v.email.email" class="input-error">Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i></span>
-        <span v-else-if="emailError" class="input-error">El e-mail ingresado ya está en uso</span>
+        <span
+          v-if="$v.email.$dirty && !$v.email.required"
+          class="input-error"
+        >Por favor, ingrese su e-mail</span>
+        <span
+          v-else-if="$v.email.$dirty && !$v.email.email"
+          class="input-error"
+        >Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i></span>
+        <span
+          v-else-if="emailError"
+          class="input-error"
+        >El e-mail ingresado ya está en uso</span>
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="username">Nombre de usuario</label>
+        <label
+          class="form__label"
+          for="username"
+        >Nombre de usuario</label>
         <BaseInput
-          v-model="username"
           id="username"
-          :serverError="usernameError"
+          v-model="username"
+          :server-error="usernameError"
           :v="$v.username"
         />
-        <span v-if="$v.username.$dirty && !$v.username.required" class="input-error">Por favor, ingrese su nombre de usuario</span>
-        <span v-else-if="$v.username.$dirty && !$v.username.valid" class="input-error">Use entre 8 y 15 caracteres</span>
-        <span v-else-if="usernameError" class="input-error">El nombre de usuario ingresado ya está en uso</span>
+        <span
+          v-if="$v.username.$dirty && !$v.username.required"
+          class="input-error"
+        >Por favor, ingrese su nombre de usuario</span>
+        <span
+          v-else-if="$v.username.$dirty && !$v.username.valid"
+          class="input-error"
+        >Use entre 8 y 15 caracteres</span>
+        <span
+          v-else-if="usernameError"
+          class="input-error"
+        >El nombre de usuario ingresado ya está en uso</span>
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="password">Contraseña</label>
+        <label
+          class="form__label"
+          for="password"
+        >Contraseña</label>
         <BaseInput
+          id="password"
           v-model="password"
           type="password"
-          id="password"
           :v="$v.password"
         />
-        <span v-if="$v.password.$dirty && !$v.password.required" class="input-error">Por favor, ingrese su contraseña</span>
-        <span v-else-if="$v.password.$dirty && !$v.password.valid" class="input-error">Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número</span>
+        <span
+          v-if="$v.password.$dirty && !$v.password.required"
+          class="input-error"
+        >Por favor, ingrese su contraseña</span>
+        <span
+          v-else-if="$v.password.$dirty && !$v.password.valid"
+          class="input-error"
+        >Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número</span>
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="confirm-password">Confirmar contraseña</label>
+        <label
+          class="form__label"
+          for="confirm-password"
+        >Confirmar contraseña</label>
         <BaseInput
+          id="confirm-password"
           v-model="confirmPassword"
           type="password"
-          id="confirm-password"
           :v="$v.confirmPassword"
         />
-        <span v-if="$v.confirmPassword.$dirty && !$v.confirmPassword.required" class="input-error">Por favor, confirme su contraseña</span>
-        <span v-else-if="$v.confirmPassword.$dirty && !$v.confirmPassword.sameAs" class="input-error">Las contraseñas no coinciden</span>
+        <span
+          v-if="$v.confirmPassword.$dirty && !$v.confirmPassword.required"
+          class="input-error"
+        >Por favor, confirme su contraseña</span>
+        <span
+          v-else-if="$v.confirmPassword.$dirty && !$v.confirmPassword.sameAs"
+          class="input-error"
+        >Las contraseñas no coinciden</span>
       </div>
 
-      <BaseButton :disabled="$v.$invalid" type="submit" class="w-100">
+      <BaseButton
+        :disabled="$v.$invalid"
+        type="submit"
+        class="w-100"
+      >
         Registrarse
       </BaseButton>
     </form>
 
     <p class="auth__footer">
       ¿Ya tiene una cuenta?
-      <BaseLink :to="{ name: 'login' }">Inicie sesión</BaseLink>
+      <BaseLink :to="{ name: 'login' }">
+        Inicie sesión
+      </BaseLink>
     </p>
   </div>
 </template>

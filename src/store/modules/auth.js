@@ -77,6 +77,7 @@ export const actions = {
   },
 
   async logOut ({ commit }) {
+    localStorage.clear()
     commit('setCurrentUser', null)
   },
 

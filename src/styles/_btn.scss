@@ -1,0 +1,27 @@
+.btn {
+  display: block;
+  border: none;
+  border-radius: 2px;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  // flex: 1;
+  padding: 1rem .5rem;
+
+  &--small {
+    padding: .5rem;
+  }
+
+  &--edit {
+    background-color: #3949ab;
+  }
+
+  &--enable {
+    background-color: $color-secondary;
+  }
+
+  &--disable {
+    background-color: #c62828;
+  }
+}

@@ -2,35 +2,74 @@
   <header class="header">
     <div class="container">
       <div class="header__logo-box">
-        <img class="header__logo" src="../assets/logo.png" alt="logo">
+        <img
+          class="header__logo"
+          src="../assets/logo.png"
+          alt="logo"
+        >
       </div>
       <nav class="nav">
         <ul class="nav__list">
           <template v-if="isAdmin">
             <li>
-              <BaseLink :to="{ name: 'dispositivos' }" class="nav__link">Dispositivos</BaseLink>
+              <BaseLink
+                :to="{ name: 'dispositivos' }"
+                class="nav__link"
+              >
+                Dispositivos
+              </BaseLink>
             </li>
             <li>
-              <BaseLink :to="{ name: 'reglas' }" class="nav__link">Reglas</BaseLink>
+              <BaseLink
+                :to="{ name: 'reglas' }"
+                class="nav__link"
+              >
+                Reglas
+              </BaseLink>
             </li>
             <li>
-              <BaseLink :to="{ name: 'usuarios' }" class="nav__link">Usuarios</BaseLink>
+              <BaseLink
+                :to="{ name: 'usuarios' }"
+                class="nav__link"
+              >
+                Usuarios
+              </BaseLink>
             </li>
           </template>
           <template v-if="isLoggedIn">
             <li>
-              <BaseLink :to="{ name: 'profile' }" class="nav__link">Perfil</BaseLink>
+              <BaseLink
+                :to="{ name: 'profile' }"
+                class="nav__link"
+              >
+                Perfil
+              </BaseLink>
             </li>
             <li>
-              <BaseLink :to="{ name: 'logout' }" class="nav__link">Cerrar sesión</BaseLink>
+              <BaseLink
+                :to="{ name: 'logout' }"
+                class="nav__link"
+              >
+                Cerrar sesión
+              </BaseLink>
             </li>
           </template>
           <template v-if="!isLoggedIn">
             <li>
-              <BaseLink :to="{ name: 'signup' }" class="nav__link">Registrarse</BaseLink>
+              <BaseLink
+                :to="{ name: 'signup' }"
+                class="nav__link"
+              >
+                Registrarse
+              </BaseLink>
             </li>
             <li>
-              <BaseLink :to="{ name: 'login' }" class="nav__link">Iniciar sesión</BaseLink>
+              <BaseLink
+                :to="{ name: 'login' }"
+                class="nav__link"
+              >
+                Iniciar sesión
+              </BaseLink>
             </li>
           </template>
         </ul>

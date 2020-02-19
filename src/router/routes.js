@@ -9,7 +9,7 @@ export default [
   {
     path: '/signup',
     name: 'signup',
-    component: () => import('@/router/views/auth/Signup.vue'),
+    component: () => import('@/router/views/auth/SignUp.vue'),
     meta: {
       requiresGuest: true
     }
@@ -25,7 +25,7 @@ export default [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/router/views/auth/Login.vue'),
+    component: () => import('@/router/views/auth/LogIn.vue'),
     meta: {
       requiresGuest: true
     }
@@ -67,18 +67,10 @@ export default [
       requiresGuest: true
     }
   },
-  // {
-  //   path: '/dashboard',
-  //   name: 'dashboard',
-  //   component: () => import('@/router/views/Dashboard.vue'),
-  //   meta: {
-  //     requiresAuth: true
-  //   }
-  // },
   {
     path: '/profile',
     name: 'profile',
-    component: () => import('@/router/views/usuarios/UserProfile.vue'),
+    component: () => import('@/router/views/auth/Profile.vue'),
     meta: {
       requiresAuth: true
     },
@@ -166,6 +158,15 @@ export default [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/reglas/editar/:identificador',
+    name: 'editarRegla',
+    component: () => import('@/router/views/reglas/EditarRegla.vue'),
+    meta: {
+      requiresAuth: true
+    },
+    props: true
   },
   {
     // Redireccionar a home cuando el path no coincide

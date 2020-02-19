@@ -1,23 +1,34 @@
 <template>
   <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Crear usuario</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Crear usuario
+    </h2>
 
-    <form @submit.prevent="crearUsuario" class="form">
+    <form
+      class="form"
+      @submit.prevent="crearUsuario"
+    >
       <div class="form__group">
-        <label class="form__label" for="username">Nombre de usuario</label>
+        <label
+          class="form__label"
+          for="username"
+        >Nombre de usuario</label>
         <BaseInput
-          class="form__input"
-          v-model="username"
           id="username"
+          v-model="username"
+          class="form__input"
         />
       </div>
 
       <div class="form__group">
-        <label class="form__label" for="email">E-mail</label>
+        <label
+          class="form__label"
+          for="email"
+        >E-mail</label>
         <BaseInput
+          id="email"
           v-model="email"
           type="email"
-          id="email"
         />
       </div>
 
@@ -26,7 +37,7 @@
         <BaseInputSelect
           v-model="selectedAuthorities"
           :options="authoritiesOptions"
-          :optionsLabels="authoritiesOptionsSpanish"
+          :options-labels="authoritiesOptionsSpanish"
           :multiple="true"
         />
       </div>
@@ -41,6 +52,7 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
+import { translateAuthorities } from '@/translations.js'
 import axios from 'axios'
 
 export default {
@@ -54,16 +66,7 @@ export default {
   },
   computed: {
     authoritiesOptionsSpanish () {
-      return this.authoritiesOptions.map(el => {
-        switch (el) {
-          case 'ROLE_ADMIN':
-            return 'Administrador'
-          case 'ROLE_USER':
-            return 'Cliente'
-          default:
-            return el
-        }
-      })
+      return this.authoritiesOptions.map(value => translateAuthorities(value))
     }
   },
   methods: {

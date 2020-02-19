@@ -1,13 +1,21 @@
 <template>
   <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">Asociar dispositivo</h2>
+    <h2 class="heading-secondary text-center margin-bottom-medium">
+      Asociar dispositivo
+    </h2>
 
-    <form @submit.prevent="asociarDispositivo" class="form">
+    <form
+      class="form"
+      @submit.prevent="asociarDispositivo"
+    >
       <div class="form__group">
-        <label class="form__label" for="nombre">Nombre</label>
+        <label
+          class="form__label"
+          for="nombre"
+        >Nombre</label>
         <BaseInput
-          v-model="nombre"
           id="nombre"
+          v-model="nombre"
         />
       </div>
 
@@ -21,9 +29,9 @@
 
       <div class="form__group">
         <BaseInputCheckbox
+          :id="'device-state'"
           v-model="activo"
           :label="'Habilitado'"
-          :id="'device-state'"
         />
       </div>
 

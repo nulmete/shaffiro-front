@@ -6,9 +6,11 @@
     Por ejemplo '/profile/:username', siendo username un parámetro variable,
     Crear el componente nuevamente con el parámetro 'key'
     -->
-    <main>
+    <main class="page-wrapper">
       <transition
-        name="fade"
+        name="router-animation"
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
         mode="out-in"
       >
         <RouterView :key="$route.fullPath" />
@@ -48,6 +50,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css');
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -92,6 +96,10 @@ body {
   color: $color-primary-dark;
 }
 
+.page-wrapper > * {
+  animation-duration: .3s;
+}
+
 ul {
   list-style: none;
 }
@@ -99,16 +107,5 @@ ul {
 a:link,
 a:visited {
   text-decoration: none;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all .3s ease;
-}
-
-.fade-enter,
-.fade-leave-to {
-  transform: translate(-30px);
-  opacity: 0;
 }
 </style>

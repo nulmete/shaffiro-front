@@ -11,44 +11,14 @@ Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://localhost:8080'
-// axios.defaults.baseURL = 'http://192.168.22.6:8080'
 
-Vue.filter('headingsFilter', (value) => {
-  switch (value) {
-    case 'id':
-      return 'ID'
-    case 'login':
-      return 'Usuario'
-    case 'email':
-      return 'E-mail'
-    case 'activated':
-      return 'Estado'
-    case 'authorities':
-      return 'Tipo de usuario'
-
-    case 'nombre':
-      return 'Nombre'
-    case 'tipo':
-      return 'Tipo'
-    case 'activo':
-      return 'Estado'
-    case 'configuracion':
-      return 'Configuracion'
-    case 'reglaId':
-      return 'Regla'
-
-    default:
-      return value
-  }
-})
-
-const app = new Vue({
+new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
 
-window.app = app
+// window.app = app
 
 // Exponer app al testear con Cypress
 // if (window.Cypress) {

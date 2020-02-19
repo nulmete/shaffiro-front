@@ -24,22 +24,7 @@ export const mutations = {
 
 export const getters = {
   getAllUsers (state) {
-    // const fields = ['id', 'login', 'email', 'activated', 'authorities']
-
-    return (fields) => {
-      return state.users.map(user => {
-        const filtered = Object.keys(user)
-          .filter(key => fields.includes(key))
-          .reduce((obj, key) => {
-            return {
-              ...obj,
-              [key]: user[key]
-            }
-          }, {})
-
-        return filtered
-      })
-    }
+    return state.users
   },
 
   getUser (state) {
@@ -48,14 +33,10 @@ export const getters = {
 }
 
 export const actions = {
-  getAllUsers ({ commit }) {
-    return axios
-      .get('/api/users')
-      .then(response => {
-        const users = response.data
-        commit('setAllUsers', users)
-        return users
-      })
+  async getAllUsers ({ commit }) {
+    const allUsers = await axios.get('api/users')
+    commit('setAllUsers', allUsers.data)
+    return allUsers
   },
 
   async getUser ({ commit }, username) {
