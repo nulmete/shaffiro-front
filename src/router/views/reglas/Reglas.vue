@@ -59,7 +59,7 @@ export default {
   },
   data () {
     return {
-      headings: ['Nombre', 'Unidad', 'Operador', 'Valor', 'Dispositivo asociado', 'Acciones'],
+      headings: ['Nombre', 'Unidad', 'Operador', 'Valor', 'Dispositivo sensor asociado', 'Acciones'],
       fields: ['nombre', 'unidad', 'operador', 'valor', 'dispositivo'],
       search: ''
     }

@@ -26,7 +26,7 @@
       </div>
 
       <div class="form__group">
-        <label class="form__label">Dispositivo asociado</label>
+        <label class="form__label">Dispositivo sensor asociado</label>
         <BaseInputSelect
           v-model="dispositivoAsociado"
           :options="sensores"
@@ -116,7 +116,7 @@ export default {
       id: '',
       nombre: '',
       unidad: '',
-      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERES'],
+      unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPER'],
       operador: '',
       operadoresPosibles: ['>', '<', '>=', '<='],
       valor: '',

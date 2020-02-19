@@ -26,7 +26,7 @@
       </div>
 
       <div class="form__group">
-        <label class="form__label">Dispositivo asociado</label>
+        <label class="form__label">Dispositivo sensor asociado</label>
         <BaseInputSelect
           v-model="dispositivoAsociado"
           :options="sensores"
