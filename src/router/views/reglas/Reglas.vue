@@ -1,7 +1,7 @@
 <template>
   <div class="list-wrapper container">
     <h2 class="heading-secondary margin-bottom-medium">
-      ABM de reglas
+      Listado de condiciones
     </h2>
 
     <div class="flex-container margin-bottom-medium">
@@ -11,7 +11,7 @@
         type="button"
         @click="crear"
       >
-        Crear una nueva regla
+        Crear una nueva condicion
       </BaseButton>
     </div>
 

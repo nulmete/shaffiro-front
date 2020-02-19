@@ -1,7 +1,7 @@
 <template>
   <div class="auth container">
     <h2 class="heading-secondary text-center margin-bottom-medium">
-      Crear regla
+      Crear condicion
     </h2>
 
     <form
@@ -12,7 +12,7 @@
         <label
           class="form__label"
           for="nombre"
-        >Nombre de la regla</label>
+        >Nombre de la condicion</label>
         <BaseInput
           id="nombre"
           v-model="nombre"
@@ -22,7 +22,7 @@
         <span
           v-if="$v.nombre.$dirty && !$v.nombre.required"
           class="input-error"
-        >Por favor, ingrese el nombre de la regla</span>
+        >Por favor, ingrese el nombre de la condicion</span>
       </div>
 
       <div class="form__group">
@@ -65,11 +65,11 @@
         <span
           v-if="$v.valor.$dirty && !$v.valor.required"
           class="input-error"
-        >Por favor, ingrese el valor de la regla</span>
+        >Por favor, ingrese el valor de la condicion</span>
       </div>
 
       <BaseButton
-        :disabled="$v.invalid || !dispositivoAsociado || !unidad || !operador"
+        :disabled="$v.$invalid || !dispositivoAsociado || !unidad || !operador"
         type="submit"
       >
         Crear regla

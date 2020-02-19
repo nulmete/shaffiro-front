@@ -1,7 +1,7 @@
 <template>
   <div class="list-wrapper container">
     <h2 class="heading-secondary margin-bottom-medium">
-      ABM de dispositivos
+      Listado de dispositivos
     </h2>
 
     <div class="flex-container margin-bottom-medium">
@@ -104,7 +104,7 @@ export default {
   },
   data () {
     return {
-      headings: ['Dispositivo', 'Estado', 'Reglas', 'Actuador', 'Acciones'],
+      headings: ['Dispositivo', 'Estado', 'Condicion', 'Actuador', 'Acciones'],
       fields: ['nombre', 'activo', 'reglasParseadas'],
       search: '',
       actuadoresElegidos: JSON.parse(localStorage.getItem('actuadoresElegidos')) || []
@@ -145,7 +145,7 @@ export default {
       const regla = props.map(prop => {
         return prop.reglas.map(innerProp => {
           return `
-            ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
+            Si ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
           `
         })
       })

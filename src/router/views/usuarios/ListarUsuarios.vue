@@ -1,7 +1,7 @@
 <template>
   <div class="list-wrapper container">
     <h2 class="heading-secondary margin-bottom-medium">
-      ABM de usuarios
+      Listado de usuarios
     </h2>
 
     <div class="flex-container margin-bottom-medium">

@@ -41,7 +41,7 @@
       </div>
 
       <BaseButton
-        :disabled="$v.invalid || !tipo"
+        :disabled="$v.$invalid || !tipo"
         type="submit"
       >
         Asociar

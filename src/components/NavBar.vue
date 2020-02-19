@@ -24,7 +24,7 @@
                 :to="{ name: 'reglas' }"
                 class="nav__link"
               >
-                Reglas
+                Condiciones
               </BaseLink>
             </li>
             <li>
