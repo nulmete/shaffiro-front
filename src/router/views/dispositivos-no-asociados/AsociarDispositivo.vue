@@ -102,7 +102,7 @@ export default {
         await axios.post('/api/dispositivos', formData)
         // eliminar dispositivo de la tabla de dispositivos no asociados
         await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
-        this.$router.push({ name: 'dispositivos' })
+        await this.$nextTick.then(this.$router.push({ name: 'dispositivos' }))
       } catch (error) {
         // todo
         console.log(error.response)

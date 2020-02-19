@@ -58,8 +58,8 @@
         >
           <BaseInputSelect
             v-model="actuadoresElegidos[index]"
-            :options="actuadores"
-            :options-labels="nombreActuadores"
+            :options="actuadoresEncenderApagar"
+            :options-labels="nombreActuadoresEncenderApagar"
             @change="elegirActuador"
           />
         </td>
@@ -120,6 +120,12 @@ export default {
     nombreActuadores () {
       return this.actuadores.map(actuador => actuador.nombre)
     },
+    actuadoresEncenderApagar () {
+      return this.actuadores.map(actuador => [{ ...actuador, accion: 'ENCENDER' }, { ...actuador, accion: 'APAGAR' }]).flat()
+    },
+    nombreActuadoresEncenderApagar () {
+      return this.actuadoresEncenderApagar.map(actuador => `${actuador.accion} ${actuador.nombre}`)
+    },
     dispositivosToSpanish () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
@@ -139,7 +145,7 @@ export default {
       const regla = props.map(prop => {
         return prop.reglas.map(innerProp => {
           return `
-            Encender si ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
+            ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
           `
         })
       })

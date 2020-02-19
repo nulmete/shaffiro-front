@@ -91,7 +91,7 @@ export default {
   computed: {
     sensores () {
       const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
-      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR' && dispositivo.reglas.length === 0)
     },
     sensoresLabels () {
       return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)

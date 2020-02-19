@@ -87,7 +87,10 @@ export default {
 
       const ids = props.map(prop => prop.dispositivoId)
 
+      console.log(ids)
+
       const nombres = ids.map(id => {
+        console.log(id)
         return this.dispositivos.find(dispositivo => dispositivo.id === id).nombre
       })
 
