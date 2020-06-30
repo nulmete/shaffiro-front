@@ -27,6 +27,7 @@
       <div class="form__group">
         <label class="form__label">Tipo de dispositivo</label>
         <BaseInputSelect
+          id="tipo"
           v-model="tipo"
           :options="tiposPosibles"
         />
