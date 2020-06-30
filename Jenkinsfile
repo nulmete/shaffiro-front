@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
 node {
-    stage('Clone Sources') {
-      steps {
-        git 'https://github.com/nulmete/shaffiro-front.git'
-      }
+    
+    stage('checkout') {
+        checkout scm
     }
+
     stage('Information') {
       steps {
         sh 'node -v'
@@ -21,11 +21,7 @@ node {
         sh 'npm run unit'
       }
     }
-    stage('E2E Test') {
-      steps {
-        sh 'npm run e2e'
-      }
-    }
+    
     stage('Build') {
       steps {
         sh 'npm run build'
@@ -34,9 +30,7 @@ node {
     stage('Artifacts') {
       steps {
         sh 'tar -czf dist.tar.gz ./dist'
-        stash 'dist.tar.gz'
-        stash 'Dockerfile'
-        stash 'nginx.conf'
+        
         archiveArtifacts artifacts: 'dist.tar.gz', fingerprint: true
       }
     }
