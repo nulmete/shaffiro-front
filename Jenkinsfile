@@ -13,10 +13,6 @@ node {
     stage('Dependencies') {
       sh 'npm install'      
     }
-
-    stage('Unit Test') {
-      sh 'npm run unit'
-    }
     
     stage('Build') {
       sh 'npm run build'
