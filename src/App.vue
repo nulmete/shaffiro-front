@@ -72,7 +72,7 @@ body {
   position: relative;
 
   > * {
-    animation-duration: 3s;
+    animation-duration: .3s;
   }
 }
 
