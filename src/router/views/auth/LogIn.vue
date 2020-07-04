@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
+  <Auth>
+    <template v-slot:heading>
       Inicie sesión en Shaffiro
-    </h2>
+    </template>
 
     <BaseCard
       v-if="credentialsError"
@@ -26,7 +26,7 @@
         >
           aquí
         </BaseLink>
-        para activar su cuenta.
+        para activar su usuario.
       </template>
     </BaseCard>
 
@@ -76,18 +76,20 @@
       </BaseButton>
     </form>
 
-    <p class="auth__footer">
+    <template v-slot:footer>
       <BaseLink :to="{ name: 'resetPasswordInit' }">
         ¿Olvidó su contraseña?
       </BaseLink>
-    </p>
-  </div>
+    </template>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
+  components: { Auth },
   data () {
     return {
       username: '',

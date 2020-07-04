@@ -37,14 +37,14 @@
             </li>
           </template>
           <template v-if="isLoggedIn">
-            <li>
+            <!-- <li>
               <BaseLink
                 :to="{ name: 'profile' }"
                 class="nav__link"
               >
                 Perfil
               </BaseLink>
-            </li>
+            </li> -->
             <li>
               <BaseLink
                 :to="{ name: 'logout' }"

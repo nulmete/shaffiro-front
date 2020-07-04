@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
+  <Auth>
+    <template v-slot:heading>
       Regístrese en Shaffiro
-    </h2>
+    </template>
 
     <form
       class="form margin-bottom-medium"
@@ -110,21 +110,23 @@
       </BaseButton>
     </form>
 
-    <p class="auth__footer">
+    <template v-slot:footer>
       ¿Ya tiene una cuenta?
       <BaseLink :to="{ name: 'login' }">
         Inicie sesión
       </BaseLink>
-    </p>
-  </div>
+    </template>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
 import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
 import axios from 'axios'
 
 export default {
+  components: { Auth },
   data () {
     return {
       email: '',
