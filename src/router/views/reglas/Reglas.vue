@@ -31,7 +31,7 @@
         type="button"
         @click="eliminar(reglas[selectedItem])"
       >
-        Eliminar
+        Dar de baja
       </BaseButton>
     </template>
 
@@ -68,47 +68,6 @@
       </template>
     </template>
   </Listado>
-  <!-- <div class="list-wrapper container">
-    <h2 class="heading-secondary margin-bottom-medium">
-      Listado de condiciones
-    </h2>
-
-    <div class="flex-container margin-bottom-medium">
-      <BaseFilter v-model="search" />
-
-      <BaseButton
-        type="button"
-        @click="crear"
-      >
-        Crear una nueva regla
-      </BaseButton>
-    </div>
-
-    <List
-      :headings="headings"
-      :fields="fields"
-      :content="reglasFiltradas"
-    >
-      <template v-slot:body="{ row, field }">
-        <template v-if="Array.isArray(row[field])">
-          <div
-            v-for="(value, index) in row[field]"
-            :key="index"
-          >
-            {{ value }}
-          </div>
-        </template>
-        <template v-else>
-          {{ row[field] }}
-        </template>
-      </template>
-      <template v-slot:buttons="{ index }">
-        <ListButtonEdit @click="editar(reglas[index])">
-          Editar
-        </ListButtonEdit>
-      </template>
-    </List>
-  </div> -->
 </template>
 
 <script>

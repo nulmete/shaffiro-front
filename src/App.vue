@@ -82,23 +82,28 @@ body {
   padding: 0 1.5rem;
 }
 
+.heading-secondary {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
 .flex-wrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    & > .form__group {
-      flex: 1;
-      margin: 0 !important;
+  & > .form__group {
+    flex: 1;
+    margin: 0 !important;
 
-      &:not(:last-child) {
-        margin-right: 1.4rem !important;
-      }
-    }
-
-    & > span {
-      margin-right: 1.4rem;
+    &:not(:last-child) {
+      margin-right: 1.4rem !important;
     }
   }
+
+  & > span {
+    margin-right: 1.4rem;
+  }
+}
 
 ul {
   list-style: none;

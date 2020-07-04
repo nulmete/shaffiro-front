@@ -13,6 +13,7 @@
         <BaseInput
           id="magnitud"
           v-model="magnitud"
+          placeholder="Magnitud"
           disabled
           class="form__input"
         />
@@ -35,7 +36,7 @@
           v-model="valor"
           type="number"
           class="form__input"
-          placeholder="Valor"
+          placeholder="Ingresar valor"
         />
         <!-- <span
           v-if="$v.valor.$dirty && !$v.valor.required"
@@ -43,7 +44,17 @@
         >Por favor, ingrese el valor de la condición</span> -->
       </div>
 
-      <span>{{ unidad }}</span>
+      <div class="form__group">
+        <BaseInput
+          id="unidad"
+          v-model="unidad"
+          placeholder="Unidad"
+          disabled
+          class="form__input"
+        />
+      </div>
+
+      <!-- <span>{{ unidad }}</span> -->
     </div>
 
     <button
@@ -107,7 +118,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

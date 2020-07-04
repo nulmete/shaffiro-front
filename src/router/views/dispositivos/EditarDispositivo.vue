@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
+  <Auth>
+    <template v-slot:heading>
       Editar dispositivo
-    </h2>
+    </template>
 
     <form
       class="form"
@@ -47,14 +47,16 @@
         Guardar
       </BaseButton>
     </form>
-  </div>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
 export default {
+  components: { Auth },
   props: {
     identificador: {
       type: String,

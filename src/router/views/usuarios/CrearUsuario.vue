@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
+  <Auth>
+    <template v-slot:heading>
       Crear usuario
-    </h2>
+    </template>
 
     <form
       class="form"
@@ -46,16 +46,18 @@
         Crear usuario
       </BaseButton>
     </form>
-  </div>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
 import { translateAuthorities } from '@/translations.js'
 import axios from 'axios'
 
 export default {
+  components: { Auth },
   data () {
     return {
       username: '',

@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
+  <Auth>
+    <template v-slot:heading>
       Asociar dispositivo
-    </h2>
+    </template>
 
     <form
       class="form"
@@ -74,15 +74,17 @@
         Asociar
       </BaseButton>
     </form>
-  </div>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { transformarUnidad } from '@/components/Reglas/condicion'
 import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
 export default {
+  components: { Auth },
   props: {
     identificador: {
       type: String,

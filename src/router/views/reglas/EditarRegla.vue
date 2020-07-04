@@ -1,8 +1,8 @@
 <template>
-  <div class="auth container">
-    <h2 class="heading-secondary text-center margin-bottom-medium">
-      Editar condicion
-    </h2>
+  <Auth>
+    <template v-slot:heading>
+      Editar regla
+    </template>
 
     <form
       class="form"
@@ -12,7 +12,7 @@
         <label
           class="form__label"
           for="nombre"
-        >Nombre de la condicion</label>
+        >Nombre de la Regla</label>
         <BaseInput
           id="nombre"
           v-model="nombre"
@@ -26,11 +26,20 @@
       </div>
 
       <div class="form__group">
-        <label class="form__label">Dispositivo sensor asociado</label>
+        <label class="form__label">Sensor asociado</label>
         <BaseInputSelect
-          v-model="dispositivoAsociado"
+          v-model="sensorAsociado"
           :options="sensores"
           :options-labels="sensoresLabels"
+        />
+      </div>
+
+      <div class="form__group">
+        <label class="form__label">Actuador asociado</label>
+        <BaseInputSelect
+          v-model="actuadorAsociado"
+          :options="actuadores"
+          :options-labels="actuadoresLabels"
         />
       </div>
 
@@ -75,15 +84,17 @@
         Guardar
       </BaseButton>
     </form>
-  </div>
+  </Auth>
 </template>
 
 <script>
+import Auth from '@/router/views/layouts/Auth'
 import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 import store from '@/store/store'
 
 export default {
+  components: { Auth },
   props: {
     identificador: {
       type: String,
@@ -120,7 +131,8 @@ export default {
       operador: '',
       operadoresPosibles: ['>', '<', '>=', '<='],
       valor: '',
-      dispositivoAsociado: ''
+      sensorAsociado: '',
+      actuadorAsociado: ''
     }
   },
   computed: {
@@ -130,6 +142,13 @@ export default {
     },
     sensoresLabels () {
       return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)
+    },
+    actuadores () {
+      const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
+    },
+    actuadoresLabels () {
+      return this.actuadores.map(sensor => `Nombre: ${sensor.nombre}`)
     }
   },
   methods: {
@@ -140,7 +159,7 @@ export default {
         unidad: this.unidad,
         operador: this.operador,
         valor: this.valor,
-        dispositivoId: this.dispositivoAsociado.id
+        dispositivoId: this.sensorAsociado.id
       }
 
       try {
