@@ -3,6 +3,10 @@
     <table class="list">
       <thead class="list__head">
         <tr>
+          <!-- Primer columna para radio button -->
+          <th class="list__heading list__heading--radio">
+            &nbsp;
+          </th>
           <th
             v-for="(heading, index) in headings"
             :key="index"
@@ -18,6 +22,12 @@
           :key="index"
           class="list__row"
         >
+          <td class="list__cell list__cell--buttons">
+            <slot
+              name="buttons"
+              :index="index"
+            />
+          </td>
           <td
             v-for="(field, prop) in fields"
             :key="prop"
@@ -28,22 +38,6 @@
               :row="row"
               :field="field"
             />
-          </td>
-
-          <!-- Slot extra para selección de actuadores (hardcodeado) -->
-          <slot
-            name="actuadores"
-            :row="row"
-            :index="index"
-          />
-
-          <td class="list__cell list__cell--buttons">
-            <div>
-              <slot
-                name="buttons"
-                :index="index"
-              />
-            </div>
           </td>
         </tr>
       </tbody>
@@ -95,6 +89,11 @@ export default {
       padding: 1rem;
       text-align: left;
       text-transform: capitalize;
+
+      &--radio {
+        width: 1rem;
+        padding: 1rem 0;
+      }
     }
 
     &__row:hover {
@@ -104,16 +103,8 @@ export default {
     &__cell {
       padding: 1rem;
 
-      &-item {
-
-      }
-
-      &--buttons div {
-        display: flex;
-
-        & > * {
-          flex: 1;
-        }
+      &--buttons {
+        padding: 1rem 2rem;
       }
     }
   }

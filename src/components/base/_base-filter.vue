@@ -29,7 +29,7 @@ export default {
     font-family: inherit;
     font-size: 1.5rem;
     padding: 1rem;
-    width: 100%; // applies if not inside flex-container
+    width: 100%;
     transition: all .2s;
 
     &:focus {

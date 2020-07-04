@@ -1,78 +1,90 @@
 <template>
-  <div class="list-wrapper container">
-    <h2 class="heading-secondary margin-bottom-medium">
-      Listado de usuarios
-    </h2>
+  <Listado
+    :headings="headings"
+    :fields="fields"
+    :content="filteredUsers"
+    :search-prop="search"
+    @searched="search = $event"
+  >
+    <template v-slot:heading>
+      Usuarios
+    </template>
 
-    <div class="flex-container margin-bottom-medium">
-      <BaseFilter v-model="search" />
-
+    <template v-slot:buttons>
       <BaseButton
         type="button"
         @click="crear"
       >
-        Crear un nuevo usuario
+        Crear usuario
       </BaseButton>
-    </div>
 
-    <List
-      :headings="headings"
-      :fields="fields"
-      :content="filteredUsers"
-    >
-      <template v-slot:body="{ row, field }">
-        <template v-if="Array.isArray(row[field])">
-          <div
-            v-for="(value, index) in row[field]"
-            :key="index"
-          >
-            {{ value }}
-          </div>
-        </template>
-        <template v-else>
-          {{ row[field] }}
-        </template>
+      <BaseButton
+        :disabled="selectedItem === null"
+        type="button"
+        @click="editar(usuarios[selectedItem])"
+      >
+        Editar
+      </BaseButton>
+    </template>
+
+    <template v-slot:radio-button="{ index }">
+      <div class="radio">
+        <input
+          :id="index"
+          v-model="selectedItem"
+          name="radio"
+          :value="index"
+          type="radio"
+          class="radio__input"
+        >
+        <label
+          class="radio__label"
+          :for="index"
+        >
+          <span class="radio__btn" />
+        </label>
+      </div>
+    </template>
+
+    <template v-slot:content="{ row, field, index }">
+      <template v-if="Array.isArray(row[field])">
+        <div
+          v-for="(value, index) in row[field]"
+          :key="index"
+        >
+          {{ value }}
+        </div>
       </template>
-
-      <template v-slot:buttons="{ index }">
-        <ListButtonEdit @click="editar(usuarios[index])">
-          Editar
-        </ListButtonEdit>
-        <ListButtonToggle
-          :active="usuarios[index].activated"
+      <template v-else-if="field === 'activated'">
+        <span
+          :class="[row[field] === 'Deshabilitado' ? 'disabled' : 'enabled']"
           @click="modificarEstado(usuarios[index])"
         >
-          <template v-if="usuarios[index].activated">
-            Deshabilitar
-          </template>
-          <template v-else>
-            Habilitar
-          </template>
-        </ListButtonToggle>
+          {{ row[field] }}
+        </span>
       </template>
-    </List>
-  </div>
+      <template v-else>
+        {{ row[field] }}
+      </template>
+    </template>
+  </Listado>
 </template>
 
 <script>
-import List from '@/components/List'
-import ListButtonEdit from '@/components/ListButtonEdit'
-import ListButtonToggle from '@/components/ListButtonToggle'
-
+import Listado from '@/router/views/layouts/Listado'
 import { translateAuthorities } from '@/translations.js'
 import { searchFilter } from '@/searchFilter.js'
 
 export default {
   components: {
-    List,
-    ListButtonEdit,
-    ListButtonToggle
+    Listado
   },
   data () {
     return {
-      headings: ['Nombre', 'E-mail', 'Estado', 'Tipo', 'Acciones'],
+      headings: ['Nombre', 'E-mail', 'Estado', 'Tipo'],
       fields: ['login', 'email', 'activated', 'authorities'],
-      search: ''
+      search: '',
+      selectedItem: null
     }
   },
   computed: {
@@ -136,6 +148,7 @@ export default {
       try {
         await this.$store.dispatch(`usuarios/modificarEstado`, usuarioModificado)
       } catch (error) {
+        // TODO
         console.log(error)
       }
     }

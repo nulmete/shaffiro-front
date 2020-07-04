@@ -45,7 +45,7 @@ export const actions = {
     return regla
   },
 
-  async darDeBaja ({ commit }, regla) {
+  async eliminarRegla ({ commit }, regla) {
     await axios.delete(`/api/reglas/${regla.id}`)
     commit('eliminarRegla', regla.id)
   }

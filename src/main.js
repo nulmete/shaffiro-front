@@ -10,8 +10,8 @@ import '@/styles/main.scss'
 Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = 'http://localhost:8080'
-axios.defaults.baseURL = 'https://shaffiro.morlax.com.ar/backend'
+axios.defaults.baseURL = 'http://localhost:8080'
+// axios.defaults.baseURL = 'https://shaffiro.morlax.com.ar/backend'
 
 const app = new Vue({
   router,

@@ -1,5 +1,74 @@
 <template>
-  <div class="list-wrapper container">
+  <Listado
+    :headings="headings"
+    :fields="fields"
+    :content="reglasFiltradas"
+    :search-prop="search"
+    @searched="search = $event"
+  >
+    <template v-slot:heading>
+      Reglas
+    </template>
+
+    <template v-slot:buttons>
+      <BaseButton
+        type="button"
+        @click="crear"
+      >
+        Crear regla
+      </BaseButton>
+
+      <BaseButton
+        :disabled="selectedItem === null"
+        type="button"
+        @click="editar(reglas[selectedItem])"
+      >
+        Editar
+      </BaseButton>
+
+      <BaseButton
+        :disabled="selectedItem === null"
+        type="button"
+        @click="eliminar(reglas[selectedItem])"
+      >
+        Eliminar
+      </BaseButton>
+    </template>
+
+    <template v-slot:radio-button="{ index }">
+      <div class="radio">
+        <input
+          :id="index"
+          v-model="selectedItem"
+          name="radio"
+          :value="index"
+          type="radio"
+          class="radio__input"
+        >
+        <label
+          class="radio__label"
+          :for="index"
+        >
+          <span class="radio__btn" />
+        </label>
+      </div>
+    </template>
+
+    <template v-slot:content="{ row, field }">
+      <template v-if="Array.isArray(row[field])">
+        <div
+          v-for="(value, index) in row[field]"
+          :key="index"
+        >
+          {{ value }}
+        </div>
+      </template>
+      <template v-else>
+        {{ row[field] }}
+      </template>
+    </template>
+  </Listado>
+  <!-- <div class="list-wrapper container">
     <h2 class="heading-secondary margin-bottom-medium">
       Listado de condiciones
     </h2>
@@ -11,7 +80,7 @@
         type="button"
         @click="crear"
       >
-        Crear una nueva condicion
+        Crear una nueva regla
       </BaseButton>
     </div>
 
@@ -39,29 +108,27 @@
         </ListButtonEdit>
       </template>
     </List>
-  </div>
+  </div> -->
 </template>
 
 <script>
 import store from '@/store/store'
-import List from '@/components/List'
-import ListButtonEdit from '@/components/ListButtonEdit'
-
+import Listado from '@/router/views/layouts/Listado'
 import { searchFilter } from '@/searchFilter.js'
 
 export default {
   components: {
-    List,
-    ListButtonEdit
+    Listado
   },
   beforeRouteEnter (to, from, next) {
     store.dispatch('dispositivos/getAllDispositivos').then(res => next())
   },
   data () {
     return {
-      headings: ['Nombre', 'Unidad', 'Operador', 'Valor', 'Dispositivo sensor asociado', 'Acciones'],
+      headings: ['Nombre', 'Unidad', 'Operador', 'Valor', 'Sensor Asociado', 'Actuador Asociado', 'Acción'],
       fields: ['nombre', 'unidad', 'operador', 'valor', 'dispositivo'],
-      search: ''
+      search: '',
+      selectedItem: null
     }
   },
   computed: {
@@ -87,10 +154,7 @@ export default {
 
       const ids = props.map(prop => prop.dispositivoId)
 
-      console.log(ids)
-
       const nombres = ids.map(id => {
-        console.log(id)
         return this.dispositivos.find(dispositivo => dispositivo.id === id).nombre
       })
 
@@ -102,6 +166,7 @@ export default {
     },
     reglasFiltradas () {
       return searchFilter(this.search, this.reglasConNombreDispositivo)
+      // return searchFilter(this.search, this.reglas)
     }
   },
   created () {
@@ -116,7 +181,7 @@ export default {
       this.$router.push({ name: 'editarRegla', params: { identificador: regla.id.toString() } })
     },
     eliminar (regla) {
-      this.$store.dispatch('reglas/darDeBaja', regla)
+      this.$store.dispatch('reglas/eliminarRegla', regla)
     }
   }
 }

@@ -12,6 +12,9 @@
       class="form__select-option"
     >
       Seleccionar
+      <template v-if="extraLabel">
+        {{ extraLabel }}
+      </template>
     </option>
     <option
       v-for="(option, index) in options"
@@ -46,6 +49,11 @@ export default {
       type: Array,
       required: false,
       default: null
+    },
+    extraLabel: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   data () {

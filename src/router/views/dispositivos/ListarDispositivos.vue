@@ -1,130 +1,110 @@
 <template>
-  <div class="list-wrapper container">
-    <h2 class="heading-secondary margin-bottom-medium">
-      Listado de dispositivos
-    </h2>
+  <Listado
+    :headings="headings"
+    :fields="fields"
+    :content="dispositivosFiltrados"
+    :search-prop="search"
+    @searched="search = $event"
+  >
+    <template v-slot:heading>
+      Dispositivos
+    </template>
 
-    <div class="flex-container margin-bottom-medium">
-      <BaseFilter v-model="search" />
-
+    <template v-slot:buttons>
       <BaseButton
         type="button"
         @click="detectar"
       >
         Detectar dispositivos
       </BaseButton>
-    </div>
 
-    <List
-      :headings="headings"
-      :fields="fields"
-      :content="dispositivosFiltrados"
-    >
-      <template v-slot:body="{ row, field }">
-        <template v-if="Array.isArray(row[field])">
-          <div
-            v-for="(value, index) in row[field]"
-            :key="index"
-            :class="{ 'flex-cell': field === 'reglasParseadas' }"
-          >
-            <template v-if="field === 'reglasParseadas'">
-              <span class="margin-right-small">
-                {{ value }}
-              </span>
-              <button
-                class="btn btn--small btn--edit"
-                @click="editarRegla(row.reglas[index])"
-              >
-                <svg class="flex-svg">
-                  <use xlink:href="@/assets/sprite.svg#icon-edit-pencil" />
-                </svg>
-              </button>
-            </template>
-            <template v-else>
-              {{ value }}
-            </template>
-          </div>
-        </template>
-        <template v-else>
-          {{ row[field] }}
-        </template>
-      </template>
+      <BaseButton
+        :disabled="selectedItem === null"
+        type="button"
+        @click="editar(dispositivos[selectedItem])"
+      >
+        Editar
+      </BaseButton>
+    </template>
 
-      <!-- Slot hardcodeado -->
-      <template v-slot:actuadores="{ row, index }">
-        <td
-          v-if="row.tipo === 'SENSOR'"
-          class="list__cell"
+    <template v-slot:radio-button="{ index }">
+      <div class="radio">
+        <input
+          :id="index"
+          v-model="selectedItem"
+          name="radio"
+          :value="index"
+          type="radio"
+          class="radio__input"
         >
-          <BaseInputSelect
-            v-model="actuadoresElegidos[index]"
-            :options="actuadoresEncenderApagar"
-            :options-labels="nombreActuadoresEncenderApagar"
-            @change="elegirActuador"
-          />
-        </td>
-        <td v-else>
-          &nbsp;
-        </td>
-      </template>
-      <!-- End slot hardcodeado -->
+        <label
+          class="radio__label"
+          :for="index"
+        >
+          <span class="radio__btn" />
+        </label>
+      </div>
+    </template>
 
-      <template v-slot:buttons="{ index }">
-        <ListButtonEdit @click="editar(dispositivos[index])">
-          Editar
-        </ListButtonEdit>
-        <ListButtonToggle
-          :active="dispositivos[index].activo"
+    <template v-slot:content="{ row, field, index }">
+      <template v-if="Array.isArray(row[field])">
+        <div
+          v-for="(value, index) in row[field]"
+          :key="index"
+        >
+          {{ value }}
+          <!-- <template v-if="field === 'reglasParseadas'">
+            <span class="margin-right-small">
+              {{ value }}
+            </span> -->
+          <!-- <button
+              class="btn btn--small btn--edit"
+              @click="editarRegla(row.reglas[index])"
+            >
+              <svg class="flex-svg">
+                <use xlink:href="@/assets/sprite.svg#icon-edit-pencil" />
+              </svg>
+            </button> -->
+          <!-- </template>
+          <template v-else>
+            {{ value }}
+          </template> -->
+        </div>
+      </template>
+      <template v-else-if="field === 'activo'">
+        <span
+          :class="[row[field] === 'Deshabilitado' ? 'disabled' : 'enabled']"
           @click="modificarEstado(dispositivos[index])"
         >
-          <template v-if="dispositivos[index].activo">
-            Deshabilitar
-          </template>
-          <template v-else>
-            Habilitar
-          </template>
-        </ListButtonToggle>
+          {{ row[field] }}
+        </span>
       </template>
-    </List>
-  </div>
+      <template v-else>
+        {{ row[field] }}
+      </template>
+    </template>
+  </Listado>
 </template>
 
 <script>
-import List from '@/components/List'
-import ListButtonEdit from '@/components/ListButtonEdit'
-import ListButtonToggle from '@/components/ListButtonToggle'
-
+import Listado from '@/router/views/layouts/Listado'
 import { searchFilter } from '@/searchFilter.js'
 
 export default {
   components: {
-    List,
-    ListButtonEdit,
-    ListButtonToggle
+    Listado
   },
   data () {
     return {
-      headings: ['Dispositivo', 'Estado', 'Condicion', 'Actuador', 'Acciones'],
-      fields: ['nombre', 'activo', 'reglasParseadas'],
+      headings: ['Nombre', 'Tipo', 'Estado', 'Reglas'],
+      fields: ['nombre', 'tipo', 'activo', 'reglasParseadas'],
       search: '',
-      actuadoresElegidos: JSON.parse(localStorage.getItem('actuadoresElegidos')) || []
+      selectedItem: null
     }
   },
   computed: {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
-    },
-    actuadores () {
-      return this.dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
-    },
-    nombreActuadores () {
-      return this.actuadores.map(actuador => actuador.nombre)
-    },
-    actuadoresEncenderApagar () {
-      return this.actuadores.map(actuador => [{ ...actuador, accion: 'ENCENDER' }, { ...actuador, accion: 'APAGAR' }]).flat()
-    },
-    nombreActuadoresEncenderApagar () {
-      return this.actuadoresEncenderApagar.map(actuador => `${actuador.accion} ${actuador.nombre}`)
     },
     dispositivosToSpanish () {
       const props = this.dispositivos.map(dispositivo => {
@@ -146,6 +126,7 @@ export default {
         return prop.reglas.map(innerProp => {
           return `
             Si ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
+            -> Encender Actuador_1
           `
         })
       })
@@ -164,9 +145,6 @@ export default {
     this.$store.dispatch('dispositivos/getAllDispositivos')
   },
   methods: {
-    elegirActuador (value) {
-      localStorage.setItem('actuadoresElegidos', JSON.stringify(this.actuadoresElegidos))
-    },
     detectar () {
       this.$router.push({ name: 'detectarDispositivos' })
     },
@@ -202,19 +180,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .flex-cell {
-    display: flex;
-    align-items: center;
+//   .flex-cell {
+//     display: flex;
+//     align-items: center;
 
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-  }
+//     &:not(:last-child) {
+//       margin-bottom: 1rem;
+//     }
+//   }
 
-  .flex-svg {
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    fill: #fff;
-  }
+//   .flex-svg {
+//     display: block;
+//     width: 1rem;
+//     height: 1rem;
+//     fill: #fff;
+//   }
 </style>

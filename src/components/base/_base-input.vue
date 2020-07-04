@@ -12,7 +12,8 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     type: {
       type: String,

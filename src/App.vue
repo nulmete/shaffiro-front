@@ -16,10 +16,6 @@
         <RouterView :key="$route.fullPath" />
       </transition>
     </main>
-
-    <!-- <footer class="footer">
-      Cátedra IdS 2019 - Grupo 1
-    </footer> -->
   </div>
 </template>
 
@@ -27,25 +23,25 @@
 import NavBar from '@/components/NavBar'
 
 export default {
-  components: { NavBar },
-  created () {
-    window.addEventListener('scroll', this.handleScroll)
-  },
-  methods: {
-    handleScroll (event) {
-      const nav = document.querySelector('nav')
-      const topOfNav = nav.offsetTop
-      const navHeight = nav.offsetHeight
+  components: { NavBar }
+  // created () {
+  //   window.addEventListener('scroll', this.handleScroll)
+  // },
+  // methods: {
+  //   handleScroll (event) {
+  //     const nav = document.querySelector('nav')
+  //     const topOfNav = nav.offsetTop
+  //     const navHeight = nav.offsetHeight
 
-      if (window.scrollY > topOfNav) {
-        document.body.style.paddingTop = navHeight + 'px'
-        nav.classList.add('fixed')
-      } else {
-        document.body.style.paddingTop = 0
-        nav.classList.remove('fixed')
-      }
-    }
-  }
+  //     if (window.scrollY > topOfNav) {
+  //       document.body.style.paddingTop = navHeight + 'px'
+  //       nav.classList.add('fixed')
+  //     } else {
+  //       document.body.style.paddingTop = 0
+  //       nav.classList.remove('fixed')
+  //     }
+  //   }
+  // }
 }
 </script>
 
@@ -59,12 +55,12 @@ export default {
   flex-direction: column;
   min-height: 100vh;
 
-  > nav.fixed {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 999;
-  }
+  // > nav.fixed {
+  //   position: fixed;
+  //   top: 0;
+  //   width: 100%;
+  //   z-index: 999;
+  // }
 }
 
 *,
@@ -100,6 +96,30 @@ body {
   animation-duration: .3s;
 }
 
+.container {
+  margin: 0 auto;
+  max-width: $grid-width;
+  padding: 0 1.5rem;
+}
+
+.flex-wrapper {
+    display: flex;
+    align-items: center;
+
+    & > .form__group {
+      flex: 1;
+      margin: 0 !important;
+
+      &:not(:last-child) {
+        margin-right: 1.4rem !important;
+      }
+    }
+
+    & > span {
+      margin-right: 1.4rem;
+    }
+  }
+
 ul {
   list-style: none;
 }
@@ -107,5 +127,20 @@ ul {
 a:link,
 a:visited {
   text-decoration: none;
+}
+
+.disabled,
+.enabled {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 5px;
+  color: #fff;
+}
+.disabled {
+  background-color: #e74c3c;
+}
+.enabled {
+  background-color: #27ae60;
 }
 </style>

@@ -33,6 +33,31 @@
         />
       </div>
 
+      <div
+        v-if="tipo === 'SENSOR'"
+        class="form__group"
+      >
+        <label class="form__label">Magnitud a medir</label>
+        <BaseInputSelect
+          id="unidad"
+          v-model="unidad"
+          :options="unidadesPosibles"
+          :options-labels="magnitudesPosibles"
+        />
+      </div>
+
+      <div
+        v-else-if="tipo === 'ACTUADOR'"
+        class="form__group"
+      >
+        <label class="form__label">Artefacto a controlar</label>
+        <BaseInputSelect
+          id="artefacto"
+          v-model="artefacto"
+          :options="artefactosPosibles"
+        />
+      </div>
+
       <div class="form__group">
         <BaseInputCheckbox
           :id="'device-state'"
@@ -52,6 +77,7 @@
 </template>
 
 <script>
+import { transformarUnidad } from '@/components/Reglas/condicion'
 import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
@@ -83,39 +109,43 @@ export default {
       uuid: '',
       nombre: '',
       tipo: '',
+      unidad: '',
       tiposPosibles: ['SENSOR', 'ACTUADOR'],
+      unidadesPosibles: ['LUMENES', 'CELSIUS', 'AMPERES'],
       activo: false,
+      artefacto: '',
+      artefactosPosibles: ['Lámpara', 'Aire', 'PC'],
       configuracion: ''
+    }
+  },
+  computed: {
+    magnitudesPosibles () {
+      return this.unidadesPosibles.map(unidad => transformarUnidad(unidad))
     }
   },
   methods: {
     async asociarDispositivo () {
-      // const pair = [{
-      //   id: '2',
-      //   pin: '2',
-      //   mode: 'OUTPUT',
-      //   type: 'proximidad'
-      // }]
+      const configuracion = this.tipo === 'SENSOR' ? this.unidad : this.artefacto
 
       const formData = {
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
-        configuracion: this.configuracion
+        // A MEJORAR: mando en el campo configuración la magnitud a medir
+        // si el dispositivo es tipo SENSOR.
+        // Si es tipo ACTUADOR, mando el artefacto a controlar
+        configuracion
       }
 
       try {
-        // hacer pair
-        // await axios.post(`/api/pair/${this.mac}`, pair)
-
         // crear dispositivo
         await axios.post('/api/dispositivos', formData)
         // eliminar dispositivo de la tabla de dispositivos no asociados
         await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
-        await this.$nextTick.then(this.$router.push({ name: 'dispositivos' }))
+        this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo
-        console.log(error.response)
+        console.log(error)
       }
     }
   },
