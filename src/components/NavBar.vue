@@ -4,7 +4,7 @@
       <div class="header__logo-box">
         <img
           class="header__logo"
-          src="../assets/logo.png"
+          src="../assets/shaffiro.svg"
           alt="logo"
         >
       </div>

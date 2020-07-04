@@ -24,24 +24,6 @@ import NavBar from '@/components/NavBar'
 
 export default {
   components: { NavBar }
-  // created () {
-  //   window.addEventListener('scroll', this.handleScroll)
-  // },
-  // methods: {
-  //   handleScroll (event) {
-  //     const nav = document.querySelector('nav')
-  //     const topOfNav = nav.offsetTop
-  //     const navHeight = nav.offsetHeight
-
-  //     if (window.scrollY > topOfNav) {
-  //       document.body.style.paddingTop = navHeight + 'px'
-  //       nav.classList.add('fixed')
-  //     } else {
-  //       document.body.style.paddingTop = 0
-  //       nav.classList.remove('fixed')
-  //     }
-  //   }
-  // }
 }
 </script>
 
@@ -54,13 +36,6 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
-  // > nav.fixed {
-  //   position: fixed;
-  //   top: 0;
-  //   width: 100%;
-  //   z-index: 999;
-  // }
 }
 
 *,
@@ -92,8 +67,13 @@ body {
   color: $color-primary-dark;
 }
 
-.page-wrapper > * {
-  animation-duration: .3s;
+.page-wrapper {
+  flex: 1;
+  position: relative;
+
+  > * {
+    animation-duration: 3s;
+  }
 }
 
 .container {

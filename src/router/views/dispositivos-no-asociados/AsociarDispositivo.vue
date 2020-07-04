@@ -55,6 +55,7 @@
           id="artefacto"
           v-model="artefacto"
           :options="artefactosPosibles"
+          :options-labels="artefactosPosibles"
         />
       </div>
 

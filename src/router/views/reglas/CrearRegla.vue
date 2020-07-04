@@ -141,8 +141,8 @@
 </template>
 
 <script>
-import Condicion from '@/components/Reglas/Condicion'
-import { transformarOperador, transformarUnidad } from '@/components/Reglas/condicion'
+import Condicion from '@/components/Reglas/Condicion.vue'
+import { transformarOperador, transformarUnidad } from '@/components/Reglas/condicion.js'
 import { required } from 'vuelidate/lib/validators'
 import axios from 'axios'
 import store from '@/store/store'
@@ -173,14 +173,14 @@ export default {
   computed: {
     sensores () {
       const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
-      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR' && dispositivo.reglas.length === 0)
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
     },
     sensoresLabels () {
       return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)
     },
     actuadores () {
       const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
-      return dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR' && dispositivo.reglas.length === 0)
+      return dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
     },
     actuadoresLabels () {
       return this.actuadores.map(actuador => `Nombre: ${actuador.nombre}`)
