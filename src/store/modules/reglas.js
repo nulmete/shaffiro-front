@@ -1,4 +1,4 @@
-import axios from 'axios'
+import ruleEngineApi from '@/utils/ruleEngineApi'
 import { getSavedState, saveState } from '../helpers'
 
 export const state = {
@@ -34,19 +34,19 @@ export const getters = {
 
 export const actions = {
   async getAllReglas ({ commit }) {
-    const reglas = await axios.get('/api/reglas')
+    const reglas = await ruleEngineApi.get('/rules')
     commit('setAllReglas', reglas.data)
     return reglas
-  },
-
-  async getRegla ({ commit }, id) {
-    const regla = await axios.get(`/api/reglas/${id}`)
-    commit('setReglaActual', regla.data)
-    return regla
-  },
-
-  async eliminarRegla ({ commit }, regla) {
-    await axios.delete(`/api/reglas/${regla.id}`)
-    commit('eliminarRegla', regla.id)
   }
+
+  // async getRegla ({ commit }, id) {
+  //   const regla = await ruleEngineApi.get(`/api/reglas/${id}`)
+  //   commit('setReglaActual', regla.data)
+  //   return regla
+  // },
+
+  // async eliminarRegla ({ commit }, regla) {
+  //   await ruleEngineApi.delete(`/api/reglas/${regla.id}`)
+  //   commit('eliminarRegla', regla.id)
+  // }
 }

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 import { getSavedState, saveState } from '../helpers'
 
 export const state = {
@@ -34,19 +34,19 @@ export const getters = {
 
 export const actions = {
   async getAllDispositivos ({ commit }) {
-    const dispositivos = await axios.get('/api/dispositivos')
+    const dispositivos = await mainApi.get('/api/dispositivos')
     commit('setAllDispositivos', dispositivos.data)
     return dispositivos
   },
 
   async getDispositivo ({ commit }, id) {
-    const dispositivo = await axios.get(`/api/dispositivos/${id}`)
+    const dispositivo = await mainApi.get(`/api/dispositivos/${id}`)
     commit('setDispositivoActual', dispositivo.data)
     return dispositivo
   },
 
   async modificarEstado ({ commit }, dispositivoModificado) {
-    const respuesta = await axios.put('/api/dispositivos', dispositivoModificado)
+    const respuesta = await mainApi.put('/api/dispositivos', dispositivoModificado)
     commit('modificarEstado', respuesta.data)
     return respuesta
   }

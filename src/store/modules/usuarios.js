@@ -1,4 +1,4 @@
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 import { getSavedState, saveState } from '../helpers'
 
 export const state = {
@@ -34,19 +34,19 @@ export const getters = {
 
 export const actions = {
   async getAllUsers ({ commit }) {
-    const allUsers = await axios.get('api/users')
+    const allUsers = await mainApi.get('api/users')
     commit('setAllUsers', allUsers.data)
     return allUsers
   },
 
   async getUser ({ commit }, username) {
-    const user = await axios.get(`/api/users/${username}`)
+    const user = await mainApi.get(`/api/users/${username}`)
     commit('setCurrentUser', user.data)
     return user
   },
 
   async modificarEstado ({ commit }, usuarioModificado) {
-    const respuesta = await axios.put('/api/users', usuarioModificado)
+    const respuesta = await mainApi.put('/api/users', usuarioModificado)
     commit('modificarEstado', respuesta.data)
     return respuesta
   }

@@ -37,7 +37,6 @@ router.beforeEach((to, from, next) => {
   }
 
   function redirectToLogin () {
-    console.log('redirectToLogin()')
     next({ name: 'login', query: { redirectFrom: to.fullPath } })
   }
 })

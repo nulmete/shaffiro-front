@@ -1,4 +1,4 @@
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 import { getSavedState, saveState } from '../helpers'
 
 export const state = {
@@ -42,9 +42,9 @@ export const actions = {
 
     return Promise.all([
       // Retorna username
-      axios.get('/api/authenticate'),
+      mainApi.get('/api/authenticate'),
       // Retorna toda la info del usuario, lo que importa son las authorities
-      axios.get('/api/account')
+      mainApi.get('/api/account')
     ])
       .then(([firstResponse, secondResponse]) => {
         const username = firstResponse.data
@@ -63,12 +63,13 @@ export const actions = {
   },
 
   async login ({ commit }, { username, password } = {}) {
+    console.log(mainApi)
     // Obtener token
-    const responseAuth = await axios.post('/api/authenticate', { username, password })
+    const responseAuth = await mainApi.post('/api/authenticate', { username, password })
     const token = responseAuth.data.id_token
 
     // Obtener authorities
-    const responseAcc = await axios.get('/api/account', {
+    const responseAcc = await mainApi.get('/api/account', {
       headers: { Authorization: 'Bearer ' + token }
     })
     const authorities = responseAcc.data.authorities
@@ -83,7 +84,7 @@ export const actions = {
 
   // Recuperar contraseña
   async resetPasswordInit (context, email) {
-    await axios.post('/api/account/reset-password/init', email, {
+    await mainApi.post('/api/account/reset-password/init', email, {
       headers: {
         'Content-Type': 'text/plain'
       }
@@ -91,12 +92,12 @@ export const actions = {
   },
 
   async resetPasswordFinish (context, formData) {
-    await axios.post('/api/account/reset-password/finish', formData)
+    await mainApi.post('/api/account/reset-password/finish', formData)
   },
 
   // Cambiar contraseña de un usuario logeado
   async changePassword (context, formData) {
-    await axios.post('/api/account/change-password', formData)
+    await mainApi.post('/api/account/change-password', formData)
   }
 }
 
@@ -106,7 +107,7 @@ export const actions = {
 
 // Si hay un usuario logeado, setear el header 'Authorization' a 'Bearer <token>'
 function setDefaultAuthHeaders (state) {
-  axios.defaults.headers.common.Authorization = state.currentUser
+  mainApi.defaults.headers.common.Authorization = state.currentUser
     ? `Bearer ${state.currentUser.token}`
     : ''
 }
