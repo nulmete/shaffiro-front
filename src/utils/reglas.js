@@ -1,3 +1,4 @@
+// Helper functions para reglas
 export const transformarOperador = (operador) => {
   switch (operador) {
     case '>':
@@ -11,7 +12,7 @@ export const transformarOperador = (operador) => {
   }
 }
 
-export const transformarUnidad = (unidad) => {
+export const obtenerMagnitud = (unidad) => {
   switch (unidad) {
     case 'CELSIUS':
       return 'la temperatura'
@@ -19,5 +20,7 @@ export const transformarUnidad = (unidad) => {
       return 'la intensidad de corriente'
     case 'LUMENES':
       return 'la luminosidad'
+    default:
+      return 'MAGNITUD NO ESPECIFICADA'
   }
 }

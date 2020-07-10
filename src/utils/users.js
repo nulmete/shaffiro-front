@@ -1,4 +1,4 @@
-export function translateAuthorities (authority) {
+export const obtenerRoles = (authority) => {
   switch (authority) {
     case 'ROLE_USER':
       return 'Cliente'

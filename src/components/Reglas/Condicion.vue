@@ -4,12 +4,6 @@
       <span>Si</span>
 
       <div class="form__group">
-        <!-- <BaseInputSelect
-          v-model="unidad"
-          :extra-label="'unidad'"
-          :options="unidadesPosibles"
-          :options-labels="magnitudesPosibles"
-        /> -->
         <BaseInput
           id="magnitud"
           v-model="magnitud"
@@ -38,10 +32,6 @@
           class="form__input"
           placeholder="Ingresar valor"
         />
-        <!-- <span
-          v-if="$v.valor.$dirty && !$v.valor.required"
-          class="input-error"
-        >Por favor, ingrese el valor de la condición</span> -->
       </div>
 
       <div class="form__group">
@@ -53,8 +43,6 @@
           class="form__input"
         />
       </div>
-
-      <!-- <span>{{ unidad }}</span> -->
     </div>
 
     <button
@@ -67,7 +55,7 @@
 </template>
 
 <script>
-import { transformarOperador, transformarUnidad } from './condicion'
+import { transformarOperador, obtenerMagnitud } from '@/utils/reglas'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
@@ -80,9 +68,8 @@ export default {
   data () {
     return {
       operador: '',
-      valor: '',
+      valor: null,
       operadoresPosibles: ['>', '<', '>=', '<=']
-      // unidadesPosibles: ['CELSIUS', 'LUMENES', 'AMPERES']
     }
   },
   computed: {
@@ -90,21 +77,18 @@ export default {
       return this.sensorAsociado.configuracion || ''
     },
     magnitud () {
-      return transformarUnidad(this.unidad)
+      return obtenerMagnitud(this.unidad)
     },
     operadoresPosiblesTexto () {
       return this.operadoresPosibles.map(operador => transformarOperador(operador))
     }
-    // magnitudesPosibles () {
-    //   return this.unidadesPosibles.map(unidad => transformarUnidad(unidad))
-    // }
   },
   methods: {
     agregarCondicion () {
       this.$emit('agregarCondicion', {
-        unidad: this.unidad,
-        operador: this.operador,
-        valor: this.valor
+        op: this.operador,
+        vs: parseInt(this.valor),
+        unit: this.unidad
       })
 
       this.operador = ''

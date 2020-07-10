@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Asociar dispositivo
     </template>
@@ -74,17 +74,17 @@
         Asociar
       </BaseButton>
     </form>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
-import { transformarUnidad } from '@/components/Reglas/condicion'
+import MainForm from '@/router/views/layouts/MainForm'
+import { obtenerMagnitud } from '@/utils/reglas'
 import { required } from 'vuelidate/lib/validators'
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   props: {
     identificador: {
       type: String,
@@ -123,7 +123,7 @@ export default {
   },
   computed: {
     magnitudesPosibles () {
-      return this.unidadesPosibles.map(unidad => transformarUnidad(unidad))
+      return this.unidadesPosibles.map(unidad => obtenerMagnitud(unidad))
     }
   },
   methods: {
@@ -142,9 +142,9 @@ export default {
 
       try {
         // crear dispositivo
-        await axios.post('/api/dispositivos', formData)
+        await mainApi.post('/api/dispositivos', formData)
         // eliminar dispositivo de la tabla de dispositivos no asociados
-        await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
+        await mainApi.delete(`api/dispositivo-no-asociados/${this.id}`)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo

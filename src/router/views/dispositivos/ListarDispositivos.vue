@@ -88,7 +88,8 @@
 
 <script>
 import Listado from '@/router/views/layouts/Listado'
-import { searchFilter } from '@/searchFilter.js'
+import { obtenerMagnitud } from '@/utils/reglas'
+import { searchFilter } from '@/utils/searchFilter'
 
 export default {
   components: {
@@ -106,7 +107,7 @@ export default {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
-    dispositivosToSpanish () {
+    dispositivosParseados () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
           .filter(key => ['activo', 'reglas'].includes(key))
@@ -125,7 +126,11 @@ export default {
       const regla = props.map(prop => {
         return prop.reglas.map(innerProp => {
           return `
-            Si ${this.findMagnitud(innerProp.unidad)} ${innerProp.operador} ${innerProp.valor} ${innerProp.unidad}
+            Si
+            ${this.obtenerMagnitud(innerProp.unidad)}
+            ${innerProp.operador}
+            ${innerProp.valor}
+            ${innerProp.unidad}
             -> Encender Actuador_1
           `
         })
@@ -138,13 +143,14 @@ export default {
       return dispositivos
     },
     dispositivosFiltrados () {
-      return searchFilter(this.search, this.dispositivosToSpanish)
+      return searchFilter(this.search, this.dispositivosParseados)
     }
   },
   created () {
     this.$store.dispatch('dispositivos/getAllDispositivos')
   },
   methods: {
+    obtenerMagnitud,
     detectar () {
       this.$router.push({ name: 'detectarDispositivos' })
     },
@@ -158,17 +164,8 @@ export default {
       try {
         await this.$store.dispatch(`dispositivos/modificarEstado`, dispositivoModificado)
       } catch (error) {
+        // todo
         console.log(error)
-      }
-    },
-    findMagnitud (unidad) {
-      switch (unidad) {
-        case 'CELSIUS':
-          return 'Temperatura'
-        case 'AMPERES':
-          return 'Intensidad de corriente'
-        case 'LUMENES':
-          return 'Flujo luminoso'
       }
     },
     editarRegla (regla) {
@@ -178,21 +175,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-//   .flex-cell {
-//     display: flex;
-//     align-items: center;
-
-//     &:not(:last-child) {
-//       margin-bottom: 1rem;
-//     }
-//   }
-
-//   .flex-svg {
-//     display: block;
-//     width: 1rem;
-//     height: 1rem;
-//     fill: #fff;
-//   }
-</style>

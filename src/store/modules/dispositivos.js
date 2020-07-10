@@ -26,9 +26,14 @@ export const getters = {
   getAllDispositivos (state) {
     return state.dispositivos
   },
-
   getDispositivo (state) {
     return state.dispositivoActual
+  },
+  getSensores (state, getters) {
+    return getters.getAllDispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
+  },
+  getActuadores (state, getters) {
+    return getters.getAllDispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
   }
 }
 

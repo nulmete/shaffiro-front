@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Editar dispositivo
     </template>
@@ -32,14 +32,6 @@
         />
       </div>
 
-      <!-- <div class="form__group">
-        <label class="form__label">Tipo de dispositivo</label>
-        <BaseInputSelect
-          v-model="tipo"
-          :options="tiposPosibles"
-        />
-      </div> -->
-
       <BaseButton
         :disabled="$v.$invalid"
         type="submit"
@@ -47,16 +39,16 @@
         Guardar
       </BaseButton>
     </form>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
+import MainForm from '@/router/views/layouts/MainForm'
 import { required } from 'vuelidate/lib/validators'
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   props: {
     identificador: {
       type: String,
@@ -101,7 +93,7 @@ export default {
       }
 
       try {
-        await axios.put('/api/dispositivos', formData)
+        await mainApi.put('/api/dispositivos', formData)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo

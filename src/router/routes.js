@@ -154,15 +154,15 @@ export default [
   {
     path: '/reglas/crear',
     name: 'crearRegla',
-    component: () => import('@/router/views/reglas/CrearRegla.vue'),
+    component: () => import('@/router/views/reglas/ReglaForm.vue'),
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/reglas/editar/:identificador',
+    path: '/reglas/editar',
     name: 'editarRegla',
-    component: () => import('@/router/views/reglas/EditarRegla.vue'),
+    component: () => import('@/router/views/reglas/ReglaForm.vue'),
     meta: {
       requiresAuth: true
     },

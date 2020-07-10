@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Activar usuario
     </template>
@@ -13,14 +13,14 @@
         Por favor, verifique su casilla para continuar con el proceso de activación.
       </template>
     </BaseCard>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
+import MainForm from '@/router/views/layouts/MainForm'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   computed: {
     email () {
       return this.$store.getters['auth/getActivationEmail']

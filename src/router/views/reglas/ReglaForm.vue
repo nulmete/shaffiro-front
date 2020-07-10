@@ -1,7 +1,7 @@
 <template>
   <div class="regla-form container">
     <h2 class="heading-secondary text-center margin-bottom-large">
-      Crear Regla
+      {{ pageTitle }} Regla
     </h2>
 
     <form
@@ -64,11 +64,15 @@
         >
           <li
             v-for="(condicion, index) in condiciones"
-            :key="index + condicion.valor"
+            :key="index"
             class="condicion"
           >
             <span class="condicion__detail">
-              {{ index + 1 }}. Si {{ transformarUnidad(condicion.unidad) }} es {{ transformarOperador(condicion.operador) }} {{ condicion.valor }} {{ condicion.unidad }}
+              {{ index + 1 }}.
+              Si {{ obtenerMagnitud(condicion.unit) }}
+              es {{ transformarOperador(condicion.op) }}
+              {{ condicion.vs }}
+              {{ condicion.unit }}
             </span>
             <button
               class="btn btn--condicion"
@@ -94,10 +98,10 @@
             Nota: el conector se utiliza para combinar las condiciones entre sí.
           </p>
           <p class="conector__help">
-            Conector Y: todas las condiciones deben cumplirse para que se accione el actuador.
+            Conector "y": todas las condiciones deben cumplirse para que se accione el actuador.
           </p>
           <p class="conector__help">
-            Conector O: al menos una de las condiciones debe cumplirse para que se accione el actuador.
+            Conector "o": al menos una de las condiciones debe cumplirse para que se accione el actuador.
           </p>
         </div>
       </div>
@@ -127,7 +131,7 @@
         <span class="regla__condiciones">{{ condicionesCombinadasString }}</span>
         entonces
         <span class="regla__acciones">{{ accion === 'on' ? 'encender' : 'apagar' }}</span>
-        {{ actuadorAsociado.configuracion || 'el artefacto' }}
+        {{ actuadorAsociado.configuracion || 'artefacto no especificado' }}
       </p>
 
       <BaseButton
@@ -142,45 +146,47 @@
 
 <script>
 import Condicion from '@/components/Reglas/Condicion.vue'
-import { transformarOperador, transformarUnidad } from '@/components/Reglas/condicion.js'
+import { transformarOperador, obtenerMagnitud } from '@/utils/reglas'
 import { required } from 'vuelidate/lib/validators'
-import axios from 'axios'
+import ruleEngineApi from '@/utils/ruleEngineApi'
 import store from '@/store/store'
 
 export default {
   components: {
     Condicion
   },
-  beforeRouteEnter (to, from, next) {
-    store.dispatch('dispositivos/getAllDispositivos').then(res => next())
-  },
-  beforeRouteLeave (to, from, next) {
-    this.$store.commit('dispositivos/setAllDispositivos', [])
-    next()
+  props: {
+    regla: {
+      type: Object,
+      required: false,
+      default: function () {
+        return {}
+      }
+    }
   },
   data () {
     return {
+      pageTitle: 'Crear',
+      editMode: false,
       nombre: '',
-      sensorAsociado: '',
-      actuadorAsociado: '',
       condiciones: [],
       conector: '&&',
       conectoresPosibles: ['&&', '||'],
+      sensorAsociado: '',
+      actuadorAsociado: '',
       accion: 'on',
       accionesPosibles: ['on', 'off']
     }
   },
   computed: {
     sensores () {
-      const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
-      return dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
+      return this.$store.getters['dispositivos/getSensores']
     },
     sensoresLabels () {
       return this.sensores.map(sensor => `Nombre: ${sensor.nombre}`)
     },
     actuadores () {
-      const dispositivos = this.$store.getters['dispositivos/getAllDispositivos']
-      return dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
+      return this.$store.getters['dispositivos/getActuadores']
     },
     actuadoresLabels () {
       return this.actuadores.map(actuador => `Nombre: ${actuador.nombre}`)
@@ -195,10 +201,10 @@ export default {
       const cantidadCondiciones = this.condiciones.length
 
       const condicionesTexto = this.condiciones.map(condicion => {
-        const magnitud = transformarUnidad(condicion.unidad)
-        const operadorTexto = transformarOperador(condicion.operador)
+        const magnitud = obtenerMagnitud(condicion.unit)
+        const operadorTexto = transformarOperador(condicion.op)
 
-        return `${cantidadCondiciones > 1 ? '(' : ''}${magnitud} es ${operadorTexto} ${condicion.valor} ${condicion.unidad}${cantidadCondiciones > 1 ? ')' : ''}`
+        return `${cantidadCondiciones > 1 ? '(' : ''}${magnitud} es ${operadorTexto} ${condicion.vs} ${condicion.unit}${cantidadCondiciones > 1 ? ')' : ''}`
       })
 
       const condicionesCombinadas = this.insertBetweenEachArrElement(condicionesTexto, this.transformarConector(this.conector)).join(' ')
@@ -206,9 +212,32 @@ export default {
       return condicionesCombinadas
     }
   },
+  created () {
+    if (this.$route.name === 'editarRegla') {
+      this.editMode = true
+      this.pageTitle = 'Editar'
+      this.nombre = this.regla.name
+      this.condiciones = this.regla.antecedents.filter((ant, i) => i % 2 === 0)
+      if (this.regla.antecedents.length > 1) {
+        this.conector = this.regla.antecedents.filter((ant, i) => i % 2 !== 0)[0].conector
+      }
+      const sensorId = this.regla.antecedents[0].id1
+      this.sensorAsociado = this.sensores.find(sensor => sensor.id === sensorId)
+      const actuadorId = this.regla.consequences[0].id2
+      this.actuadorAsociado = this.actuadores.find(actuador => actuador.id === actuadorId)
+      this.accion = this.regla.consequences[0].action
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    store.dispatch('dispositivos/getAllDispositivos').then(res => next())
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('dispositivos/setAllDispositivos', [])
+    next()
+  },
   methods: {
     agregarCondicion (condicion) {
-      this.condiciones.push(condicion)
+      this.condiciones.push({ id1: this.sensorAsociado.id, ...condicion })
     },
     eliminarCondicion (condicionIndex) {
       this.condiciones.splice(condicionIndex, 1)
@@ -216,9 +245,9 @@ export default {
     transformarConector (conector) {
       switch (conector) {
         case '&&':
-          return 'Y'
+          return 'y'
         case '||':
-          return 'O'
+          return 'o'
       }
     },
     transformarAccion (accion) {
@@ -229,7 +258,7 @@ export default {
           return 'Apagar'
       }
     },
-    transformarUnidad,
+    obtenerMagnitud,
     transformarOperador,
     insertBetweenEachArrElement (arr, value) {
       return arr.reduce((result, element, index, array) => {
@@ -241,25 +270,38 @@ export default {
       }, [])
     },
     async crearRegla () {
-      const formData = {
-        // dispositivoId: this.dispositivo.id,
-        // nombre: this.nombre,
-        // operador: this.operador,
-        // unidad: this.unidad,
-        // valor: this.valor
-        dispositivoId: this.sensorAsociado.id,
-        nombre: this.nombre,
-        operador: this.condiciones[0].operador,
-        unidad: this.condiciones[0].unidad,
-        valor: this.condiciones[0].valor
+      const antecedents = this.insertBetweenEachArrElement(this.condiciones, { conector: `${this.conector}` })
+      const consequences = [{
+        id2: this.actuadorAsociado.id,
+        action: this.accion
+      }]
+
+      let formData = {
+        name: this.nombre,
+        antecedents,
+        consequences
+      }
+
+      let endpoint = '/create'
+      let method = 'POST'
+
+      if (this.editMode) {
+        endpoint = `/update?id=${this.regla._id.$oid}`
+        method = 'PUT'
       }
 
       try {
-        await axios.post('/api/reglas', formData)
+        console.log(formData)
+        await ruleEngineApi({
+          url: `${endpoint}`,
+          method,
+          data: formData
+        })
+        this.editMode = false
         this.$router.push({ name: 'reglas' })
       } catch (error) {
         // todo
-        console.log(error.response)
+        console.log(error)
       }
     }
   },

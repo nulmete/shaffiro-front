@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Crear usuario
     </template>
@@ -46,18 +46,18 @@
         Crear usuario
       </BaseButton>
     </form>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
+import MainForm from '@/router/views/layouts/MainForm'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
-import { translateAuthorities } from '@/translations.js'
-import axios from 'axios'
+import { obtenerRoles } from '@/utils/users'
+import mainApi from '@/utils/mainApi'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   data () {
     return {
       username: '',
@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     authoritiesOptionsSpanish () {
-      return this.authoritiesOptions.map(value => translateAuthorities(value))
+      return this.authoritiesOptions.map(value => obtenerRoles(value))
     }
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
       }
 
       try {
-        await axios.post('/api/users', formData)
+        await mainApi.post('/api/users', formData)
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
         // todo

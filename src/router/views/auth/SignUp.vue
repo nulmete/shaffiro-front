@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Regístrese en Shaffiro
     </template>
@@ -116,17 +116,17 @@
         Inicie sesión
       </BaseLink>
     </template>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
+import MainForm from '@/router/views/layouts/MainForm'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
 import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
-import axios from 'axios'
+import mainApi from '@/utils/mainApi'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   data () {
     return {
       email: '',
@@ -174,7 +174,7 @@ export default {
       }
 
       try {
-        await axios.post('/api/register', data)
+        await mainApi.post('/api/register', data)
         this.$store.commit('auth/setActivationEmail', data.email)
         this.$router.push({ name: 'activate' })
       } catch (error) {

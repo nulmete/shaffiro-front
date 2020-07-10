@@ -1,5 +1,5 @@
 <template>
-  <Auth>
+  <MainForm>
     <template v-slot:heading>
       Inicie sesión en Shaffiro
     </template>
@@ -81,15 +81,15 @@
         ¿Olvidó su contraseña?
       </BaseLink>
     </template>
-  </Auth>
+  </MainForm>
 </template>
 
 <script>
-import Auth from '@/router/views/layouts/Auth'
+import MainForm from '@/router/views/layouts/MainForm'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  components: { Auth },
+  components: { MainForm },
   data () {
     return {
       username: '',

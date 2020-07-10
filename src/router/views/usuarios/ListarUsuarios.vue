@@ -72,8 +72,8 @@
 
 <script>
 import Listado from '@/router/views/layouts/Listado'
-import { translateAuthorities } from '@/translations.js'
-import { searchFilter } from '@/searchFilter.js'
+import { obtenerRoles } from '@/utils/users'
+import { searchFilter } from '@/utils/searchFilter'
 
 export default {
   components: {
@@ -116,9 +116,9 @@ export default {
       // Traducir a español el estado de todos los usuarios
       const activated = props.map(prop => prop.activated ? 'Habilitado' : 'Deshabilitado')
 
-      // Traducir a español los roles de todos los usuario
+      // Traducir a español los roles de todos los usuarios
       const authorities = props.map(prop => {
-        return prop.authorities.map(value => translateAuthorities(value))
+        return prop.authorities.map(value => obtenerRoles(value))
       })
 
       const usuarios = this.usuarios.map((el, index) => {

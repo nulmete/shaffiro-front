@@ -1,35 +1,5 @@
 <template>
-  <!--
-    -- Nombre de la Regla: regla.name
-    -- Sensor ID: regla.antecedents[0].id1 => hacer un find con el listado de dispositivos tipo sensor
-    -- Actuador ID: regla.consequences[0].id2 => hacer un find con el listado de dispositivos tipo actuador
-    -- Antecedente: v-for de regla.antecedents
-        * si length = 1, quiere decir que solo tengo una condición, parseo esa condición
-        * si length > 1, quiere decir que tengo al menos 2 condiciones, parseo esas condiciones
-          ** Si
-            <magnitud> [0].op + [0].vs + [0].unit +
-            [1].conector +
-            <magnitud> [1].op + [1].vs + [1].unit + ...
-    -- "ENTONCES"
-    -- Consecuente: es un array con un solo elemento, que es un object
-        * if (action === "on") then "Encender"
-        * else "Apagar"
-  -->
-  <div>
-    <div
-      v-for="(regla, index) in reglas"
-      :key="index"
-      class="text"
-    >
-      <div>
-        Nombre: {{ regla.name }}
-      </div>
-      <div>
-        Sensor ID: {{ regla.antecedents[0].id1 }}
-      </div>
-    </div>
-  </div>
-  <!-- <Listado
+  <Listado
     :headings="headings"
     :fields="fields"
     :content="reglasFiltradas"
@@ -97,25 +67,26 @@
         {{ row[field] }}
       </template>
     </template>
-  </Listado> -->
+  </Listado>
 </template>
 
 <script>
 import store from '@/store/store'
-// import Listado from '@/router/views/layouts/Listado'
-import { searchFilter } from '@/searchFilter.js'
+import Listado from '@/router/views/layouts/Listado'
+import { searchFilter } from '@/utils/searchFilter'
+import { transformarOperador, obtenerMagnitud } from '@/utils/reglas'
 
 export default {
   components: {
-    // Listado
+    Listado
   },
   beforeRouteEnter (to, from, next) {
     store.dispatch('dispositivos/getAllDispositivos').then(res => next())
   },
   data () {
     return {
-      headings: ['Nombre', 'Unidad', 'Operador', 'Valor', 'Sensor Asociado', 'Actuador Asociado', 'Acción'],
-      fields: ['nombre', 'unidad', 'operador', 'valor', 'dispositivo'],
+      headings: ['Nombre', 'Descripción', 'Sensor asociado', 'Actuador asociado'],
+      fields: ['nombre', 'descripcion', 'sensorAsociado', 'actuadorAsociado'],
       search: '',
       selectedItem: null
     }
@@ -127,47 +98,81 @@ export default {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
-    // reglasConNombreDispositivo () {
-    //   const props = this.reglas.map(regla => {
-    //     const filtered = Object.keys(regla)
-    //       .filter(key => ['dispositivoId'].includes(key))
-    //       .reduce((obj, key) => {
-    //         return {
-    //           ...obj,
-    //           [key]: regla[key]
-    //         }
-    //       }, {})
+    sensores () {
+      return this.dispositivos.filter(dispositivo => dispositivo.tipo === 'SENSOR')
+    },
+    actuadores () {
+      return this.dispositivos.filter(dispositivo => dispositivo.tipo === 'ACTUADOR')
+    },
+    reglasParseadas () {
+      return this.reglas.map(regla => {
+        // Nombre de la regla
+        const nombre = regla.name
 
-    //     return filtered
-    //   })
+        // Descripción de la regla
+        const descripcion = regla.antecedents.map((antecedente, j) => {
+          let str
+          if (j % 2 === 0) {
+            str = `${this.transformarOperador(antecedente.op)} ${antecedente.vs} ${antecedente.unit}`
+          } else {
+            str = `${antecedente.conector === '&&' ? 'y' : 'o'}`
+          }
+          return str
+        })
 
-    //   const ids = props.map(prop => prop.dispositivoId)
+        const magnitud = this.obtenerMagnitud(regla.antecedents[0].unit)
+        descripcion.unshift(`Si ${magnitud} es`)
+        descripcion.push('ENTONCES')
+        const consecuente = regla.consequences[0].action === 'on'
+          ? 'Encender <artefacto>'
+          : 'Apagar <artefacto>'
+        descripcion.push(consecuente)
+        const descripcionJoined = descripcion.join(' ')
 
-    //   const nombres = ids.map(id => {
-    //     return this.dispositivos.find(dispositivo => dispositivo.id === id).nombre
-    //   })
+        // Sensor asociado
+        let nombreSensor
+        const sensorId = regla.antecedents[0].id1
+        const sensorAsociado = this.sensores.find(sensor => sensor.id === sensorId)
+        if (sensorAsociado) nombreSensor = sensorAsociado.nombre
+        else nombreSensor = ''
 
-    //   const reglas = this.reglas.map((el, index) => {
-    //     return { ...el, dispositivo: nombres[index] }
-    //   })
+        // Actuador asociado
+        let nombreActuador
+        const actuadorId = regla.consequences[0].id2
+        const actuadorAsociado = this.actuadores.find(actuador => actuador.id === actuadorId)
+        if (actuadorAsociado) nombreActuador = actuadorAsociado.nombre
+        else nombreActuador = ''
 
-    //   return reglas
-    // },
+        return {
+          nombre,
+          descripcion: descripcionJoined,
+          sensorAsociado: nombreSensor,
+          actuadorAsociado: nombreActuador
+        }
+      })
+    },
     reglasFiltradas () {
-      return searchFilter(this.search, this.reglasConNombreDispositivo)
-      // return searchFilter(this.search, this.reglas)
+      return searchFilter(this.search, this.reglasParseadas)
     }
   },
   created () {
     this.$store.dispatch('reglas/getAllReglas')
   },
   methods: {
+    transformarOperador,
+    obtenerMagnitud,
     crear () {
       this.$router.push({ name: 'crearRegla' })
     },
     editar (regla) {
       this.$store.commit('reglas/setReglaActual', regla)
-      this.$router.push({ name: 'editarRegla', params: { identificador: regla.id.toString() } })
+      this.$router.push({
+        name: 'editarRegla',
+        params: {
+          identificador: regla._id.$oid,
+          regla
+        }
+      })
     },
     eliminar (regla) {
       this.$store.dispatch('reglas/eliminarRegla', regla)
