@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const url = process.env.NODE_ENV === 'production'
-  ? process.env.VUE_APP_RULE_ENGINE_API_PROD
-  : process.env.VUE_APP_RULE_ENGINE_API_DEV
+  ? 'https://shaffiro.morlax.com.ar/engine/ruleEngine'
+  : 'http://localhost:5000/ruleEngine'
 
 const service = axios.create({
   baseURL: url
