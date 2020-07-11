@@ -1,29 +1,30 @@
 <template>
   <div id="app">
-    <NavBar />
+    <!-- <NavBar /> -->
     <!--
     Cuando diferentes rutas usan el mismo componente
     Por ejemplo '/profile/:username', siendo username un parámetro variable,
     Crear el componente nuevamente con el parámetro 'key'
     -->
     <main class="page-wrapper">
-      <transition
+      Ahre
+      <!-- <transition
         name="router-animation"
         enter-active-class="animated fadeIn"
         leave-active-class="animated fadeOut"
         mode="out-in"
       >
         <RouterView :key="$route.fullPath" />
-      </transition>
+      </transition> -->
     </main>
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar'
+// import NavBar from '@/components/NavBar'
 
 export default {
-  components: { NavBar }
+  // components: { NavBar }
 }
 </script>
 
