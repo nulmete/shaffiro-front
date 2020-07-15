@@ -14,13 +14,11 @@ export const transformarOperador = (operador) => {
 
 export const obtenerMagnitud = (unidad) => {
   switch (unidad) {
-    case 'CELSIUS':
-      return 'la temperatura'
-    case 'AMPERES':
-      return 'la intensidad de corriente'
     case 'LUMENES':
-      return 'la luminosidad'
+      return 'el Flujo Luminoso'
+    case 'horas':
+      return 'el Horario'
     default:
-      return 'MAGNITUD NO ESPECIFICADA'
+      return ''
   }
 }

@@ -109,26 +109,6 @@ export default {
         // Nombre de la regla
         const nombre = regla.name
 
-        // Descripción de la regla
-        const descripcion = regla.antecedents.map((antecedente, j) => {
-          let str
-          if (j % 2 === 0) {
-            str = `${this.transformarOperador(antecedente.op)} ${antecedente.vs} ${antecedente.unit}`
-          } else {
-            str = `${antecedente.conector === '&&' ? 'y' : 'o'}`
-          }
-          return str
-        })
-
-        const magnitud = this.obtenerMagnitud(regla.antecedents[0].unit)
-        descripcion.unshift(`Si ${magnitud} es`)
-        descripcion.push('ENTONCES')
-        const consecuente = regla.consequences[0].action === 'on'
-          ? 'Encender <artefacto>'
-          : 'Apagar <artefacto>'
-        descripcion.push(consecuente)
-        const descripcionJoined = descripcion.join(' ')
-
         // Sensor asociado
         let nombreSensor
         const sensorId = regla.antecedents[0].id1
@@ -142,6 +122,28 @@ export default {
         const actuadorAsociado = this.actuadores.find(actuador => actuador.id === actuadorId)
         if (actuadorAsociado) nombreActuador = actuadorAsociado.nombre
         else nombreActuador = ''
+
+        // Descripción de la regla
+        const descripcion = regla.antecedents.map((antecedente, j) => {
+          let str
+          if (j % 2 === 0) {
+            const magnitud = this.obtenerMagnitud(antecedente.unit)
+            str = `${magnitud} es ${this.transformarOperador(antecedente.op)} ${antecedente.vs} ${antecedente.unit}`
+          } else {
+            str = `${antecedente.conector === '&&' ? 'y' : 'o'}`
+          }
+          return str
+        })
+        descripcion.unshift('Si ')
+        descripcion.push('ENTONCES')
+
+        // Encontrar artefacto "vinculado" al actuador
+        const artefacto = actuadorAsociado ? actuadorAsociado.configuracion : 'ARTEFACTO NO VINCULADO'
+        const consecuente = regla.consequences[0].action === 'on'
+          ? `Encender ${artefacto}`
+          : `Apagar ${artefacto}`
+        descripcion.push(consecuente)
+        const descripcionJoined = descripcion.join(' ')
 
         return {
           nombre,

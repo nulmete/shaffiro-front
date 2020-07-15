@@ -67,6 +67,7 @@ export default {
         return this.value
       },
       set (newValue) {
+        console.log('changed from child select comp')
         this.$emit('change', newValue)
       }
     }

@@ -16,6 +16,7 @@
         <BaseInput
           id="username"
           v-model="username"
+          disabled
         />
       </div>
 
@@ -27,6 +28,7 @@
         <BaseInput
           id="email"
           v-model="email"
+          disabled
           type="email"
         />
       </div>

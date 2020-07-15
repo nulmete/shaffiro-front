@@ -11,24 +11,24 @@
       <div class="form__group">
         <label
           class="form__label"
-          for="username"
-        >Nombre de usuario</label>
-        <BaseInput
-          id="username"
-          v-model="username"
-          class="form__input"
-        />
-      </div>
-
-      <div class="form__group">
-        <label
-          class="form__label"
           for="email"
         >E-mail</label>
         <BaseInput
           id="email"
           v-model="email"
           type="email"
+        />
+      </div>
+
+      <div class="form__group">
+        <label
+          class="form__label"
+          for="username"
+        >Nombre de usuario</label>
+        <BaseInput
+          id="username"
+          v-model="username"
+          class="form__input"
         />
       </div>
 

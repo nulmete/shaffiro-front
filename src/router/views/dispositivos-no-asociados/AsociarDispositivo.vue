@@ -41,6 +41,7 @@
         <BaseInputSelect
           id="unidad"
           v-model="unidad"
+          disabled
           :options="unidadesPosibles"
           :options-labels="magnitudesPosibles"
         />
@@ -112,12 +113,14 @@ export default {
       uuid: '',
       nombre: '',
       tipo: '',
-      unidad: '',
+      unidad: 'LUMENES',
       tiposPosibles: ['SENSOR', 'ACTUADOR'],
-      unidadesPosibles: ['LUMENES', 'CELSIUS', 'AMPERES'],
+      // unidadesPosibles: ['LUMENES', 'CELSIUS', 'AMPERES'],
+      unidadesPosibles: ['LUMENES'],
       activo: false,
       artefacto: '',
-      artefactosPosibles: ['Lámpara', 'Aire', 'PC'],
+      // artefactosPosibles: ['Lámpara', 'Aire', 'PC'],
+      artefactosPosibles: ['Lámpara LED', 'Lámpara fluorescente', 'Lámpara halógena', 'Lámpara bajo consumo'],
       configuracion: ''
     }
   },

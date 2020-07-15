@@ -1,15 +1,21 @@
 <template>
   <div>
+    {{ sensorAsociado }}
     <div class="flex-wrapper margin-bottom-small">
       <span>Si</span>
 
       <div class="form__group">
-        <BaseInput
+        <!-- <BaseInput
           id="magnitud"
           v-model="magnitud"
           placeholder="Magnitud"
           disabled
           class="form__input"
+        /> -->
+        <BaseInputSelect
+          v-model="magnitud"
+          :extra-label="'magnitud'"
+          :options="magnitudesPosibles"
         />
       </div>
 
@@ -61,26 +67,49 @@ import { required } from 'vuelidate/lib/validators'
 export default {
   props: {
     sensorAsociado: {
-      type: [Object, String],
-      required: true
+      type: Object,
+      required: false,
+      default: function () {
+        return {}
+      }
     }
   },
   data () {
     return {
       operador: '',
+      magnitud: '',
       valor: null,
-      operadoresPosibles: ['>', '<', '>=', '<=']
+      operadoresPosibles: ['>', '<', '>=', '<='],
+      sensor: this.sensorAsociado
     }
   },
   computed: {
-    unidad () {
-      return this.sensorAsociado.configuracion || ''
-    },
-    magnitud () {
-      return obtenerMagnitud(this.unidad)
-    },
+    // unidad () {
+    //   return this.sensorAsociado.configuracion || ''
+    // },
     operadoresPosiblesTexto () {
       return this.operadoresPosibles.map(operador => transformarOperador(operador))
+    },
+    magnitudesPosibles () {
+      if (this.sensorAsociado) {
+        const magnitudSensor = obtenerMagnitud(this.sensorAsociado.configuracion)
+        return [magnitudSensor, 'el Horario']
+      } else {
+        return []
+      }
+    },
+    unidad () {
+      if (!this.sensorAsociado) {
+        return ''
+      }
+
+      if (this.magnitud === obtenerMagnitud(this.sensorAsociado.configuracion)) {
+        return this.sensorAsociado.configuracion
+      } else if (this.magnitud === 'el Horario') {
+        return 'horas'
+      } else {
+        return ''
+      }
     }
   },
   methods: {

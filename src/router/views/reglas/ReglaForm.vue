@@ -32,6 +32,7 @@
             v-model="sensorAsociado"
             :options="sensores"
             :options-labels="sensoresLabels"
+            @change="sensorElegido"
           />
         </div>
 
@@ -49,11 +50,63 @@
         Condiciones
       </h3>
 
-      <Condicion
-        class="margin-bottom-large"
-        :sensor-asociado="sensorAsociado"
-        @agregarCondicion="agregarCondicion"
-      />
+      <div class="flex-wrapper margin-bottom-small">
+        <span>Si</span>
+
+        <div class="form__group">
+          <BaseInputSelect
+            v-model="magnitud"
+            :extra-label="'magnitud'"
+            :options="magnitudesPosibles"
+          />
+        </div>
+
+        <span>es</span>
+
+        <div class="form__group">
+          <BaseInputSelect
+            v-model="operador"
+            :extra-label="'operador'"
+            :options="operadoresPosibles"
+            :options-labels="operadoresPosiblesTexto"
+          />
+        </div>
+
+        <div class="form__group">
+          <template v-if="magnitud === 'el Horario'">
+            <VueTimepicker
+              v-model="valor"
+              class="timepicker"
+            />
+          </template>
+          <template v-else>
+            <BaseInput
+              id="valor"
+              v-model="valor"
+              type="number"
+              class="form__input"
+              placeholder="Ingresar valor"
+            />
+          </template>
+        </div>
+
+        <div class="form__group">
+          <BaseInput
+            id="unidad"
+            v-model="unidad"
+            placeholder="Unidad"
+            disabled
+            class="form__input"
+          />
+        </div>
+      </div>
+
+      <button
+        class="btn btn--condicion margin-bottom-small"
+        @click.prevent="agregarCondicion"
+      >
+        Agregar
+      </button>
 
       <div
         v-if="condiciones.length"
@@ -131,29 +184,28 @@
         <span class="regla__condiciones">{{ condicionesCombinadasString }}</span>
         entonces
         <span class="regla__acciones">{{ accion === 'on' ? 'encender' : 'apagar' }}</span>
-        {{ actuadorAsociado.configuracion || 'artefacto no especificado' }}
+        {{ actuadorAsociado ? actuadorAsociado.configuracion : 'artefacto no especificado' }}
       </p>
 
       <BaseButton
-        :disabled="$v.$invalid"
         type="submit"
       >
-        Crear Regla
+        {{ pageTitle }} Regla
       </BaseButton>
     </form>
   </div>
 </template>
 
 <script>
-import Condicion from '@/components/Reglas/Condicion.vue'
 import { transformarOperador, obtenerMagnitud } from '@/utils/reglas'
 import { required } from 'vuelidate/lib/validators'
 import ruleEngineApi from '@/utils/ruleEngineApi'
 import store from '@/store/store'
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 
 export default {
   components: {
-    Condicion
+    VueTimepicker
   },
   props: {
     regla: {
@@ -169,11 +221,16 @@ export default {
       pageTitle: 'Crear',
       editMode: false,
       nombre: '',
+      operador: '',
+      magnitud: '',
+      magnitudesPosibles: [],
+      valor: '',
+      operadoresPosibles: ['>', '<', '>=', '<='],
       condiciones: [],
       conector: '&&',
       conectoresPosibles: ['&&', '||'],
-      sensorAsociado: '',
-      actuadorAsociado: '',
+      sensorAsociado: null,
+      actuadorAsociado: null,
       accion: 'on',
       accionesPosibles: ['on', 'off']
     }
@@ -190,6 +247,22 @@ export default {
     },
     actuadoresLabels () {
       return this.actuadores.map(actuador => `Nombre: ${actuador.nombre}`)
+    },
+    operadoresPosiblesTexto () {
+      return this.operadoresPosibles.map(operador => transformarOperador(operador))
+    },
+    unidad () {
+      if (!this.sensorAsociado) {
+        return ''
+      }
+
+      if (this.magnitud === obtenerMagnitud(this.sensorAsociado.configuracion)) {
+        return this.sensorAsociado.configuracion
+      } else if (this.magnitud === 'el Horario') {
+        return 'horas'
+      } else {
+        return ''
+      }
     },
     conectoresPosiblesTexto () {
       return this.conectoresPosibles.map(conector => this.transformarConector(conector))
@@ -223,6 +296,8 @@ export default {
       }
       const sensorId = this.regla.antecedents[0].id1
       this.sensorAsociado = this.sensores.find(sensor => sensor.id === sensorId)
+      const magnitudSensor = obtenerMagnitud(this.sensorAsociado.configuracion)
+      this.magnitudesPosibles.push(magnitudSensor, 'el Horario')
       const actuadorId = this.regla.consequences[0].id2
       this.actuadorAsociado = this.actuadores.find(actuador => actuador.id === actuadorId)
       this.accion = this.regla.consequences[0].action
@@ -236,8 +311,21 @@ export default {
     next()
   },
   methods: {
-    agregarCondicion (condicion) {
-      this.condiciones.push({ id1: this.sensorAsociado.id, ...condicion })
+    sensorElegido (sensor) {
+      this.magnitudesPosibles.splice(0, this.magnitudesPosibles.length)
+      const magnitudSensor = obtenerMagnitud(sensor.configuracion)
+      this.magnitudesPosibles.push(magnitudSensor, 'el Horario')
+    },
+    agregarCondicion () {
+      this.condiciones.push({
+        id1: this.sensorAsociado.id,
+        op: this.operador,
+        vs: this.valor,
+        unit: this.unidad
+      })
+      this.magnitud = ''
+      this.operador = ''
+      this.valor = ''
     },
     eliminarCondicion (condicionIndex) {
       this.condiciones.splice(condicionIndex, 1)
@@ -307,6 +395,9 @@ export default {
   },
   validations: {
     nombre: {
+      required
+    },
+    valor: {
       required
     }
   }
