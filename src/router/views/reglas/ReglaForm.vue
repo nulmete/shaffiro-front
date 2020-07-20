@@ -59,8 +59,11 @@
             v-for="(reglaActuador, index) in reglasParseadasActuadorAsociado"
             :key="reglaActuador.descripcion + index"
           >
-            <p class="margin-bottom-small">
-              {{ index + 1 }}. {{ reglaActuador.nombre }} - {{ reglaActuador.descripcion }}
+            <p
+              v-if="$route.params.identificador !== reglaActuador.id"
+              class="margin-bottom-small"
+            >
+              <strong>{{ reglaActuador.nombre }}</strong> - {{ reglaActuador.descripcion }}
             </p>
           </li>
         </ul>
@@ -180,10 +183,6 @@
         </div>
       </div>
 
-      <div v-if="actuadorAsociado">
-        {{ reglasExistentesConAccionOpuesta }}
-      </div>
-
       <div class="test margin-bottom-large">
         <h3 class="margin-bottom-medium">
           Acción
@@ -256,8 +255,8 @@ export default {
       sensorAsociado: null,
       actuadorAsociado: null,
       accion: 'on',
-      accionesPosibles: ['on', 'off'],
-      reglasConflictivas: []
+      accionesPosibles: ['on', 'off']
+      // reglasConflictivas: []
     }
   },
   computed: {
