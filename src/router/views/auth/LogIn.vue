@@ -50,7 +50,7 @@
         >Por favor, ingrese su nombre de usuario</span>
       </div>
 
-      <div class="form__group">
+      <div class="form__group margin-bottom-medium">
         <label
           class="form__label"
           for="password"

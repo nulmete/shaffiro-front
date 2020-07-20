@@ -80,7 +80,7 @@
         >Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número</span>
       </div>
 
-      <div class="form__group">
+      <div class="form__group margin-bottom-medium">
         <label
           class="form__label"
           for="confirm-password"
