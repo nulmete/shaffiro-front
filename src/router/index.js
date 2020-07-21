@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
   } else if (isGuestRequired) {
     if (isLoggedIn) {
       next({
-        name: 'dispositivos'
+        name: 'reglas'
       })
     } else {
       next()

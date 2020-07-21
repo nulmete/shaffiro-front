@@ -3,7 +3,8 @@ import { getSavedState, saveState } from '../helpers'
 
 export const state = {
   currentUser: getSavedState('auth.currentUser'),
-  activationEmail: getSavedState('auth.activationEmail')
+  activationEmail: getSavedState('auth.activationEmail'),
+  sessionExpired: false
 }
 
 export const mutations = {
@@ -12,10 +13,12 @@ export const mutations = {
     saveState('auth.currentUser', newValue)
     setDefaultAuthHeaders(state)
   },
-
   setActivationEmail (state, email) {
     state.activationEmail = email
     saveState('auth.activationEmail', email)
+  },
+  setSessionExpired (state, newValue) {
+    state.sessionExpired = newValue
   }
 }
 
@@ -23,11 +26,12 @@ export const getters = {
   isLoggedIn (state) {
     return !!state.currentUser && !!state.currentUser.token
   },
-
   isAdmin (state, getters) {
     return !!getters.isLoggedIn && !!state.currentUser.authorities.includes('ROLE_ADMIN')
   },
-
+  getSessionExpired (state) {
+    return state.sessionExpired
+  },
   getActivationEmail (state) {
     return state.activationEmail
   }
@@ -37,6 +41,7 @@ export const actions = {
   async validate ({ commit, state }) {
     // Si no hay usuario logeado, retornar
     if (!state.currentUser) return Promise.resolve(null)
+
     // Setear header Authorization para poder hacer las calls a la API
     setDefaultAuthHeaders(state)
 
@@ -51,30 +56,30 @@ export const actions = {
         const authorities = secondResponse.data.authorities
         const token = state.currentUser.token
         commit('setCurrentUser', { username, token, authorities })
+        commit('setSessionExpired', false)
         return token
       })
       .catch(error => {
         // Fallan las 2 requests al server porque el usuario no está logeado
         // o expiró su token
-        console.warn(error)
+        console.log('validate error: ', error)
         commit('setCurrentUser', null)
+        commit('setSessionExpired', true)
         return null
       })
   },
 
   async login ({ commit }, { username, password } = {}) {
-    console.log(mainApi)
     // Obtener token
     const responseAuth = await mainApi.post('/api/authenticate', { username, password })
     const token = responseAuth.data.id_token
-
     // Obtener authorities
     const responseAcc = await mainApi.get('/api/account', {
       headers: { Authorization: 'Bearer ' + token }
     })
     const authorities = responseAcc.data.authorities
-
     commit('setCurrentUser', { username, token, authorities })
+    commit('setSessionExpired', false)
   },
 
   async logOut ({ commit }) {

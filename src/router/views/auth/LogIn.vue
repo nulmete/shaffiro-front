@@ -19,14 +19,7 @@
     >
       <template v-slot:paragraph>
         El usuario ingresado no se encuentra habilitado.<br>
-        Haga click
-        <BaseLink
-          :to="{ name: 'activate' }"
-          class="activate"
-        >
-          aquí
-        </BaseLink>
-        para activar su usuario.
+        Por favor, revise su casilla de correo electrónico para activar su usuario.
       </template>
     </BaseCard>
 
@@ -89,7 +82,9 @@ import MainForm from '@/router/views/layouts/MainForm'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  components: { MainForm },
+  components: {
+    MainForm
+  },
   data () {
     return {
       username: '',

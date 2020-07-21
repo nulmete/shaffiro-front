@@ -1,6 +1,6 @@
 <template>
   <button
-    class="button"
+    :class="['button']"
     v-on="$listeners"
   >
     <slot />

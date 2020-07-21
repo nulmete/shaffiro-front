@@ -20,7 +20,9 @@
 import MainForm from '@/router/views/layouts/MainForm'
 
 export default {
-  components: { MainForm },
+  components: {
+    MainForm
+  },
   computed: {
     email () {
       return this.$store.getters['auth/getActivationEmail']

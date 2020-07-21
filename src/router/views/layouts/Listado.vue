@@ -101,7 +101,8 @@ export default {
 
 <style lang="scss" scoped>
   .listado {
-    padding: 3rem 0;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
 
     &__heading {
       font-size: 3rem;

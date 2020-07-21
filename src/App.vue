@@ -1,12 +1,9 @@
 <template>
   <div id="app">
     <NavBar />
-    <!--
-    Cuando diferentes rutas usan el mismo componente
-    Por ejemplo '/profile/:username', siendo username un parámetro variable,
-    Crear el componente nuevamente con el parámetro 'key'
-    -->
-    <main class="page-wrapper">
+    <Backdrop v-if="sessionExpired" />
+    <LoginError v-if="sessionExpired" />
+    <main :class="['page-wrapper', { 'backdrop': sessionExpired }]">
       <transition
         name="router-animation"
         enter-active-class="animated fadeIn"
@@ -21,9 +18,22 @@
 
 <script>
 import NavBar from '@/components/NavBar'
+import LoginError from '@/components/LoginError'
+import Backdrop from '@/components/Backdrop'
 
 export default {
-  components: { NavBar }
+  components: {
+    NavBar,
+    LoginError,
+    Backdrop
+  },
+  computed: {
+    sessionExpired () {
+      // console.log('test', this.$store.getters['getTest'])
+      console.log('sessionExpired', this.$store.getters['auth/getSessionExpired'])
+      return this.$store.getters['auth/getSessionExpired']
+    }
+  }
 }
 </script>
 
@@ -36,6 +46,7 @@ export default {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    position: relative;
   }
 
   *,
@@ -50,12 +61,12 @@ export default {
     box-sizing: border-box;
     font-size: 62.5%; // 1rem = 10px
 
-    @media screen and (min-width: 87.5em) {
+    @media only screen and (min-width: 87.5em) {
       // at 1100px, 1rem = 11px
       font-size: 68.75%;
     }
 
-    @media screen and (max-width: 43.75em) {
+    @media only screen and (max-width: 43.75em) {
       // at 700px, 1rem = 9px
       font-size: 56.25%;
     }

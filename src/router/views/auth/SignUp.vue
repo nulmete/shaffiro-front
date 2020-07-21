@@ -126,7 +126,9 @@ import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
 import mainApi from '@/utils/mainApi'
 
 export default {
-  components: { MainForm },
+  components: {
+    MainForm
+  },
   data () {
     return {
       email: '',
