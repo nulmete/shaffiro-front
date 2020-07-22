@@ -5,15 +5,8 @@ export function isUsernameValid (username) {
 
 // Contraseña
 export function isPasswordStrong (password) {
-  return (
-    // Verificar que tenga al menos un número
-    /\d/.test(password) &&
-    // Verificar que tenga letras
-    /[a-zA-Z]/.test(password) &&
-    // Verificar que tenga mayúsculas
-    /.*[A-Z].*/.test(password) &&
-    // Verificar que la longitud sea entre 8 y 20 caracteres
-    password.length >= 8 &&
-    password.length <= 20
-  )
+  // La contraseña debe ser alfanumérica, con al menos 1 número, 1 mayúscula
+  // y con una longitud de entre 8 y 20 caracteres
+  const passwordRegexp = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,20}$')
+  return passwordRegexp.test(password)
 }

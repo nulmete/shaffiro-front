@@ -27,7 +27,7 @@
         <span
           v-else-if="$v.email.$dirty && !$v.email.email"
           class="input-error"
-        >Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i></span>
+        >Ingrese un e-mail válido <em>(ejemplo: shaffiro@gmail.com)</em></span>
         <span
           v-else-if="emailError"
           class="input-error"

@@ -16,6 +16,7 @@
         <BaseInput
           id="nombre"
           v-model="nombre"
+          placeholder="Dispositivo_Living"
           :v="$v.nombre"
         />
         <span
@@ -30,33 +31,22 @@
           id="tipo"
           v-model="tipo"
           :options="tiposPosibles"
+          @change="mostrarOpciones"
         />
       </div>
 
       <div
-        v-if="tipo === 'SENSOR'"
+        v-if="tipo"
         class="form__group"
       >
-        <label class="form__label">Magnitud a medir</label>
+        <label class="form__label">
+          {{ tipo === 'SENSOR' ? 'Magnitud a medir' : 'Artefacto a controlar' }}
+        </label>
         <BaseInputSelect
-          id="unidad"
-          v-model="unidad"
-          disabled
-          :options="unidadesPosibles"
-          :options-labels="magnitudesPosibles"
-        />
-      </div>
-
-      <div
-        v-else-if="tipo === 'ACTUADOR'"
-        class="form__group"
-      >
-        <label class="form__label">Artefacto a controlar</label>
-        <BaseInputSelect
-          id="artefacto"
-          v-model="artefacto"
-          :options="artefactosPosibles"
-          :options-labels="artefactosPosibles"
+          id="configuracion"
+          v-model="configuracion"
+          :options="configuracionesPosibles"
+          :options-labels="configuracionesPosiblesLabels"
         />
       </div>
 
@@ -113,34 +103,38 @@ export default {
       uuid: '',
       nombre: '',
       tipo: '',
-      unidad: 'LUMENES',
       tiposPosibles: ['SENSOR', 'ACTUADOR'],
-      // unidadesPosibles: ['LUMENES', 'CELSIUS', 'AMPERES'],
       unidadesPosibles: ['LUMENES'],
-      activo: false,
-      artefacto: '',
-      // artefactosPosibles: ['Lámpara', 'Aire', 'PC'],
       artefactosPosibles: ['Lámpara LED', 'Lámpara fluorescente', 'Lámpara halógena', 'Lámpara bajo consumo'],
-      configuracion: ''
-    }
-  },
-  computed: {
-    magnitudesPosibles () {
-      return this.unidadesPosibles.map(unidad => obtenerMagnitud(unidad))
+      configuracion: '',
+      configuracionesPosibles: [],
+      configuracionesPosiblesLabels: [],
+      activo: false
     }
   },
   methods: {
+    mostrarOpciones (tipoDispositivo) {
+      this.configuracionesPosibles.splice(0, this.configuracionesPosibles.length)
+      this.configuracionesPosiblesLabels.splice(0, this.configuracionesPosiblesLabels.length)
+      if (tipoDispositivo === 'SENSOR') {
+        const unidad = 'LUMENES'
+        const magnitud = obtenerMagnitud(unidad)
+        this.configuracionesPosibles.push('LUMENES')
+        this.configuracionesPosiblesLabels.push(magnitud)
+      } else if (tipoDispositivo === 'ACTUADOR') {
+        this.configuracionesPosibles.push('Lámpara LED', 'Lámpara fluorescente', 'Lámpara halógena', 'Lámpara bajo consumo')
+        this.configuracionesPosiblesLabels.push('Lámpara LED', 'Lámpara fluorescente', 'Lámpara halógena', 'Lámpara bajo consumo')
+      }
+    },
     async asociarDispositivo () {
-      const configuracion = this.tipo === 'SENSOR' ? this.unidad : this.artefacto
-
       const formData = {
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
-        // A MEJORAR: mando en el campo configuración la magnitud a medir
+        // todo posible mejora: mando en el campo configuración la magnitud a medir
         // si el dispositivo es tipo SENSOR.
         // Si es tipo ACTUADOR, mando el artefacto a controlar
-        configuracion
+        configuracion: this.configuracion
       }
 
       try {

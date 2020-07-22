@@ -1,13 +1,16 @@
 <template>
   <div class="listado container">
     <!-- Heading -->
-    <h2 class="listado__heading margin-bottom-medium">
+    <h2
+      id="table-description"
+      class="listado__heading margin-bottom-medium"
+    >
       Listado de <slot name="heading" />
     </h2>
 
     <!-- Filtro de búsqueda -->
     <input
-      v-if="searchProp"
+      v-if="searchProp !== null"
       :value="searchProp"
       class="listado__filter margin-bottom-medium"
       type="text"
@@ -22,16 +25,23 @@
 
     <!-- Listado de cosas -->
     <div class="listado__table-container">
-      <table class="table">
+      <table
+        class="table"
+        aria-describedby="table-description"
+      >
         <thead class="table__head">
           <tr>
             <!-- Primer columna para radio button -->
-            <th class="table__heading table__heading--radio">
+            <th
+              scope="col"
+              class="table__heading table__heading--radio"
+            >
               &nbsp;
             </th>
             <th
               v-for="(heading, index) in headings"
               :key="index"
+              scope="col"
               class="table__heading"
             >
               {{ heading }}
@@ -46,10 +56,22 @@
           >
             <!-- Primera celda para radio button -->
             <td class="table__cell table__cell--radio">
-              <slot
-                name="radio-button"
-                :index="index"
-              />
+              <div class="radio">
+                <input
+                  :id="index"
+                  name="radio"
+                  :value="index"
+                  type="radio"
+                  class="radio__input"
+                  @input="$emit('selected', $event.target.value)"
+                >
+                <label
+                  class="radio__label"
+                  :for="index"
+                >
+                  <span class="radio__btn" />
+                </label>
+              </div>
             </td>
             <td
               v-for="(field, prop) in fields"
@@ -88,7 +110,7 @@ export default {
     searchProp: {
       type: String,
       required: false,
-      default: ''
+      default: null
     }
   },
   data () {
@@ -182,6 +204,46 @@ export default {
       &--radio {
         padding: 1rem 2rem;
       }
+    }
+  }
+
+  // Radio button
+  .radio {
+    position: relative;
+
+    &__input {
+      display: none;
+    }
+
+    &__btn {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      height: 1.4rem;
+      width: 1.4rem;
+      border-radius: 10rem;
+      border: 1px solid $color-secondary;
+
+      &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: .7rem;
+        width: .7rem;
+        border-radius: 10rem;
+        background-color: $color-secondary;
+        opacity: 0;
+        transition: all .2s;
+      }
+    }
+
+    &__input:checked + &__label &__btn::after {
+      opacity: 1;
     }
   }
 </style>

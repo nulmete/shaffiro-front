@@ -29,8 +29,6 @@ export default {
   },
   computed: {
     sessionExpired () {
-      // console.log('test', this.$store.getters['getTest'])
-      console.log('sessionExpired', this.$store.getters['auth/getSessionExpired'])
       return this.$store.getters['auth/getSessionExpired']
     }
   }

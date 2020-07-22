@@ -5,45 +5,23 @@
     :content="dispositivosFiltrados"
     :search-prop="search"
     @searched="search = $event"
+    @selected="selectedItem = $event"
   >
     <template v-slot:heading>
       Dispositivos
     </template>
 
     <template v-slot:buttons>
-      <BaseButton
-        type="button"
-        @click="detectar"
-      >
+      <BaseButton @click="detectar">
         Detectar dispositivos
       </BaseButton>
 
       <BaseButton
         :disabled="selectedItem === null"
-        type="button"
         @click="editar(dispositivos[selectedItem])"
       >
         Editar
       </BaseButton>
-    </template>
-
-    <template v-slot:radio-button="{ index }">
-      <div class="radio">
-        <input
-          :id="index"
-          v-model="selectedItem"
-          name="radio"
-          :value="index"
-          type="radio"
-          class="radio__input"
-        >
-        <label
-          class="radio__label"
-          :for="index"
-        >
-          <span class="radio__btn" />
-        </label>
-      </div>
     </template>
 
     <template v-slot:content="{ row, field, index }">
@@ -53,22 +31,6 @@
           :key="index"
         >
           {{ value }}
-          <!-- <template v-if="field === 'reglasParseadas'">
-            <span class="margin-right-small">
-              {{ value }}
-            </span> -->
-          <!-- <button
-              class="btn btn--small btn--edit"
-              @click="editarRegla(row.reglas[index])"
-            >
-              <svg class="flex-svg">
-                <use xlink:href="@/assets/sprite.svg#icon-edit-pencil" />
-              </svg>
-            </button> -->
-          <!-- </template>
-          <template v-else>
-            {{ value }}
-          </template> -->
         </div>
       </template>
       <template v-else-if="field === 'activo'">
@@ -107,6 +69,7 @@ export default {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
+    // todo -> actualizar estructura de reglas segun nuevo motor de reglas
     dispositivosParseados () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
@@ -167,10 +130,6 @@ export default {
         // todo
         console.log(error)
       }
-    },
-    editarRegla (regla) {
-      this.$store.commit('reglas/setReglaActual', { ...regla, dispositivoId: regla.dispositivo.id })
-      this.$router.push({ name: 'editarRegla', params: { identificador: regla.id.toString() } })
     }
   }
 }

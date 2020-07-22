@@ -1,6 +1,7 @@
 <template>
   <button
     :class="['button']"
+    type="button"
     v-on="$listeners"
   >
     <slot />

@@ -3,6 +3,7 @@
     :headings="headings"
     :fields="fields"
     :content="dispositivosNoAsociados"
+    @selected="selectedItem = $event"
   >
     <template v-slot:heading>
       Dispositivos No Asociados
@@ -11,30 +12,10 @@
     <template v-slot:buttons>
       <BaseButton
         :disabled="selectedItem === null"
-        type="button"
         @click="asociar(dispositivosNoAsociados[selectedItem])"
       >
         Asociar
       </BaseButton>
-    </template>
-
-    <template v-slot:radio-button="{ index }">
-      <div class="radio">
-        <input
-          :id="index"
-          v-model="selectedItem"
-          name="radio"
-          :value="index"
-          type="radio"
-          class="radio__input"
-        >
-        <label
-          class="radio__label"
-          :for="index"
-        >
-          <span class="radio__btn" />
-        </label>
-      </div>
     </template>
 
     <template v-slot:content="{ row, field }">

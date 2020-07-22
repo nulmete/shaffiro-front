@@ -5,45 +5,23 @@
     :content="filteredUsers"
     :search-prop="search"
     @searched="search = $event"
+    @selected="selectedItem = $event"
   >
     <template v-slot:heading>
       Usuarios
     </template>
 
     <template v-slot:buttons>
-      <BaseButton
-        type="button"
-        @click="crear"
-      >
+      <BaseButton @click="crear">
         Crear usuario
       </BaseButton>
 
       <BaseButton
         :disabled="selectedItem === null"
-        type="button"
         @click="editar(usuarios[selectedItem])"
       >
         Editar
       </BaseButton>
-    </template>
-
-    <template v-slot:radio-button="{ index }">
-      <div class="radio">
-        <input
-          :id="index"
-          v-model="selectedItem"
-          name="radio"
-          :value="index"
-          type="radio"
-          class="radio__input"
-        >
-        <label
-          class="radio__label"
-          :for="index"
-        >
-          <span class="radio__btn" />
-        </label>
-      </div>
     </template>
 
     <template v-slot:content="{ row, field, index }">

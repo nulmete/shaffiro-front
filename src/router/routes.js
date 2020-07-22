@@ -165,8 +165,7 @@ export default [
     component: () => import('@/router/views/reglas/ReglaForm.vue'),
     meta: {
       requiresAuth: true
-    },
-    props: true
+    }
   },
   {
     // Redireccionar a home cuando el path no coincide
