@@ -14,20 +14,11 @@ describe('Componente: Login', () => {
     login: jest.fn()
   }
 
-  const store = new Vuex.Store({
-    modules: {
-      auth: {
-        namespaced: true
-      }
-    }
-  })
-
   beforeEach(() => {
     wrapper = mount(Login, {
       localVue,
-      stubs: ['BaseLink', 'BaseInput'],
-      methods,
-      store
+      stubs: ['BaseLink', 'BaseInput', 'BaseButton', 'BaseCard'],
+      methods
     })
   })
 
@@ -41,7 +32,22 @@ describe('Componente: Login', () => {
     expect(methods.login).toHaveBeenCalled()
   })
 
-  // todo
-  // it('error no debe ser null si el método login falla', async () => {
-  // })
+  it('error no debe ser null si el método login falla', async () => {
+    const actions = {
+      'auth/login': jest.fn(() => { throw new Error('error de login') })
+    }
+    const store = new Vuex.Store({
+      actions
+    })
+    const loginWithStore = mount(Login, {
+      localVue,
+      stubs: ['BaseLink', 'BaseButton', 'BaseInput', 'BaseCard'],
+      store
+    })
+
+    loginWithStore.find('.form').trigger('submit.prevent')
+    await loginWithStore.vm.$nextTick()
+    expect(actions['auth/login']).toHaveBeenCalled()
+    expect(loginWithStore.vm.error).toBe('error de login')
+  })
 })

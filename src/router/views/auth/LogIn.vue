@@ -69,13 +69,11 @@
 
 <script>
 import MainForm from '@/router/views/layouts/MainForm'
-import BaseButton from '@/components/base/_base-button'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
   components: {
-    MainForm,
-    BaseButton
+    MainForm
   },
   data () {
     return {

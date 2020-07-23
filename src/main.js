@@ -4,7 +4,7 @@ import Vuelidate from 'vuelidate'
 import router from '@/router/index'
 import store from '@/store/store'
 import axios from 'axios'
-import '@/components/base/_globals'
+import '@/components/base/globals'
 import '@/styles/main.scss'
 
 Vue.use(Vuelidate)
