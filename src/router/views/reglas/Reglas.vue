@@ -13,13 +13,14 @@
 
     <template v-slot:buttons>
       <BaseButton
-        type="button"
+        ref="crearReglaBtn"
         @click="crear"
       >
         Crear regla
       </BaseButton>
 
       <BaseButton
+        ref="editarReglaBtn"
         :disabled="selectedItem === null"
         @click="editar(reglas[selectedItem])"
       >

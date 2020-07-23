@@ -1,7 +1,7 @@
 import ruleEngineApi from '@/utils/ruleEngineApi'
 import { getSavedState, saveState } from '../helpers'
 
-export const mutations = {
+const mutations = {
   setAllReglas (state, newValue) {
     state.reglas = newValue
   },
@@ -11,7 +11,7 @@ export const mutations = {
   }
 }
 
-export const getters = {
+const getters = {
   getAllReglas (state) {
     return state.reglas
   },
@@ -20,7 +20,7 @@ export const getters = {
   }
 }
 
-export const actions = {
+const actions = {
   async getAllReglas ({ commit }) {
     const reglas = await ruleEngineApi.get('/rules')
     commit('setAllReglas', reglas.data)
@@ -28,7 +28,15 @@ export const actions = {
   }
 }
 
-export const state = {
+const state = {
   reglas: [],
   reglaActual: getSavedState('regla.reglaActual')
+}
+
+export default {
+  namespaced: true,
+  state,
+  actions,
+  mutations,
+  getters
 }

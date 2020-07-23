@@ -1,7 +1,14 @@
 import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
-export const mutations = {
+// Si hay un usuario logeado, setear el header 'Authorization' a 'Bearer <token>'
+function setDefaultAuthHeaders (authState) {
+  axios.defaults.headers.common.Authorization = authState.currentUser
+    ? `Bearer ${authState.currentUser.token}`
+    : ''
+}
+
+const mutations = {
   setCurrentUser (state, newValue) {
     state.currentUser = newValue
     saveState('auth.currentUser', newValue)
@@ -16,7 +23,7 @@ export const mutations = {
   }
 }
 
-export const getters = {
+const getters = {
   isLoggedIn (state) {
     return !!state.currentUser && !!state.currentUser.token
   },
@@ -32,7 +39,7 @@ export const getters = {
   }
 }
 
-export const actions = {
+const actions = {
   async validate ({ commit, state }) {
     // Si no hay usuario logeado, retornar
     if (!state.currentUser) return Promise.resolve(null)
@@ -111,19 +118,16 @@ export const actions = {
   }
 }
 
-export const state = {
+const state = {
   currentUser: getSavedState('auth.currentUser'),
   activationEmail: getSavedState('auth.activationEmail'),
   sessionExpired: false
 }
 
-// ==========
-// Helpers
-// ==========
-
-// Si hay un usuario logeado, setear el header 'Authorization' a 'Bearer <token>'
-function setDefaultAuthHeaders (authState) {
-  axios.defaults.headers.common.Authorization = authState.currentUser
-    ? `Bearer ${authState.currentUser.token}`
-    : ''
+export default {
+  namespaced: true,
+  state,
+  actions,
+  mutations,
+  getters
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
-export const mutations = {
+const mutations = {
   setAllUsers (state, newValue) {
     state.users = newValue
   },
@@ -15,7 +15,7 @@ export const mutations = {
   }
 }
 
-export const getters = {
+const getters = {
   getAllUsers (state) {
     return state.users
   },
@@ -24,7 +24,7 @@ export const getters = {
   }
 }
 
-export const actions = {
+const actions = {
   async getAllUsers ({ commit }) {
     const allUsers = await axios.get('api/users')
     commit('setAllUsers', allUsers.data)
@@ -42,7 +42,15 @@ export const actions = {
   }
 }
 
-export const state = {
+const state = {
   users: [],
   currentUser: getSavedState('users.currentUser')
+}
+
+export default {
+  namespaced: true,
+  state,
+  actions,
+  mutations,
+  getters
 }

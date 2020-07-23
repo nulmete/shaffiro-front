@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
-export const mutations = {
+const mutations = {
   setAllDispositivosNoAsociados (state, newValue) {
     state.dispositivosNoAsociados = newValue
   },
@@ -11,7 +11,7 @@ export const mutations = {
   }
 }
 
-export const getters = {
+const getters = {
   getAllDispositivosNoAsociados (state) {
     return state.dispositivosNoAsociados
   },
@@ -20,7 +20,7 @@ export const getters = {
   }
 }
 
-export const actions = {
+const actions = {
   async getAllDispositivosNoAsociados ({ commit }) {
     const dispositivos = await axios.get('/api/dispositivo-no-asociados')
     commit('setAllDispositivosNoAsociados', dispositivos.data)
@@ -33,7 +33,15 @@ export const actions = {
   }
 }
 
-export const state = {
+const state = {
   dispositivosNoAsociados: [],
   dispositivoNoAsociadoActual: getSavedState('dispositivosNoAsociados.dispositivoNoAsociadoActual')
+}
+
+export default {
+  namespaced: true,
+  state,
+  actions,
+  mutations,
+  getters
 }
