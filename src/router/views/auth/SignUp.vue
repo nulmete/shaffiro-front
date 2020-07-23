@@ -123,7 +123,7 @@
 import MainForm from '@/router/views/layouts/MainForm'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
 import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 
 export default {
   components: {
@@ -176,7 +176,7 @@ export default {
       }
 
       try {
-        await mainApi.post('/api/register', data)
+        await axios.post('/api/register', data)
         this.$store.commit('auth/setActivationEmail', data.email)
         this.$router.push({ name: 'activate' })
       } catch (error) {

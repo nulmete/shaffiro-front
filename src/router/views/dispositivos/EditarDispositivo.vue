@@ -45,7 +45,7 @@
 <script>
 import MainForm from '@/router/views/layouts/MainForm'
 import { required } from 'vuelidate/lib/validators'
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 
 export default {
   components: { MainForm },
@@ -93,7 +93,7 @@ export default {
       }
 
       try {
-        await mainApi.put('/api/dispositivos', formData)
+        await axios.put('/api/dispositivos', formData)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo

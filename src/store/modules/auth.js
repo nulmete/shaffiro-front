@@ -1,4 +1,4 @@
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 export const mutations = {
@@ -42,9 +42,9 @@ export const actions = {
 
     return Promise.all([
       // Retorna username
-      mainApi.get('/api/authenticate'),
+      axios.get('/api/authenticate'),
       // Retorna toda la info del usuario, lo que importa son las authorities
-      mainApi.get('/api/account')
+      axios.get('/api/account')
     ])
       .then(([firstResponse, secondResponse]) => {
         const username = firstResponse.data
@@ -64,16 +64,31 @@ export const actions = {
       })
   },
   async login ({ commit }, { username, password } = {}) {
-    // Obtener token
-    const responseAuth = await mainApi.post('/api/authenticate', { username, password })
-    const token = responseAuth.data.id_token
-    // Obtener authorities
-    const responseAcc = await mainApi.get('/api/account', {
-      headers: { Authorization: 'Bearer ' + token }
-    })
-    const authorities = responseAcc.data.authorities
-    commit('setCurrentUser', { username, token, authorities })
-    commit('setSessionExpired', false)
+    try {
+      // Obtener token
+      const responseAuth = await axios.post('/api/authenticate', { username, password })
+      const token = responseAuth.data.id_token
+      // Obtener authorities
+      const responseAcc = await axios.get('/api/account', {
+        headers: { Authorization: 'Bearer ' + token }
+      })
+      const authorities = responseAcc.data.authorities
+      commit('setCurrentUser', { username, token, authorities })
+      commit('setSessionExpired', false)
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        console.log(error.response)
+        throw new Error('Nombre de usuario o contraseña incorrectos.')
+      } else if (error.response && error.response.status === 401) {
+        if (error.response.data.detail === 'Bad credentials') {
+          throw new Error('Nombre de usuario o contraseña incorrectos.')
+        } else {
+          throw new Error('El usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para activar su usuario.')
+        }
+      } else {
+        throw new Error('Hubo un problema de conexión. Intente nuevamente.')
+      }
+    }
   },
   async logOut ({ commit }) {
     localStorage.clear()
@@ -81,18 +96,18 @@ export const actions = {
   },
   // Recuperar contraseña
   async resetPasswordInit (context, email) {
-    await mainApi.post('/api/account/reset-password/init', email, {
+    await axios.post('/api/account/reset-password/init', email, {
       headers: {
         'Content-Type': 'text/plain'
       }
     })
   },
   async resetPasswordFinish (context, formData) {
-    await mainApi.post('/api/account/reset-password/finish', formData)
+    await axios.post('/api/account/reset-password/finish', formData)
   },
   // Cambiar contraseña de un usuario logeado
   async changePassword (context, formData) {
-    await mainApi.post('/api/account/change-password', formData)
+    await axios.post('/api/account/change-password', formData)
   }
 }
 
@@ -108,7 +123,7 @@ export const state = {
 
 // Si hay un usuario logeado, setear el header 'Authorization' a 'Bearer <token>'
 function setDefaultAuthHeaders (authState) {
-  mainApi.defaults.headers.common.Authorization = authState.currentUser
+  axios.defaults.headers.common.Authorization = authState.currentUser
     ? `Bearer ${authState.currentUser.token}`
     : ''
 }

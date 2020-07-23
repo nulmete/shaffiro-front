@@ -23,9 +23,9 @@
 export default {
   props: {
     error: {
-      type: Boolean,
+      type: String,
       required: false,
-      default: false
+      default: null
     }
   }
 }

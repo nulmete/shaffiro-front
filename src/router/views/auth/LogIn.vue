@@ -5,21 +5,11 @@
     </template>
 
     <BaseCard
-      v-if="credentialsError"
-      :error="credentialsError"
+      v-if="error"
+      :error="error"
     >
       <template v-slot:paragraph>
-        Nombre de usuario o contraseña incorrectos.
-      </template>
-    </BaseCard>
-
-    <BaseCard
-      v-if="activationError"
-      :error="activationError"
-    >
-      <template v-slot:paragraph>
-        El usuario ingresado no se encuentra habilitado.<br>
-        Por favor, revise su casilla de correo electrónico para activar su usuario.
+        {{ error }}
       </template>
     </BaseCard>
 
@@ -79,18 +69,19 @@
 
 <script>
 import MainForm from '@/router/views/layouts/MainForm'
+import BaseButton from '@/components/base/_base-button'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
   components: {
-    MainForm
+    MainForm,
+    BaseButton
   },
   data () {
     return {
       username: '',
       password: '',
-      credentialsError: false,
-      activationError: false
+      error: null
     }
   },
   validations: {
@@ -103,8 +94,7 @@ export default {
   },
   methods: {
     async login () {
-      this.credentialsError = false
-      this.activationError = false
+      this.error = false
 
       const data = {
         username: this.username,
@@ -114,23 +104,9 @@ export default {
 
       try {
         await this.$store.dispatch('auth/login', data)
-
-        // Redireccionar a la ruta en la que estaba antes de hacer el login
-        // o a Home por defecto.
         this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
       } catch (error) {
-        const responseError = error.response.data.detail
-
-        switch (responseError) {
-          case `User ${this.username} was not activated`:
-            this.activationError = true
-            break
-          case 'Bad credentials':
-            this.credentialsError = true
-            break
-          default:
-            break
-        }
+        this.error = error.message
       }
     }
   }

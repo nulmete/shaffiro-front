@@ -72,7 +72,7 @@
 import MainForm from '@/router/views/layouts/MainForm'
 import { obtenerMagnitud } from '@/utils/reglas'
 import { required } from 'vuelidate/lib/validators'
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 
 export default {
   components: { MainForm },
@@ -139,9 +139,9 @@ export default {
 
       try {
         // crear dispositivo
-        await mainApi.post('/api/dispositivos', formData)
+        await axios.post('/api/dispositivos', formData)
         // eliminar dispositivo de la tabla de dispositivos no asociados
-        await mainApi.delete(`api/dispositivo-no-asociados/${this.id}`)
+        await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo

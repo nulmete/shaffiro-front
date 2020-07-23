@@ -1,4 +1,4 @@
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 export const mutations = {
@@ -22,12 +22,12 @@ export const getters = {
 
 export const actions = {
   async getAllDispositivosNoAsociados ({ commit }) {
-    const dispositivos = await mainApi.get('/api/dispositivo-no-asociados')
+    const dispositivos = await axios.get('/api/dispositivo-no-asociados')
     commit('setAllDispositivosNoAsociados', dispositivos.data)
     return dispositivos
   },
   async getDispositivo ({ commit }, id) {
-    const dispositivo = await mainApi.get(`/api/dispositivo-no-asociados/${id}`)
+    const dispositivo = await axios.get(`/api/dispositivo-no-asociados/${id}`)
     commit('setDispositivoNoAsociadoActual', dispositivo.data)
     return dispositivo
   }

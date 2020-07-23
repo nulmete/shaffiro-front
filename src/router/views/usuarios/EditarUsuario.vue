@@ -63,7 +63,7 @@ import MainForm from '@/router/views/layouts/MainForm'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
 import { obtenerRoles } from '@/utils/users'
-import mainApi from '@/utils/mainApi'
+import axios from 'axios'
 
 export default {
   components: { MainForm },
@@ -113,7 +113,7 @@ export default {
       }
 
       try {
-        await mainApi.put('/api/users', formulario)
+        await axios.put('/api/users', formulario)
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
         // todo
