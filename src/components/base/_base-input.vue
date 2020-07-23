@@ -2,7 +2,6 @@
   <input
     v-model="computedValue"
     :type="type"
-    :name="id"
     :class="['form__input', { 'error': hasError }]"
   >
 </template>
@@ -30,19 +29,10 @@ export default {
         ].includes(value)
       }
     },
-    id: {
-      type: String,
-      required: true
-    },
     v: {
       type: Object,
       required: false,
       default: null
-    },
-    serverError: {
-      type: Boolean,
-      required: false,
-      default: false
     }
   },
   computed: {
@@ -56,8 +46,8 @@ export default {
       }
     },
     hasError () {
-      if (!this.v && !this.serverError) return
-      return !!this.v.$error || !!this.serverError
+      if (!this.v) return
+      return !!this.v.$error
     }
   }
 }

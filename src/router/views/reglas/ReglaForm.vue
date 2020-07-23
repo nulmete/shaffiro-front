@@ -52,7 +52,7 @@
         class="group margin-bottom-large"
       >
         <h3 class="margin-bottom-small">
-          Reglas existentes para el actuador seleccionado
+          Reglas preexistentes para el actuador seleccionado
         </h3>
         <ul>
           <li

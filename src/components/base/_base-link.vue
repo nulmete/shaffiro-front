@@ -28,6 +28,14 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    params: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
