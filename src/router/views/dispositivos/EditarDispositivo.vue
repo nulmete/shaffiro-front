@@ -57,7 +57,7 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      const { id, nombre, tipo, activo, configuracion, regla } = vm.$store.getters['dispositivos/getDispositivo']
+      const { id, nombre, tipo, activo, configuracion, regla } = vm.$store.getters['dispositivos/getDispositivoActual']
 
       vm.id = id.toString()
       vm.nombre = nombre

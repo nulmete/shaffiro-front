@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 const mutations = {
-  setAllDispositivos (state, newValue) {
+  setDispositivo (state, newValue) {
     state.dispositivos = newValue
   },
   setDispositivoActual (state, newValue) {
@@ -19,7 +19,7 @@ const getters = {
   getAllDispositivos (state) {
     return state.dispositivos
   },
-  getDispositivo (state) {
+  getDispositivoActual (state) {
     return state.dispositivoActual
   },
   /* eslint no-shadow: ["error", { "allow": ["getters"] }] */
@@ -42,19 +42,20 @@ const getters = {
 
 const actions = {
   async getAllDispositivos ({ commit }) {
-    const dispositivos = await axios.get('/api/dispositivos')
-    commit('setAllDispositivos', dispositivos.data)
-    return dispositivos
-  },
-  async getDispositivo ({ commit }, id) {
-    const dispositivo = await axios.get(`/api/dispositivos/${id}`)
-    commit('setDispositivoActual', dispositivo.data)
-    return dispositivo
+    try {
+      const dispositivos = await axios.get('/api/dispositivos')
+      commit('setDispositivo', dispositivos.data)
+    } catch (error) {
+      throw new Error('No se pudo obtener ningún dispositivo. Intente nuevamente.')
+    }
   },
   async modificarEstado ({ commit }, dispositivoModificado) {
-    const respuesta = await axios.put('/api/dispositivos', dispositivoModificado)
-    commit('modificarEstado', respuesta.data)
-    return respuesta
+    try {
+      const respuesta = await axios.put('/api/dispositivos', dispositivoModificado)
+      commit('modificarEstado', respuesta.data)
+    } catch (error) {
+      throw new Error('No se pudo modificar el dispositivo. Intente nuevamente.')
+    }
   }
 }
 

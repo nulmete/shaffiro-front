@@ -25,8 +25,7 @@ describe('Componente: Signup', () => {
   })
 
   it('Debe invocar al método signup luego de hacer click en el botón "Registrarse"', async () => {
-    wrapper.find('.form').trigger('submit.prevent')
-    await wrapper.vm.$nextTick()
+    await wrapper.find('.form').trigger('submit.prevent')
     expect(methods.signup).toHaveBeenCalled()
   })
 })

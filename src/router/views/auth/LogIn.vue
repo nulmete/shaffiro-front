@@ -51,6 +51,7 @@
       </div>
 
       <BaseButton
+        ref="loginButton"
         :disabled="$v.$invalid"
         type="submit"
         class="w-100"

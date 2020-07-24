@@ -79,13 +79,16 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('dispositivos/getAllDispositivos')
-    this.$store.dispatch('reglas/getAllReglas')
+    this.fetchData()
   },
   methods: {
     transformarOperador,
     obtenerMagnitud,
     parsearReglas,
+    fetchData () {
+      this.$store.dispatch('dispositivos/getAllDispositivos')
+      this.$store.dispatch('reglas/getAllReglas')
+    },
     crear () {
       this.$router.push({ name: 'crearRegla' })
     },

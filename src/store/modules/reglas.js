@@ -2,7 +2,7 @@ import ruleEngineApi from '@/utils/ruleEngineApi'
 import { getSavedState, saveState } from '../helpers'
 
 const mutations = {
-  setAllReglas (state, newValue) {
+  setRegla (state, newValue) {
     state.reglas = newValue
   },
   setReglaActual (state, newValue) {
@@ -23,7 +23,7 @@ const getters = {
 const actions = {
   async getAllReglas ({ commit }) {
     const reglas = await ruleEngineApi.get('/rules')
-    commit('setAllReglas', reglas.data)
+    commit('setRegla', reglas.data)
     return reglas
   }
 }

@@ -27,8 +27,7 @@ describe('Componente: Login', () => {
   })
 
   it('Debe invocar al método login luego de hacer click en el botón "Iniciar Sesión"', async () => {
-    wrapper.find('.form').trigger('submit.prevent')
-    await wrapper.vm.$nextTick()
+    await wrapper.find('.form').trigger('submit.prevent')
     expect(methods.login).toHaveBeenCalled()
   })
 
@@ -45,8 +44,7 @@ describe('Componente: Login', () => {
       store
     })
 
-    loginWithStore.find('.form').trigger('submit.prevent')
-    await loginWithStore.vm.$nextTick()
+    await loginWithStore.find('.form').trigger('submit.prevent')
     expect(actions['auth/login']).toHaveBeenCalled()
     expect(loginWithStore.vm.error).toBe('error de login')
   })
