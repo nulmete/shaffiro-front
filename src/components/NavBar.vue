@@ -86,6 +86,7 @@
 <script>
 
 export default {
+  name: 'NavBar',
   computed: {
     isLoggedIn () {
       return this.$store.getters['auth/isLoggedIn']

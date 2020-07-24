@@ -12,16 +12,16 @@
     </template>
 
     <template v-slot:buttons>
-      <BaseButton @click="crear">
+      <base-button @click="crear">
         Crear usuario
-      </BaseButton>
+      </base-button>
 
-      <BaseButton
+      <base-button
         :disabled="selectedItem === null"
         @click="editar(usuarios[selectedItem])"
       >
         Editar
-      </BaseButton>
+      </base-button>
     </template>
 
     <template v-slot:content="{ row, field, index }">

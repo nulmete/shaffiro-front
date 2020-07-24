@@ -10,7 +10,7 @@
         leave-active-class="animated fadeOut"
         mode="out-in"
       >
-        <RouterView :key="$route.fullPath" />
+        <router-view :key="$route.fullPath" />
       </transition>
     </main>
   </div>

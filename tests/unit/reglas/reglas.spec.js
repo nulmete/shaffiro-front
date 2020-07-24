@@ -5,31 +5,48 @@ import Reglas from '@/router/views/reglas/Reglas'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-const getters = {
-  'reglas/getAllReglas': (state) => state.reglas,
-  'dispositivos/getSensores': (state) => ['Sensor 1', 'Sensor 2'],
-  'dispositivos/getActuadores': (state) => ['Actuador 1', 'Actuador 2']
-}
-const actions = {
-  'dispositivos/getAllDispositivos': jest.fn(),
-  'reglas/getAllReglas': jest.fn()
-}
-const mutations = {
-  'reglas/setReglaActual': jest.fn()
-}
-const state = {
-  reglas: ['Reglita', 'ReglaLuminosa']
-}
-
-const store = new Vuex.Store({
-  getters,
-  actions,
-  mutations,
-  state
-})
-
 describe('Componente: Reglas', () => {
   let wrapper
+
+  const actionsReglas = {
+    getAllReglas: jest.fn()
+  }
+  const gettersReglas = {
+    getAllReglas: (state) => state.reglas
+  }
+  const mutationsReglas = {
+    setReglaActual: jest.fn()
+  }
+  const stateReglas = {
+    reglas: ['Reglita', 'ReglaLuminosa']
+  }
+  const reglasModule = {
+    namespaced: true,
+    state: stateReglas,
+    getters: gettersReglas,
+    actions: actionsReglas,
+    mutations: mutationsReglas
+  }
+
+  const actionsDispositivos = {
+    getAllDispositivos: jest.fn()
+  }
+  const gettersDispositivos = {
+    getSensores: (state) => ['Sensor 1', 'Sensor 2'],
+    getActuadores: (state) => ['Actuador 1', 'Actuador 2']
+  }
+  const dispositivosModule = {
+    namespaced: true,
+    actions: actionsDispositivos,
+    getters: gettersDispositivos
+  }
+
+  const store = new Vuex.Store({
+    modules: {
+      reglas: reglasModule,
+      dispositivos: dispositivosModule
+    }
+  })
 
   const methods = {
     crear: jest.fn(),
@@ -55,7 +72,7 @@ describe('Componente: Reglas', () => {
     })
   })
 
-  it('Es renderizado correctamente', () => {
+  it('Es renderizado correctamente', async () => {
     expect(wrapper.exists()).toBeTruthy()
     expect(methods.fetchData).toHaveBeenCalled()
     expect(wrapper.vm.reglas).toStrictEqual(['Reglita', 'ReglaLuminosa'])

@@ -17,7 +17,6 @@
           id="email"
           v-model="email"
           type="email"
-          :server-error="emailError"
           :v="$v.email"
         />
         <span
@@ -42,7 +41,6 @@
         <BaseInput
           id="username"
           v-model="username"
-          :server-error="usernameError"
           :v="$v.username"
         />
         <span
@@ -101,13 +99,13 @@
         >Las contraseñas no coinciden</span>
       </div>
 
-      <BaseButton
+      <base-button
         :disabled="$v.$invalid"
         type="submit"
         class="w-100"
       >
         Registrarse
-      </BaseButton>
+      </base-button>
     </form>
 
     <template v-slot:footer>
@@ -123,7 +121,6 @@
 import MainForm from '@/router/views/layouts/MainForm'
 import { required, email, sameAs } from 'vuelidate/lib/validators'
 import { isUsernameValid, isPasswordStrong } from '@/validators/validators'
-import axios from 'axios'
 
 export default {
   components: {
@@ -135,8 +132,8 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',
-      emailError: false,
-      usernameError: false
+      emailError: null,
+      usernameError: null
     }
   },
   validations: {
@@ -176,13 +173,10 @@ export default {
       }
 
       try {
-        await axios.post('/api/register', data)
-        this.$store.commit('auth/setActivationEmail', data.email)
+        await this.$store.dispatch('auth/signup', data)
         this.$router.push({ name: 'activate' })
       } catch (error) {
-        const responseError = error.response.data.errorKey
-
-        switch (responseError) {
+        switch (error.message) {
           case 'userexists':
             this.usernameError = true
             break

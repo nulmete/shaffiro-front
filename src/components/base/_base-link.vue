@@ -6,17 +6,18 @@
   >
     <slot />
   </a>
-  <RouterLink
+  <router-link
     v-else
     :to="routerLinkTo"
     v-bind="$attrs"
   >
     <slot />
-  </RouterLink>
+  </router-link>
 </template>
 
 <script>
 export default {
+  name: 'BaseLink',
   inheritAttrs: false,
   props: {
     href: {

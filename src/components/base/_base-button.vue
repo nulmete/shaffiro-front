@@ -1,12 +1,17 @@
 <template>
   <button
-    :class="['button']"
-    type="button"
+    class="button"
     v-on="$listeners"
   >
     <slot />
   </button>
 </template>
+
+<script>
+export default {
+  name: 'BaseButton'
+}
+</script>
 
 <style lang="scss" scoped>
   .button {

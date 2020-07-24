@@ -6,9 +6,9 @@
     <p class="login-error__paragraph">
       Por favor, inicie sesión nuevamente
     </p>
-    <BaseButton @click="closeModal">
+    <base-button @click="closeModal">
       Iniciar sesión
-    </BaseButton>
+    </base-button>
   </div>
 </template>
 

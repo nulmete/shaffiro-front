@@ -32,12 +32,12 @@
         />
       </div>
 
-      <BaseButton
+      <base-button
         :disabled="$v.$invalid"
         type="submit"
       >
         Guardar
-      </BaseButton>
+      </base-button>
     </form>
   </MainForm>
 </template>

@@ -12,20 +12,20 @@
     </template>
 
     <template v-slot:buttons>
-      <BaseButton
+      <base-button
         ref="crearReglaBtn"
         @click="crear"
       >
         Crear regla
-      </BaseButton>
+      </base-button>
 
-      <BaseButton
+      <base-button
         ref="editarReglaBtn"
         :disabled="selectedItem === null"
         @click="editar(reglas[selectedItem])"
       >
         Editar
-      </BaseButton>
+      </base-button>
     </template>
 
     <template v-slot:content="{ row, field }">

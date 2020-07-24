@@ -10,12 +10,12 @@
     </template>
 
     <template v-slot:buttons>
-      <BaseButton
+      <base-button
         :disabled="selectedItem === null"
         @click="asociar(dispositivosNoAsociados[selectedItem])"
       >
         Asociar
-      </BaseButton>
+      </base-button>
     </template>
 
     <template v-slot:content="{ row, field }">

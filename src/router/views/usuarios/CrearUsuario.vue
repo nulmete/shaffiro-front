@@ -42,9 +42,9 @@
         />
       </div>
 
-      <BaseButton type="submit">
+      <base-button type="submit">
         Crear usuario
-      </BaseButton>
+      </base-button>
     </form>
   </MainForm>
 </template>

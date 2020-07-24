@@ -51,9 +51,9 @@
         />
       </div>
 
-      <BaseButton type="submit">
+      <base-button type="submit">
         Guardar
-      </BaseButton>
+      </base-button>
     </form>
   </MainForm>
 </template>

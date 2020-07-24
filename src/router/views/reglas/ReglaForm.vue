@@ -216,12 +216,12 @@
         </p>
       </div>
 
-      <BaseButton
+      <base-button
         type="submit"
         :disabled="!nombre || !sensorAsociado || !actuadorAsociado || !condiciones.length"
       >
         {{ pageTitle === 'Crear' ? 'Crear' : 'Guardar' }} Regla
-      </BaseButton>
+      </base-button>
     </form>
   </div>
 </template>

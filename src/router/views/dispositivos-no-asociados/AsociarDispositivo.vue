@@ -58,12 +58,12 @@
         />
       </div>
 
-      <BaseButton
+      <base-button
         :disabled="$v.$invalid || !tipo"
         type="submit"
       >
         Asociar
-      </BaseButton>
+      </base-button>
     </form>
   </MainForm>
 </template>

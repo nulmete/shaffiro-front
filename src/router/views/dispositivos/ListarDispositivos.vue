@@ -12,16 +12,16 @@
     </template>
 
     <template v-slot:buttons>
-      <BaseButton @click="detectar">
+      <base-button @click="detectar">
         Detectar dispositivos
-      </BaseButton>
+      </base-button>
 
-      <BaseButton
+      <base-button
         :disabled="selectedItem === null"
         @click="editar(dispositivos[selectedItem])"
       >
         Editar
-      </BaseButton>
+      </base-button>
     </template>
 
     <template v-slot:content="{ row, field, index }">

@@ -50,14 +50,14 @@
         >Por favor, ingrese su contraseña</span>
       </div>
 
-      <BaseButton
+      <base-button
         ref="loginButton"
         :disabled="$v.$invalid"
         type="submit"
         class="w-100"
       >
         Iniciar sesión
-      </BaseButton>
+      </base-button>
     </form>
 
     <template v-slot:footer>
