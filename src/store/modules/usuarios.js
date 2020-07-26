@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 const mutations = {
-  setAllUsers (state, newValue) {
+  setUsers (state, newValue) {
     state.users = newValue
   },
   setCurrentUser (state, newValue) {
@@ -16,7 +16,7 @@ const mutations = {
 }
 
 const getters = {
-  getAllUsers (state) {
+  getUsers (state) {
     return state.users
   },
   getUser (state) {
@@ -25,20 +25,20 @@ const getters = {
 }
 
 const actions = {
-  async getAllUsers ({ commit }) {
-    const allUsers = await axios.get('api/users')
-    commit('setAllUsers', allUsers.data)
-    return allUsers
+  async getUsers ({ commit }) {
+    const users = await axios.get('api/users')
+    commit('setUsers', users.data)
+    // todo catch error
   },
   async getUser ({ commit }, username) {
     const user = await axios.get(`/api/users/${username}`)
     commit('setCurrentUser', user.data)
-    return user
+    // todo catch error
   },
   async modificarEstado ({ commit }, usuarioModificado) {
     const respuesta = await axios.put('/api/users', usuarioModificado)
     commit('modificarEstado', respuesta.data)
-    return respuesta
+    // todo catch error
   }
 }
 

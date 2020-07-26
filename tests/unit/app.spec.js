@@ -22,7 +22,7 @@ describe('Componente: App', () => {
   }
 
   it('Se renderiza correctamente', () => {
-    const wrapper = mount(App, { localVue, store, mocks: { $route }, stubs: ['router-view', 'router-link'] })
+    const wrapper = mount(App, { localVue, store, mocks: { $route }, stubs: ['RouterView', 'RouterLink'] })
     expect(wrapper.exists()).toBeTruthy()
   })
 })

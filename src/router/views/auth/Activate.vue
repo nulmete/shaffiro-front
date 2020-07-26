@@ -4,7 +4,7 @@
       Activar usuario
     </template>
 
-    <BaseCard>
+    <base-card>
       <template v-slot:title>
         Usuario dado de alta con éxito
       </template>
@@ -12,7 +12,7 @@
         Se ha enviado un correo electrónico a <strong>{{ email }}</strong> para activar su usuario.
         Por favor, verifique su casilla para continuar con el proceso de activación.
       </template>
-    </BaseCard>
+    </base-card>
   </MainForm>
 </template>
 

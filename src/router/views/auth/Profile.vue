@@ -5,9 +5,9 @@
       {{ user }}
     </div>
 
-    <BaseLink :to="{ name: 'changePassword' }">
+    <base-link :to="{ name: 'changePassword' }">
       Cambiar contraseña
-    </BaseLink>
+    </base-link>
   </div> -->
 </template>
 

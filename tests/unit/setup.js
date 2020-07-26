@@ -1,4 +1,7 @@
-import Vue from 'vue'
-import NavBar from '@/components/NavBar'
 import '@/components/base/globals'
-Vue.component('NavBar', NavBar)
+import { config } from '@vue/test-utils'
+
+config.showDeprecationWarnings = false
+
+// eslint-disable-next-line
+global.console.warn = jest.fn()

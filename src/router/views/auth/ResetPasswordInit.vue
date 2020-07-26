@@ -8,7 +8,7 @@
 
     <BaseForm @submit.prevent="resetPasswordInit">
       <BaseFormGroup>
-        <BaseInput
+        <base-input
           v-model="email"
           name="email"
           label="E-mail"
@@ -27,36 +27,37 @@
         </BaseLabelError>
       </BaseFormGroup>
 
-      <BaseButton
+      <base-button
         :disabled="$v.$invalid"
         type="submit"
       >
         Enviar
-      </BaseButton>
+      </base-button>
     </BaseForm> -->
 </template>
 
 <script>
 import { required, email } from 'vuelidate/lib/validators'
+import axios from 'axios'
 
 export default {
   data () {
     return {
       email: '',
-      errors: {
-        email: false
-      }
+      error: false
     }
   },
   methods: {
     async resetPasswordInit () {
       try {
-        // Ejecutar la acción 'resetPasswordInit'
-        await this.$store.dispatch('auth/resetPasswordInit', this.email)
-        // Redireccionar a /reset-password-finish
+        await axios.post('/api/account/reset-password/init', this.email, {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        })
         this.$router.push({ name: 'resetPasswordFinish' })
       } catch (error) {
-        this.errors.email = true
+        this.error = true
       }
     }
   },

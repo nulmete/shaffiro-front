@@ -13,7 +13,7 @@
           class="form__label"
           for="email"
         >E-mail</label>
-        <BaseInput
+        <base-input
           id="email"
           v-model="email"
           type="email"
@@ -38,7 +38,7 @@
           class="form__label"
           for="username"
         >Nombre de usuario</label>
-        <BaseInput
+        <base-input
           id="username"
           v-model="username"
           :v="$v.username"
@@ -50,7 +50,7 @@
         <span
           v-else-if="$v.username.$dirty && !$v.username.valid"
           class="input-error"
-        >Use entre 8 y 15 caracteres</span>
+        >Use entre 8 y 20 caracteres</span>
         <span
           v-else-if="usernameError"
           class="input-error"
@@ -62,7 +62,7 @@
           class="form__label"
           for="password"
         >Contraseña</label>
-        <BaseInput
+        <base-input
           id="password"
           v-model="password"
           type="password"
@@ -75,7 +75,7 @@
         <span
           v-else-if="$v.password.$dirty && !$v.password.valid"
           class="input-error"
-        >Use entre 8 y 20 caracteres, y al menos una mayúsucula y un número</span>
+        >Use entre 8 y 20 caracteres, y al menos una mayúscula y un número</span>
       </div>
 
       <div class="form__group margin-bottom-medium">
@@ -83,7 +83,7 @@
           class="form__label"
           for="confirm-password"
         >Confirmar contraseña</label>
-        <BaseInput
+        <base-input
           id="confirm-password"
           v-model="confirmPassword"
           type="password"
@@ -110,9 +110,9 @@
 
     <template v-slot:footer>
       ¿Ya tiene una cuenta?
-      <BaseLink :to="{ name: 'login' }">
+      <base-link :to="{ name: 'login' }">
         Inicie sesión
-      </BaseLink>
+      </base-link>
     </template>
   </MainForm>
 </template>

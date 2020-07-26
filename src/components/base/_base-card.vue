@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  name: 'BaseCard',
   props: {
     error: {
       type: String,

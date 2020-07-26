@@ -13,7 +13,7 @@
           class="form__label"
           for="username"
         >Nombre de usuario</label>
-        <BaseInput
+        <base-input
           id="username"
           v-model="username"
           disabled
@@ -25,7 +25,7 @@
           class="form__label"
           for="email"
         >E-mail</label>
-        <BaseInput
+        <base-input
           id="email"
           v-model="email"
           disabled
@@ -34,7 +34,7 @@
       </div>
 
       <div class="form__group">
-        <BaseInputCheckbox
+        <base-input-checkbox
           :id="'user-state'"
           v-model="activated"
           :label="'Habilitado'"
@@ -43,7 +43,7 @@
 
       <div class="form__group">
         <label class="form__label">Tipo de Usuario</label>
-        <BaseInputSelect
+        <base-input-select
           v-model="authorities"
           :options="authoritiesOptions"
           :options-labels="authoritiesOptionsSpanish"

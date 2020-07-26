@@ -10,6 +10,7 @@
 
 <script>
 export default {
+  name: 'BaseFilter',
   props: {
     value: {
       type: String,

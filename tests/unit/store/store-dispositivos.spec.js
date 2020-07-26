@@ -86,8 +86,8 @@ describe('Store dispositivos module', () => {
   })
 
   it('actions.modificarEstado hace un commit de mutations.modificarEstado y el dispositivo modificado se guarda en state.dispositivos', async () => {
-    const mock = new MockAdapter(axios)
     store.commit('setDispositivo', dispositivos)
+    const mock = new MockAdapter(axios)
     const dispositivo = { ...dispositivos[0] }
     dispositivo.activo = !dispositivo.activo
     mock.onPut('/api/dispositivos').reply(200, dispositivo)

@@ -10,10 +10,16 @@ localVue.use(Vuex)
 
 describe('Store auth module', () => {
   let store
-  let user = {
+  const user = {
     authorities: ['ROLE_ADMIN', 'ROLE_USER'],
     token: 'token',
     username: 'admin'
+  }
+  const signupData = {
+    email: 'admin@admin.com',
+    login: 'admin',
+    password: 'password',
+    langKey: 'en'
   }
 
   beforeEach(() => {
@@ -30,7 +36,7 @@ describe('Store auth module', () => {
     axios.defaults.headers.common.Authorization = ''
 
     store.commit('setCurrentUser', user)
-    expect(axios.defaults.headers.common.Authorization).toEqual('Bearer token')
+    expect(axios.defaults.headers.common.Authorization).toEqual(`Bearer ${user.token}`)
 
     store.commit('setCurrentUser', null)
     expect(axios.defaults.headers.common.Authorization).toEqual('')
@@ -46,6 +52,29 @@ describe('Store auth module', () => {
     expect(savedCurrentUser).toEqual(expectedCurrentUser)
   })
 
+  it('mutations.setActivationEmail guarda en state el e-mail del usuario recién dado de alta', () => {
+    store.commit('setActivationEmail', signupData.email)
+    expect(store.state.activationEmail).toEqual(signupData.email)
+  })
+
+  it('mutations.setActivationEmail guarda en localStorage el e-mail del usuario recién dado de alta', () => {
+    let savedActivationEmail = JSON.parse(window.localStorage.getItem('auth.activationEmail'))
+    expect(savedActivationEmail).toEqual(null)
+
+    const expectedActivationEmail = signupData.email
+    store.commit('setActivationEmail', expectedActivationEmail)
+    savedActivationEmail = JSON.parse(window.localStorage.getItem('auth.activationEmail'))
+    expect(savedActivationEmail).toEqual(expectedActivationEmail)
+  })
+
+  it('mutations.setSessionExpired guarda el estado de la sesión de un usuario', () => {
+    expect(store.state.sessionExpired).toEqual(false)
+    store.commit('setSessionExpired', true)
+    expect(store.state.sessionExpired).toEqual(true)
+    store.commit('setSessionExpired', false)
+    expect(store.state.sessionExpired).toEqual(false)
+  })
+
   it('getters.isLoggedIn retorna true cuando state.currentUser es no nulo', () => {
     store.commit('setCurrentUser', user)
     expect(store.getters.isLoggedIn).toEqual(true)
@@ -54,6 +83,28 @@ describe('Store auth module', () => {
   it('getters.isLoggedIn retorna false cuando state.currentUser es nulo', () => {
     store.commit('setCurrentUser', null)
     expect(store.getters.isLoggedIn).toEqual(false)
+  })
+
+  it('actions.signup hace un commit de mutations.setActivationEmail y la información del usuario dado de alta se guarda en state.currentUser', async () => {
+    const mock = new MockAdapter(axios)
+
+    mock.onPost('/api/register', signupData).reply(200)
+
+    await store.dispatch('signup', signupData)
+    expect(store.state.activationEmail).toEqual(signupData.email)
+  })
+
+  it('actions.signup retorna el mensaje de error "Hubo un problema de conexión. Intente nuevamente." si un usuario intenta darse de alta y ocurre un problema de conexión', async () => {
+    expect.assertions(1)
+
+    const mock = new MockAdapter(axios)
+    mock.onPost('/api/register').networkError()
+
+    try {
+      await store.dispatch('signup', signupData)
+    } catch (error) {
+      expect(error.message).toEqual('Hubo un problema de conexión. Intente nuevamente.')
+    }
   })
 
   it('actions.login hace un commit de mutations.setCurrentUser y la información del usuario que inicia sesión se guarda en state.currentUser', async () => {
@@ -73,7 +124,7 @@ describe('Store auth module', () => {
     expect(store.state.currentUser).toEqual(user)
   })
 
-  it('actions.login retorna un error un mensaje de error si un usuario intenta iniciar sesión y ocurre un problema de conexión', async () => {
+  it('actions.login retorna el mensaje de error "Hubo un problema de conexión. Intente nuevamente." si un usuario intenta iniciar sesión y ocurre un problema de conexión', async () => {
     expect.assertions(1)
 
     const mock = new MockAdapter(axios)
@@ -112,7 +163,50 @@ describe('Store auth module', () => {
     try {
       await store.dispatch('login', { username: 'deshabilitado', password: 'random' })
     } catch (error) {
-      expect(error.message).toEqual('El usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para activar su usuario.')
+      expect(error.message).toEqual('El usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para completar el proceso de activación.')
     }
+  })
+
+  it('actions.validate resuelve a `null` si no hay una sesión iniciada', () => {
+    store.commit('setCurrentUser', null)
+    return store.dispatch('validate').then((user) => {
+      expect(user).toEqual(null)
+    })
+  })
+
+  it('actions.validate hace un commit de mutations.setCurrentUser(`user`) y mutations.setSessionExpired(`false`) y valida su sesión', async () => {
+    store.commit('setCurrentUser', user)
+
+    const mock = new MockAdapter(axios)
+    mock.onGet('/api/authenticate').reply(200, user.username)
+    mock.onGet('/api/account').reply(200, {
+      authorities: user.authorities
+    })
+
+    await store.dispatch('validate')
+    expect(axios.defaults.headers.common.Authorization).toEqual(`Bearer ${user.token}`)
+    expect(store.state.currentUser).toEqual(user)
+    expect(store.state.sessionExpired).toEqual(false)
+  })
+
+  it('actions.validate resuelve a `null` si la sesión del usuario contiene un token inválido', async () => {
+    store.commit('setCurrentUser', user)
+
+    const mock = new MockAdapter(axios)
+    mock.onGet('/api/authenticate').reply(401, {
+      title: 'Unauthorized'
+    })
+    mock.onGet('/api/account').reply(200)
+
+    await store.dispatch('validate')
+    expect(store.state.currentUser).toEqual(null)
+    expect(store.state.sessionExpired).toEqual(true)
+  })
+
+  it('actions.logout finaliza la sesión de un usuario, por lo que state.currentUser es `null`', async () => {
+    store.commit('setCurrentUser', user)
+    expect(store.state.currentUser).toEqual(user)
+    await store.dispatch('logout')
+    expect(store.state.currentUser).toEqual(null)
   })
 })

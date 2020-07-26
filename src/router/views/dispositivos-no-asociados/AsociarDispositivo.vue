@@ -13,7 +13,7 @@
           class="form__label"
           for="nombre"
         >Nombre del dispositivo</label>
-        <BaseInput
+        <base-input
           id="nombre"
           v-model="nombre"
           placeholder="Dispositivo_Living"
@@ -27,7 +27,7 @@
 
       <div class="form__group">
         <label class="form__label">Tipo de dispositivo</label>
-        <BaseInputSelect
+        <base-input-select
           id="tipo"
           v-model="tipo"
           :options="tiposPosibles"
@@ -42,7 +42,7 @@
         <label class="form__label">
           {{ tipo === 'SENSOR' ? 'Magnitud a medir' : 'Artefacto a controlar' }}
         </label>
-        <BaseInputSelect
+        <base-input-select
           id="configuracion"
           v-model="configuracion"
           :options="configuracionesPosibles"
@@ -51,7 +51,7 @@
       </div>
 
       <div class="form__group">
-        <BaseInputCheckbox
+        <base-input-checkbox
           :id="'device-state'"
           v-model="activo"
           :label="'Habilitado'"
@@ -76,15 +76,9 @@ import axios from 'axios'
 
 export default {
   components: { MainForm },
-  props: {
-    identificador: {
-      type: String,
-      required: true
-    }
-  },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      const { id, mac, uuid } = vm.$store.getters['dispositivosNoAsociados/getDispositivoNoAsociado']
+      const { id, mac, uuid } = vm.$store.getters['dispositivosNoAsociados/getDispositivoNoAsociadoActual']
 
       vm.id = id
       vm.mac = mac
@@ -109,7 +103,8 @@ export default {
       configuracion: '',
       configuracionesPosibles: [],
       configuracionesPosiblesLabels: [],
-      activo: false
+      activo: false,
+      error: null
     }
   },
   methods: {
@@ -127,7 +122,7 @@ export default {
       }
     },
     async asociarDispositivo () {
-      const formData = {
+      const data = {
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
@@ -139,13 +134,13 @@ export default {
 
       try {
         // crear dispositivo
-        await axios.post('/api/dispositivos', formData)
+        await axios.post('/api/dispositivos', data)
         // eliminar dispositivo de la tabla de dispositivos no asociados
         await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo
-        console.log(error)
+        this.error = error.message
       }
     }
   },

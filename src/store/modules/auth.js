@@ -8,6 +8,14 @@ function setDefaultAuthHeaders (authState) {
     : ''
 }
 
+const handleSignupError = (error) => {
+  if (error.response && error.response.status === 400) {
+    throw new Error(error.response.data.errorKey)
+  } else {
+    throw new Error('Hubo un problema de conexión. Intente nuevamente.')
+  }
+}
+
 const mutations = {
   setCurrentUser (state, newValue) {
     state.currentUser = newValue
@@ -45,12 +53,14 @@ const actions = {
       await axios.post('/api/register', data)
       commit('setActivationEmail', data.email)
     } catch (error) {
-      console.log(error.response)
-      if (error.response && error.response.status === 400) {
-        throw new Error(error.response.data.errorKey)
-      } else {
-        throw new Error('Hubo un problema de conexión. Intente nuevamente.')
-      }
+      handleSignupError(error)
+    }
+  },
+  async createUser ({ commit }, data) {
+    try {
+      await axios.post('/api/users', data)
+    } catch (error) {
+      handleSignupError(error)
     }
   },
   async validate ({ commit, state }) {
@@ -75,8 +85,7 @@ const actions = {
         return token
       })
       .catch(error => {
-        // Fallan las 2 requests al server porque el usuario no está logeado
-        // o expiró su token
+        // Fallan las 2 requests al server porque expiró el token
         console.warn(error)
         commit('setCurrentUser', null)
         commit('setSessionExpired', true)
@@ -97,37 +106,21 @@ const actions = {
       commit('setSessionExpired', false)
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        console.log(error.response)
         throw new Error('Nombre de usuario o contraseña incorrectos.')
       } else if (error.response && error.response.status === 401) {
         if (error.response.data.detail === 'Bad credentials') {
           throw new Error('Nombre de usuario o contraseña incorrectos.')
         } else {
-          throw new Error('El usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para activar su usuario.')
+          throw new Error('El usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para completar el proceso de activación.')
         }
       } else {
         throw new Error('Hubo un problema de conexión. Intente nuevamente.')
       }
     }
   },
-  async logOut ({ commit }) {
+  async logout ({ commit }) {
     localStorage.clear()
     commit('setCurrentUser', null)
-  },
-  // Recuperar contraseña
-  async resetPasswordInit (context, email) {
-    await axios.post('/api/account/reset-password/init', email, {
-      headers: {
-        'Content-Type': 'text/plain'
-      }
-    })
-  },
-  async resetPasswordFinish (context, formData) {
-    await axios.post('/api/account/reset-password/finish', formData)
-  },
-  // Cambiar contraseña de un usuario logeado
-  async changePassword (context, formData) {
-    await axios.post('/api/account/change-password', formData)
   }
 }
 

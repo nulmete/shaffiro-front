@@ -17,8 +17,8 @@ describe('Componente: Login', () => {
   beforeEach(() => {
     wrapper = mount(Login, {
       localVue,
-      stubs: ['BaseLink', 'BaseInput', 'BaseButton', 'BaseCard'],
-      methods
+      methods,
+      stubs: ['router-link']
     })
   })
 
@@ -32,20 +32,21 @@ describe('Componente: Login', () => {
   })
 
   it('error no debe ser null si el método login falla', async () => {
+    const mockFail = jest.fn(() => { throw new Error('error de login') })
     const actions = {
-      'auth/login': jest.fn(() => { throw new Error('error de login') })
+      'auth/login': mockFail
     }
     const store = new Vuex.Store({
       actions
     })
     const loginWithStore = mount(Login, {
       localVue,
-      stubs: ['BaseLink', 'BaseButton', 'BaseInput', 'BaseCard'],
-      store
+      store,
+      stubs: ['router-link']
     })
 
     await loginWithStore.find('.form').trigger('submit.prevent')
-    expect(actions['auth/login']).toHaveBeenCalled()
+    expect(mockFail).toHaveBeenCalled()
     expect(loginWithStore.vm.error).toBe('error de login')
   })
 })

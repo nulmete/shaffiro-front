@@ -59,7 +59,7 @@ export default {
   methods: {
     asociar (dispositivo) {
       this.$store.commit('dispositivosNoAsociados/setDispositivoNoAsociadoActual', dispositivo)
-      this.$router.push({ name: 'asociarDispositivo', params: { identificador: dispositivo.id.toString() } })
+      this.$router.push({ name: 'asociarDispositivo' })
     }
   }
 }

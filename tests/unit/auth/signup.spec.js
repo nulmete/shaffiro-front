@@ -18,8 +18,8 @@ describe('Componente: Signup', () => {
     beforeEach(() => {
       wrapper = mount(SignUp, {
         localVue,
-        stubs: ['BaseLink', 'BaseInput', 'BaseButton'],
-        methods
+        methods,
+        stubs: ['router-link']
       })
     })
 
@@ -57,7 +57,7 @@ describe('Componente: Signup', () => {
       const wrapperWithStore = mount(SignUp, {
         localVue,
         store,
-        stubs: ['BaseLink', 'BaseInput', 'BaseButton']
+        stubs: ['router-link']
       })
       await wrapperWithStore.find('.form').trigger('submit.prevent')
       expect(signupMock).toHaveBeenCalled()
@@ -69,7 +69,7 @@ describe('Componente: Signup', () => {
       const wrapperWithStore = mount(SignUp, {
         localVue,
         store,
-        stubs: ['BaseLink', 'BaseInput', 'BaseButton']
+        stubs: ['router-link']
       })
       await wrapperWithStore.find('.form').trigger('submit.prevent')
       expect(signupMockError).toHaveBeenCalled()
@@ -83,7 +83,7 @@ describe('Componente: Signup', () => {
       const wrapperWithStore = mount(SignUp, {
         localVue,
         store,
-        stubs: ['BaseLink', 'BaseInput', 'BaseButton']
+        stubs: ['router-link']
       })
       await wrapperWithStore.find('.form').trigger('submit.prevent')
       expect(signupMockError).toHaveBeenCalled()

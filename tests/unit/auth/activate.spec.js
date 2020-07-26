@@ -23,7 +23,7 @@ describe('Componente: Activate', () => {
   })
 
   it('Se renderiza correctamente', () => {
-    const wrapper = mount(Activate, { localVue, store, stubs: ['BaseCard'] })
+    const wrapper = mount(Activate, { localVue, store })
     expect(wrapper.exists()).toBeTruthy()
     expect(wrapper.vm.email).toEqual('test@test.com')
   })

@@ -1,4 +1,4 @@
-export function searchFilter (searchString, array) {
+export const searchFilter = (searchString, array) => {
   const lowerCaseString = searchString.toLowerCase().trim()
 
   return array.filter(element => {

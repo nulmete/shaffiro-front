@@ -9,6 +9,8 @@ export const transformarOperador = (operador) => {
       return 'mayor o igual a'
     case '<=':
       return 'menor o igual a'
+    default:
+      return ''
   }
 }
 
@@ -55,14 +57,14 @@ export const parsearReglas = (reglas, sensores, actuadores) => {
     const sensorId = regla.antecedents[0].id1
     const sensorAsociado = sensores.find(sensor => sensor.id === sensorId)
     if (sensorAsociado) nombreSensor = sensorAsociado.nombre
-    else nombreSensor = ''
+    else nombreSensor = 'Sensor no encontrado'
 
     // Actuador asociado
     let nombreActuador
     const actuadorId = regla.consequences[0].id2
     const actuadorAsociado = actuadores.find(actuador => actuador.id === actuadorId)
     if (actuadorAsociado) nombreActuador = actuadorAsociado.nombre
-    else nombreActuador = ''
+    else nombreActuador = 'Actuador no encontrado'
 
     // Descripción de la regla
     const descripcion = regla.antecedents.map((antecedente, j) => {
@@ -75,7 +77,7 @@ export const parsearReglas = (reglas, sensores, actuadores) => {
       }
       return str
     })
-    descripcion.unshift('Si ')
+    descripcion.unshift('Si')
     descripcion.push('ENTONCES')
 
     // Encontrar artefacto "vinculado" al actuador

@@ -13,7 +13,7 @@
           class="form__label"
           for="nombre"
         >Nombre del dispositivo</label>
-        <BaseInput
+        <base-input
           id="nombre"
           v-model="nombre"
           :v="$v.nombre"
@@ -25,7 +25,7 @@
       </div>
 
       <div class="form__group">
-        <BaseInputCheckbox
+        <base-input-checkbox
           :id="'device-state'"
           v-model="activo"
           :label="'Habilitado'"

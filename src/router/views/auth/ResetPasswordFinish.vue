@@ -8,7 +8,7 @@
 
       <BaseForm @submit.prevent="resetPasswordFinish">
         <BaseFormGroup>
-          <BaseInput
+          <base-input
             id="code"
             v-model="code"
             label="Código"
@@ -25,7 +25,7 @@
         </BaseFormGroup>
 
         <BaseFormGroup>
-          <BaseInput
+          <base-input
             id="password"
             v-model="password"
             label="Contraseña"
@@ -41,12 +41,12 @@
           </BaseLabelError>
         </BaseFormGroup>
 
-        <BaseButton
+        <base-button
           :disabled="$v.$invalid"
           type="submit"
         >
           Restablecer contraseña
-        </BaseButton>
+        </base-button>
       </BaseForm>
     </template>
 
@@ -66,18 +66,19 @@
       Es necesario agregar v-on="$listeners" en BaseButton para que herede
       el event listener de este componente padre
       -->
-  <!-- <BaseButton
+  <!-- <base-button
         type="button"
         @click="redirectToLogin"
       >
         Iniciar sesión
-      </BaseButton>
+      </base-button>
     </template> -->
 </template>
 
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { isPasswordStrong } from '@/validators/validators'
+import axios from 'axios'
 
 export default {
   beforeRouteLeave (to, from, next) {
@@ -88,26 +89,23 @@ export default {
     return {
       code: '',
       password: '',
-      errors: {
-        code: false
-      },
+      error: false,
       resetted: localStorage.getItem('resetted') || false
     }
   },
   methods: {
     async resetPasswordFinish () {
-      const formData = {
+      const data = {
         key: this.fields.code,
         newPassword: this.fields.password
       }
 
       try {
-        // Ejecutar la acción 'resetPasswordFinish'
-        await this.$store.dispatch('auth/resetPasswordFinish', formData)
+        await axios.post('/api/account/reset-password/finish', data)
         this.resetted = true
         localStorage.setItem('resetted', this.resetted)
       } catch (error) {
-        this.errors.code = true
+        this.error = true
       }
     }
   },

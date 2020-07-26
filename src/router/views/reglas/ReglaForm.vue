@@ -14,7 +14,7 @@
             class="form__label"
             for="nombre"
           >Nombre de la Regla</label>
-          <BaseInput
+          <base-input
             id="nombre"
             v-model="nombre"
             :v="$v.nombre"
@@ -28,7 +28,7 @@
 
         <div class="form__group">
           <label class="form__label">Sensor asociado</label>
-          <BaseInputSelect
+          <base-input-select
             v-model="sensorAsociado"
             :options="sensores"
             :options-labels="sensoresLabels"
@@ -38,7 +38,7 @@
 
         <div class="form__group">
           <label class="form__label">Actuador asociado</label>
-          <BaseInputSelect
+          <base-input-select
             v-model="actuadorAsociado"
             :options="actuadores"
             :options-labels="actuadoresLabels"
@@ -85,7 +85,7 @@
           <span>Si</span>
 
           <div class="form__group">
-            <BaseInputSelect
+            <base-input-select
               v-model="magnitud"
               :extra-label="'magnitud'"
               :options="magnitudesPosibles"
@@ -95,7 +95,7 @@
           <span>es</span>
 
           <div class="form__group">
-            <BaseInputSelect
+            <base-input-select
               v-model="operador"
               :extra-label="'operador'"
               :options="operadoresPosibles"
@@ -111,7 +111,7 @@
               />
             </template>
             <template v-else>
-              <BaseInput
+              <base-input
                 id="valor"
                 v-model="valor"
                 type="number"
@@ -122,7 +122,7 @@
           </div>
 
           <div class="form__group">
-            <BaseInput
+            <base-input
               id="unidad"
               v-model="unidad"
               placeholder="Unidad"
@@ -171,7 +171,7 @@
             class="conector"
           >
             <label class="form__label">Conector:</label>
-            <BaseInputSelect
+            <base-input-select
               v-model="conector"
               :extra-label="'conector'"
               :options="conectoresPosibles"
@@ -196,7 +196,7 @@
         </h3>
 
         <div class="form__group">
-          <BaseInputSelect
+          <base-input-select
             v-model="accion"
             :options="accionesPosibles"
             :options-labels="accionesPosiblesLabels"

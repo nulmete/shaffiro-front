@@ -10,7 +10,7 @@
 
     <BaseForm @submit.prevent="changePassword">
       <BaseFormGroup>
-        <BaseInput
+        <base-input
           v-model="currentPassword"
           label="Contraseña actual"
           type="password"
@@ -27,7 +27,7 @@
       </BaseFormGroup>
 
       <BaseFormGroup>
-        <BaseInput
+        <base-input
           v-model="newPassword"
           label="Contraseña nueva"
           type="password"
@@ -43,12 +43,12 @@
         </BaseLabelError>
       </BaseFormGroup>
 
-      <BaseButton
+      <base-button
         :disabled="$v.$invalid"
         type="submit"
       >
         Cambiar contraseña
-      </BaseButton>
+      </base-button>
     </BaseForm>
   </template>
 
@@ -65,31 +65,29 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { isPasswordStrong } from '@/validators/validators'
+import axios from 'axios'
 
 export default {
   data () {
     return {
       currentPassword: '',
       newPassword: '',
-      errors: {
-        currentPassword: false
-      },
+      error: false,
       submitted: false
     }
   },
   methods: {
     async changePassword () {
-      const formData = {
+      const data = {
         currentPassword: this.currentPassword,
         newPassword: this.newPassword
       }
 
       try {
-        await this.$store.dispatch('auth/changePassword', formData)
+        await axios.post('/api/account/change-password', data)
         this.submitted = true
-        this.errors.currentPassword = false
       } catch (error) {
-        this.errors.currentPassword = true
+        this.error = true
       }
     }
   },

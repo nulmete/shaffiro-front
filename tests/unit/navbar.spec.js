@@ -24,7 +24,7 @@ describe('Componente: NavBar', () => {
   })
 
   it('Se renderiza correctamente', () => {
-    const wrapper = mount(NavBar, { localVue, store, stubs: ['BaseLink'] })
+    const wrapper = mount(NavBar, { localVue, store, stubs: ['router-link'] })
     expect(wrapper.exists()).toBeTruthy()
     expect(wrapper.vm.isLoggedIn).toEqual(true)
     expect(wrapper.vm.isAdmin).toEqual(true)

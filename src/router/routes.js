@@ -36,8 +36,8 @@ export default [
     meta: {
       requiresAuth: true,
       beforeResolve: (routeTo, routeFrom, next) => {
-        // Ejecutar la acción 'logOut' en store/modules/auth
-        store.dispatch('auth/logOut')
+        // Ejecutar la acción 'logout' en store/modules/auth
+        store.dispatch('auth/logout')
 
         // Verificar si la ruta en la que estaba justo antes de cerrar sesión
         // requería estar logeado
@@ -135,13 +135,12 @@ export default [
     }
   },
   {
-    path: '/dispositivos/detectar/asociar/:identificador',
+    path: '/dispositivos/detectar/asociar',
     name: 'asociarDispositivo',
     component: () => import('@/router/views/dispositivos-no-asociados/AsociarDispositivo.vue'),
     meta: {
       requiresAuth: true
-    },
-    props: true
+    }
   },
   {
     path: '/reglas',

@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  name: 'LoginError',
   methods: {
     closeModal () {
       this.$store.commit('auth/setSessionExpired', false)

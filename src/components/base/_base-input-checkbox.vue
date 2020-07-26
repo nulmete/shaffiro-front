@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  name: 'BaseInputCheckbox',
   inheritAttrs: false,
   props: {
     value: {

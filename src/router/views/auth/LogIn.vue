@@ -4,14 +4,14 @@
       Inicie sesión en Shaffiro
     </template>
 
-    <BaseCard
+    <base-card
       v-if="error"
       :error="error"
     >
       <template v-slot:paragraph>
         {{ error }}
       </template>
-    </BaseCard>
+    </base-card>
 
     <form
       class="form margin-bottom-medium"
@@ -22,7 +22,7 @@
           class="form__label"
           for="username"
         >Nombre de usuario</label>
-        <BaseInput
+        <base-input
           id="username"
           v-model="username"
           :v="$v.username"
@@ -38,7 +38,7 @@
           class="form__label"
           for="password"
         >Contraseña</label>
-        <BaseInput
+        <base-input
           id="password"
           v-model="password"
           type="password"
@@ -61,9 +61,9 @@
     </form>
 
     <template v-slot:footer>
-      <BaseLink :to="{ name: 'resetPasswordInit' }">
+      <base-link :to="{ name: 'resetPasswordInit' }">
         ¿Olvidó su contraseña?
-      </BaseLink>
+      </base-link>
     </template>
   </MainForm>
 </template>

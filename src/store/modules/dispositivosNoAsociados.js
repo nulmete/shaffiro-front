@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getSavedState, saveState } from '../helpers'
 
 const mutations = {
-  setAllDispositivosNoAsociados (state, newValue) {
+  setDispositivosNoAsociados (state, newValue) {
     state.dispositivosNoAsociados = newValue
   },
   setDispositivoNoAsociadoActual (state, newValue) {
@@ -15,7 +15,7 @@ const getters = {
   getAllDispositivosNoAsociados (state) {
     return state.dispositivosNoAsociados
   },
-  getDispositivoNoAsociado (state) {
+  getDispositivoNoAsociadoActual (state) {
     return state.dispositivoNoAsociadoActual
   }
 }
@@ -23,13 +23,8 @@ const getters = {
 const actions = {
   async getAllDispositivosNoAsociados ({ commit }) {
     const dispositivos = await axios.get('/api/dispositivo-no-asociados')
-    commit('setAllDispositivosNoAsociados', dispositivos.data)
-    return dispositivos
-  },
-  async getDispositivo ({ commit }, id) {
-    const dispositivo = await axios.get(`/api/dispositivo-no-asociados/${id}`)
-    commit('setDispositivoNoAsociadoActual', dispositivo.data)
-    return dispositivo
+    commit('setDispositivosNoAsociados', dispositivos.data)
+    // todo catch error
   }
 }
 

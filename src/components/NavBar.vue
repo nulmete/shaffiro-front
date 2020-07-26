@@ -25,56 +25,56 @@
         <ul class="nav__list">
           <template v-if="isAdmin">
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'dispositivos' }"
                 class="nav__link"
               >
                 Dispositivos
-              </BaseLink>
+              </base-link>
             </li>
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'reglas' }"
                 class="nav__link"
               >
                 Reglas
-              </BaseLink>
+              </base-link>
             </li>
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'usuarios' }"
                 class="nav__link"
               >
                 Usuarios
-              </BaseLink>
+              </base-link>
             </li>
           </template>
           <template v-if="isLoggedIn">
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'logout' }"
                 class="nav__link"
               >
                 Cerrar sesión
-              </BaseLink>
+              </base-link>
             </li>
           </template>
           <template v-if="!isLoggedIn">
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'signup' }"
                 class="nav__link"
               >
                 Registrarse
-              </BaseLink>
+              </base-link>
             </li>
             <li>
-              <BaseLink
+              <base-link
                 :to="{ name: 'login' }"
                 class="nav__link"
               >
                 Iniciar sesión
-              </BaseLink>
+              </base-link>
             </li>
           </template>
         </ul>
