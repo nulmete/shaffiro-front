@@ -1,4 +1,4 @@
-describe('Administración de Usuarios', () => {
+describe('Administración de Usuarios: Login', () => {
   describe('un usuario dado de alta puede iniciar sesión en el sistema solo si completó el proceso de activación', () => {
     const correctUsername = 'admin'
     const correctPassword = 'admin'
@@ -51,6 +51,7 @@ describe('Administración de Usuarios', () => {
     })
 
     it('debe mostrar `el usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para completar el proceso de activación`', () => {
+      // crear un usuario (por defecto tiene el estado deshabilitado)
       cy
         .request('POST', 'http://localhost:8080/api/register', notActivatedUser)
         .then(response => {
