@@ -254,7 +254,8 @@ export default {
       sensorAsociado: null,
       actuadorAsociado: null,
       accion: 'on',
-      accionesPosibles: ['on', 'off']
+      accionesPosibles: ['on', 'off'],
+      error: null
     }
   },
   computed: {
@@ -411,7 +412,7 @@ export default {
         this.$router.push({ name: 'reglas' })
       } catch (error) {
         // todo
-        console.log(error)
+        this.error = error.message
       }
     }
   },

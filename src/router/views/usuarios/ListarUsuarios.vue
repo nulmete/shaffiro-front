@@ -62,7 +62,8 @@ export default {
       headings: ['Nombre', 'E-mail', 'Estado', 'Tipo'],
       fields: ['login', 'email', 'activated', 'authorities'],
       search: '',
-      selectedItem: null
+      selectedItem: null,
+      error: null
     }
   },
   computed: {
@@ -127,7 +128,7 @@ export default {
         await this.$store.dispatch(`usuarios/modificarEstado`, usuarioModificado)
       } catch (error) {
         // TODO
-        console.log(error)
+        this.error = error.message
       }
     }
   }

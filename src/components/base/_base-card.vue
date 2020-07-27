@@ -1,7 +1,6 @@
 <template>
   <div
-    class="card margin-bottom-large"
-    :class="[error ? 'error' : 'success']"
+    :class="[error ? 'error' : 'success', 'card', 'margin-bottom-large']"
   >
     <h3 class="card__heading">
       <slot name="title">

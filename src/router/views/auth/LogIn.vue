@@ -103,7 +103,7 @@ export default {
 
       try {
         await this.$store.dispatch('auth/login', data)
-        this.$router.push(this.$route.query.redirectFrom || { name: 'home' })
+        this.$router.push({ name: 'reglas' })
       } catch (error) {
         this.error = error.message
       }

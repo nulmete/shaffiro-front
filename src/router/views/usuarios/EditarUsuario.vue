@@ -94,7 +94,8 @@ export default {
       email: '',
       authorities: [],
       activated: false,
-      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER']
+      authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER'],
+      error: null
     }
   },
   computed: {
@@ -117,7 +118,7 @@ export default {
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
         // todo
-        console.log(error.response)
+        this.error = error.message
       }
     }
   },
