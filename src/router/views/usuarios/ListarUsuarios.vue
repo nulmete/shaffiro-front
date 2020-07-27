@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     usuarios () {
-      const usuarios = this.$store.getters['usuarios/getAllUsers']
+      const usuarios = this.$store.getters['usuarios/getUsers']
 
       return usuarios.map(usuario => ({
         id: usuario.id,
@@ -110,7 +110,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('usuarios/getAllUsers')
+    this.$store.dispatch('usuarios/getUsers')
   },
   methods: {
     crear () {

@@ -23,7 +23,6 @@
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-plugin-unit-jest": "^4.4.6",
     "@vue/cli-service": "^3.11.0",

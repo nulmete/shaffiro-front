@@ -5,27 +5,30 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('Componente: Dispositivos', () => {
-  describe('con action mockeada', () => {
-    let wrapper
+describe('Componente: ListarDispositivos', () => {
+  let wrapper
+
+  describe('con methods mockeados', () => {
     const methods = {
       detectar: jest.fn(),
-      editar: jest.fn()
+      editar: jest.fn(),
+      modificarEstado: jest.fn()
     }
+
     const mockAction = jest.fn(() => Promise.resolve())
 
-    beforeEach(() => {
-      const store = new Vuex.Store({
-        modules: {
-          dispositivos: {
-            namespaced: true,
-            actions: {
-              getAllDispositivos: mockAction
-            }
+    const store = new Vuex.Store({
+      modules: {
+        dispositivos: {
+          namespaced: true,
+          actions: {
+            getAllDispositivos: mockAction
           }
         }
-      })
+      }
+    })
 
+    beforeEach(() => {
       wrapper = mount(Dispositivos, {
         localVue,
         store,
@@ -38,7 +41,7 @@ describe('Componente: Dispositivos', () => {
         computed: {
           dispositivos () { return ['Sensor_Lampara', 'Actuador_Lampara'] },
           dispositivosParseados () { return [] },
-          dispositivosFiltrados () { return [] }
+          dispositivosFiltrados () { return [{ nombre: 'disp', tipo: 'SENSOR', activo: 'Deshabilitado', reglas: [] }] }
         }
       })
     })
@@ -57,26 +60,42 @@ describe('Componente: Dispositivos', () => {
       await wrapper.vm.$refs.editar.$emit('click')
       expect(methods.editar).toHaveBeenCalledWith('Sensor_Lampara')
     })
+
+    it('Hacer click en el botón que muestra el estado de un dispositivo invoca al método modificarEstado', async () => {
+      await wrapper.find('.disabled').trigger('click')
+      expect(methods.modificarEstado).toHaveBeenCalled()
+    })
   })
 
-  describe('sin action mockeada', () => {
-    const gettersDispositivos = {
-      getAllDispositivos: (state) => state.dispositivos
-    }
-
-    const stateDispositivos = {
-      dispositivos: ['Sensor 1', 'Actuador 1']
-    }
-
-    const actionsDispositivos = {
-      getAllDispositivos: jest.fn(() => Promise.resolve())
-    }
-
+  describe('sin methods mockeados', () => {
+    const dispositivos = [
+      {
+        id: 1,
+        nombre: 'Sensor_Lampara',
+        tipo: 'SENSOR',
+        activo: true,
+        configuracion: 'LUMENES',
+        reglas: []
+      },
+      {
+        id: 2,
+        nombre: 'Actuador_Lampara',
+        tipo: 'ACTUADOR',
+        activo: true,
+        configuracion: 'Lámpara',
+        reglas: []
+      }
+    ]
+    const actions = { getAllDispositivos: jest.fn() }
+    const getters = { getAllDispositivos: (state) => state.dispositivos }
+    const mutations = { setDispositivoActual: jest.fn() }
+    const state = { dispositivos }
     const dispositivosModule = {
       namespaced: true,
-      state: stateDispositivos,
-      getters: gettersDispositivos,
-      actions: actionsDispositivos
+      state,
+      getters,
+      actions,
+      mutations
     }
 
     const store = new Vuex.Store({
@@ -85,33 +104,58 @@ describe('Componente: Dispositivos', () => {
       }
     })
 
-    const methods = {
-      modificarEstado: jest.fn()
+    const mockCommit = jest.fn()
+    store.commit = mockCommit
+
+    const mockDispatch = jest.fn()
+    store.dispatch = mockDispatch
+
+    const mockPush = jest.fn()
+    const $router = {
+      push: mockPush
     }
 
-    const wrapper = mount(Dispositivos, {
-      localVue,
-      store,
-      methods,
-      data () {
-        return {
-          headings: ['Nombre', 'Tipo', 'Estado', 'Reglas'],
-          fields: ['nombre', 'tipo', 'activo', 'reglas']
+    beforeEach(() => {
+      wrapper = mount(Dispositivos, {
+        localVue,
+        store,
+        mocks: {
+          $router
+        },
+        data () {
+          return {
+            search: '',
+            selectedItem: 0
+          }
         }
-      },
-      computed: {
-        dispositivosParseados () { return [] },
-        dispositivosFiltrados () { return [{ nombre: 'disp', tipo: 'SENSOR', activo: 'Deshabilitado', reglas: [] }] }
-      }
+      })
     })
 
-    it('getters[`dispositivos/getAllDispositivos]` devuelve store.state.dispositivos', () => {
-      expect(wrapper.vm.dispositivos).toStrictEqual(['Sensor 1', 'Actuador 1'])
+    it('Las computed properties son correctas', async () => {
+      const dispositivosParseados = dispositivos.map(disp => {
+        const activo = disp.activo ? 'Habilitado' : 'Deshabilitado'
+        return { ...disp, activo }
+      })
+      expect(wrapper.vm.dispositivos).toEqual(dispositivos)
+      expect(wrapper.vm.dispositivosParseados).toEqual(dispositivosParseados)
+      expect(wrapper.vm.dispositivosFiltrados).toEqual(dispositivosParseados)
     })
 
-    it('Hacer click en el botón que muestra el estado de un dispositivo invoca al método modificarEstado', async () => {
-      await wrapper.find('.disabled').trigger('click')
-      expect(methods.modificarEstado).toHaveBeenCalled()
+    it('Debe redirigir a `detectarDispositivos` luego de hacer click en el botón `Detectar dispositivos`', async () => {
+      await wrapper.vm.$refs.detectar.$emit('click')
+      expect(mockPush).toHaveBeenCalledWith({ name: 'detectarDispositivos' })
+    })
+
+    it('Debe hacer commit de `dispositivos/setDispositivoActual` y redirigir a `editarDispositivo` luego de hacer click en el botón `Editar`', async () => {
+      await wrapper.vm.$refs.editar.$emit('click')
+      expect(mockCommit).toHaveBeenCalledWith('dispositivos/setDispositivoActual', dispositivos[0])
+      expect(mockPush).toHaveBeenCalledWith({ name: 'editarDispositivo', params: { identificador: '1' } })
+    })
+
+    it('Debe hacer dispatch de `dispositivos/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`', async () => {
+      const dispositivo = { ...dispositivos[0], activo: !dispositivos[0].activo }
+      await wrapper.find('#modificar').trigger('click')
+      expect(mockDispatch).toHaveBeenLastCalledWith('dispositivos/modificarEstado', dispositivo)
     })
   })
 })

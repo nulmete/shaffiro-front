@@ -10,7 +10,7 @@ localVue.use(Vuex)
 describe('Componente: Login', () => {
   let wrapper
 
-  let methods = {
+  const methods = {
     login: jest.fn()
   }
 

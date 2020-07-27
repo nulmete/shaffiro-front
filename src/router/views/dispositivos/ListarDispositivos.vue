@@ -39,6 +39,7 @@
       </template>
       <template v-else-if="field === 'activo'">
         <span
+          id="modificar"
           :class="[row[field] === 'Deshabilitado' ? 'disabled' : 'enabled']"
           @click="modificarEstado(dispositivos[index])"
         >
@@ -66,14 +67,14 @@ export default {
       headings: ['Nombre', 'Tipo', 'Estado', 'Reglas'],
       fields: ['nombre', 'tipo', 'activo', 'reglasParseadas'],
       search: '',
-      selectedItem: null
+      selectedItem: null,
+      error: null
     }
   },
   computed: {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
-    // todo -> actualizar estructura de reglas segun nuevo motor de reglas
     dispositivosParseados () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
@@ -90,21 +91,23 @@ export default {
 
       const activo = props.map(prop => prop.activo ? 'Habilitado' : 'Deshabilitado')
 
-      const regla = props.map(prop => {
-        return prop.reglas.map(innerProp => {
-          return `
-            Si
-            ${this.obtenerMagnitud(innerProp.unidad)}
-            ${innerProp.operador}
-            ${innerProp.valor}
-            ${innerProp.unidad}
-            -> Encender Actuador_1
-          `
-        })
-      })
+      // TODO: actualizar estructura de reglas segun nuevo motor de reglas
+      // const regla = props.map(prop => {
+      //   return prop.reglas.map(innerProp => {
+      //     return `
+      //       Si
+      //       ${this.obtenerMagnitud(innerProp.unidad)}
+      //       ${innerProp.operador}
+      //       ${innerProp.valor}
+      //       ${innerProp.unidad}
+      //       -> Encender Actuador_1
+      //     `
+      //   })
+      // })
 
       const dispositivos = this.dispositivos.map((el, index) => {
-        return { ...el, activo: activo[index], reglasParseadas: regla[index] }
+        // return { ...el, activo: activo[index], reglasParseadas: regla[index] }
+        return { ...el, activo: activo[index] }
       })
 
       return dispositivos
@@ -132,7 +135,7 @@ export default {
         await this.$store.dispatch(`dispositivos/modificarEstado`, dispositivoModificado)
       } catch (error) {
         // todo
-        console.log(error)
+        this.error = error.message
       }
     }
   }

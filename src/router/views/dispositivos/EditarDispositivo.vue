@@ -57,14 +57,13 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      const { id, nombre, tipo, activo, configuracion, regla } = vm.$store.getters['dispositivos/getDispositivoActual']
+      const { id, nombre, tipo, activo, configuracion } = vm.$store.getters['dispositivos/getDispositivoActual']
 
       vm.id = id.toString()
       vm.nombre = nombre
       vm.tipo = tipo
       vm.activo = activo
       vm.configuracion = configuracion
-      vm.regla = regla
     })
   },
   beforeRouteLeave (to, from, next) {
@@ -78,26 +77,26 @@ export default {
       tipo: '',
       activo: false,
       configuracion: '',
-      tiposPosibles: ['SENSOR', 'ACTUADOR']
+      tiposPosibles: ['SENSOR', 'ACTUADOR'],
+      error: null
     }
   },
   methods: {
     async editarDispositivo () {
-      const formData = {
+      const data = {
         id: parseInt(this.id),
         nombre: this.nombre,
         tipo: this.tipo,
         activo: this.activo,
-        configuracion: this.configuracion,
-        regla: this.regla
+        configuracion: this.configuracion
       }
 
       try {
-        await axios.put('/api/dispositivos', formData)
+        await axios.put('/api/dispositivos', data)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo
-        console.log(error.response)
+        this.error = error.message
       }
     }
   },
