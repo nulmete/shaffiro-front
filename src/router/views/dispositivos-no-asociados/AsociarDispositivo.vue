@@ -50,7 +50,7 @@
         />
       </div>
 
-      <div class="form__group">
+      <div class="form__group margin-bottom-medium">
         <base-input-checkbox
           :id="'device-state'"
           v-model="activo"

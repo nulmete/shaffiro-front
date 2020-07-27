@@ -23,3 +23,43 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', () => {
+  let token, authorities
+
+  const usuario = {
+    username: 'admin',
+    password: 'admin',
+    rememberMe: false
+  }
+
+  return cy
+    .request('POST', 'http://localhost:8080/api/authenticate', usuario)
+    .then(response => {
+      expect(response.status).to.eq(200)
+      expect(response.body).to.have.property('id_token')
+      token = response.body.id_token
+      return token
+    })
+    .then(token => {
+      return cy.request({
+        url: 'http://localhost:8080/api/account',
+        auth: {
+          bearer: token
+        }
+      })
+    })
+    .then(response => {
+      expect(response.status).to.eq(200)
+      expect(response.body).to.have.property('authorities')
+      authorities = response.body.authorities
+      return authorities
+    })
+    .then(() => {
+      return {
+        username: usuario.username,
+        token,
+        authorities
+      }
+    })
+})
