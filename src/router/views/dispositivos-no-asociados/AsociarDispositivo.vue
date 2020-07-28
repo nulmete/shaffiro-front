@@ -50,14 +50,6 @@
         />
       </div>
 
-      <div class="form__group">
-        <base-input-checkbox
-          :id="'device-state'"
-          v-model="activo"
-          :label="'Habilitado'"
-        />
-      </div>
-
       <base-button
         :disabled="$v.$invalid || !tipo"
         type="submit"
