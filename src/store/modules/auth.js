@@ -8,14 +8,6 @@ function setDefaultAuthHeaders (authState) {
     : ''
 }
 
-const handleSignupError = (error) => {
-  if (error.response && error.response.status === 400) {
-    throw new Error(error.response.data.errorKey)
-  } else {
-    throw new Error('Hubo un problema de conexión. Intente nuevamente.')
-  }
-}
-
 const mutations = {
   setCurrentUser (state, newValue) {
     state.currentUser = newValue
@@ -53,14 +45,11 @@ const actions = {
       await axios.post('/api/register', data)
       commit('setActivationEmail', data.email)
     } catch (error) {
-      handleSignupError(error)
-    }
-  },
-  async createUser ({ commit }, data) {
-    try {
-      await axios.post('/api/users', data)
-    } catch (error) {
-      handleSignupError(error)
+      if (error.response && error.response.status === 400) {
+        throw new Error(error.response.data.errorKey)
+      } else {
+        throw new Error('Hubo un problema de conexión. Intente nuevamente.')
+      }
     }
   },
   async validate ({ commit, state }) {

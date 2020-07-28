@@ -50,7 +50,7 @@
         />
       </div>
 
-      <div class="form__group margin-bottom-medium">
+      <div class="form__group">
         <base-input-checkbox
           :id="'device-state'"
           v-model="activo"
@@ -87,7 +87,7 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.commit('dispositivosNoAsociados/setDispositivoNoAsociadoActual', {})
+    this.$store.commit('dispositivosNoAsociados/setDispositivoNoAsociadoActual', null)
     next()
   },
   data () {
@@ -125,18 +125,13 @@ export default {
       const data = {
         nombre: this.nombre,
         tipo: this.tipo,
-        activo: this.activo,
-        // todo posible mejora: mando en el campo configuración la magnitud a medir
-        // si el dispositivo es tipo SENSOR.
-        // Si es tipo ACTUADOR, mando el artefacto a controlar
+        // Si el dispositivo es tipo SENSOR, la configuración será la MAGNITUD a medir
+        // Si es tipo ACTUADOR, será el ARTEFACTO A CONTROLAR
         configuracion: this.configuracion
       }
 
       try {
-        // crear dispositivo
-        await axios.post('/api/dispositivos', data)
-        // eliminar dispositivo de la tabla de dispositivos no asociados
-        await axios.delete(`api/dispositivo-no-asociados/${this.id}`)
+        await axios.post(`api/dispositivo-no-asociado/pair/${this.id}`, data)
         this.$router.push({ name: 'dispositivos' })
       } catch (error) {
         // todo

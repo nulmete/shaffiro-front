@@ -1,12 +1,21 @@
 <template>
   <MainForm>
     <template v-slot:heading>
-      Crear usuario
+      {{ pageTitle }} usuario
     </template>
+
+    <base-card
+      v-if="networkError"
+      :error="networkError"
+    >
+      <template v-slot:paragraph>
+        {{ networkError }}
+      </template>
+    </base-card>
 
     <form
       class="form"
-      @submit.prevent="crearUsuario"
+      @submit.prevent="guardarUsuario"
     >
       <div class="form__group">
         <label
@@ -57,9 +66,10 @@
         >El nombre de usuario ingresado ya está en uso</span>
       </div>
 
-      <div class="form__group margin-bottom-medium">
+      <div class="form__group">
         <label class="form__label">Tipo de Usuario</label>
         <base-input-select
+          id="tipo"
           v-model="selectedAuthorities"
           :options="authoritiesOptions"
           :options-labels="authoritiesOptionsSpanish"
@@ -67,11 +77,22 @@
         />
       </div>
 
+      <div
+        v-if="editMode"
+        class="form__group"
+      >
+        <base-input-checkbox
+          :id="'user-state'"
+          v-model="activated"
+          :label="'Habilitado'"
+        />
+      </div>
+
       <base-button
         :disabled="$v.$invalid || !selectedAuthorities.length"
         type="submit"
       >
-        Crear usuario
+        {{ pageTitle === 'Crear' ? 'Crear' : 'Guardar' }}
       </base-button>
     </form>
   </MainForm>
@@ -82,18 +103,42 @@ import MainForm from '@/router/views/layouts/MainForm'
 import { required, email } from 'vuelidate/lib/validators'
 import { isUsernameValid } from '@/validators/validators'
 import { obtenerRoles } from '@/utils/users'
+import axios from 'axios'
 
 export default {
   components: { MainForm },
+  beforeRouteEnter (to, from, next) {
+    if (to.name !== 'editarUsuario') return next()
+    next(vm => {
+      vm.editMode = true
+      vm.pageTitle = 'Editar'
+      const { id, login, email, activated, authorities } = vm.$store.getters['usuarios/getUser']
+      vm.id = id.toString()
+      vm.username = login
+      vm.email = email
+      vm.activated = activated
+      vm.selectedAuthorities = authorities
+    })
+  },
   data () {
     return {
+      pageTitle: 'Crear',
       username: '',
       email: '',
       authoritiesOptions: ['ROLE_ADMIN', 'ROLE_USER'],
       selectedAuthorities: [],
       emailError: null,
-      usernameError: null
+      usernameError: null,
+      networkError: null,
+      // for edit mode
+      editMode: false,
+      id: '',
+      activated: null
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('usuarios/setCurrentUser', null)
+    next()
   },
   computed: {
     authoritiesOptionsSpanish () {
@@ -101,9 +146,10 @@ export default {
     }
   },
   methods: {
-    async crearUsuario () {
+    async guardarUsuario () {
       this.emailError = false
       this.usernameError = false
+      this.networkError = false
 
       const data = {
         login: this.username,
@@ -111,20 +157,45 @@ export default {
         authorities: this.selectedAuthorities
       }
 
+      const endpoint = '/api/users'
+      let method = 'POST'
+
+      if (this.editMode) {
+        data.id = this.id
+        data.activated = this.activated
+        method = 'PUT'
+      }
+
       try {
-        await this.$store.dispatch('auth/createUser', data)
+        // await this.$store.dispatch('auth/createUser', data)
+        await axios({
+          method,
+          url: endpoint,
+          data
+        })
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
-        switch (error.message) {
-          case 'userexists':
+        if (error.response && error.response.status === 400) {
+          // throw new Error(error.response.data.errorKey)
+          const errorKey = error.response.data.errorKey
+          if (errorKey === 'userexists') {
             this.usernameError = true
-            break
-          case 'emailexists':
+          } else if (errorKey === 'emailexists') {
             this.emailError = true
-            break
-          default:
-            break
+          }
+        } else {
+          this.networkError = 'Hubo un problema de conexión. Intente nuevamente.'
         }
+        // switch (error.message) {
+        //   case 'userexists':
+        //     this.usernameError = true
+        //     break
+        //   case 'emailexists':
+        //     this.emailError = true
+        //     break
+        //   default:
+        //     break
+        // }
       }
     }
   },

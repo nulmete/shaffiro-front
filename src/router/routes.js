@@ -95,19 +95,18 @@ export default [
   {
     path: '/usuarios/crear',
     name: 'crearUsuario',
-    component: () => import('@/router/views/usuarios/CrearUsuario.vue'),
+    component: () => import('@/router/views/usuarios/UsuarioForm.vue'),
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/usuarios/editar/:identificador',
+    path: '/usuarios/editar',
     name: 'editarUsuario',
-    component: () => import('@/router/views/usuarios/EditarUsuario.vue'),
+    component: () => import('@/router/views/usuarios/UsuarioForm.vue'),
     meta: {
       requiresAuth: true
-    },
-    props: true
+    }
   },
   {
     path: '/dispositivos',

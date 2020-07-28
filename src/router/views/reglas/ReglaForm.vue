@@ -29,6 +29,7 @@
         <div class="form__group">
           <label class="form__label">Sensor asociado</label>
           <base-input-select
+            id="sensor"
             v-model="sensorAsociado"
             :options="sensores"
             :options-labels="sensoresLabels"
@@ -39,6 +40,7 @@
         <div class="form__group">
           <label class="form__label">Actuador asociado</label>
           <base-input-select
+            id="actuador"
             v-model="actuadorAsociado"
             :options="actuadores"
             :options-labels="actuadoresLabels"
@@ -49,6 +51,7 @@
       <!-- Mostrar reglas ya asociadas al actuador seleccionado -->
       <div
         v-if="actuadorAsociado"
+        id="reglas-existentes"
         class="group margin-bottom-large"
       >
         <h3 class="margin-bottom-small">
@@ -86,6 +89,7 @@
 
           <div class="form__group">
             <base-input-select
+              id="magnitud"
               v-model="magnitud"
               :extra-label="'magnitud'"
               :options="magnitudesPosibles"
@@ -96,6 +100,7 @@
 
           <div class="form__group">
             <base-input-select
+              id="operador"
               v-model="operador"
               :extra-label="'operador'"
               :options="operadoresPosibles"
@@ -106,6 +111,7 @@
           <div class="form__group">
             <template v-if="magnitud === 'el Horario'">
               <VueTimepicker
+                id="horario"
                 v-model="valor"
                 class="timepicker"
               />
@@ -172,6 +178,7 @@
           >
             <label class="form__label">Conector:</label>
             <base-input-select
+              id="conector"
               v-model="conector"
               :extra-label="'conector'"
               :options="conectoresPosibles"
@@ -197,6 +204,7 @@
 
         <div class="form__group">
           <base-input-select
+            id="accion"
             v-model="accion"
             :options="accionesPosibles"
             :options-labels="accionesPosiblesLabels"
@@ -343,7 +351,7 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.commit('dispositivos/setAllDispositivos', [])
+    this.$store.commit('dispositivos/setDispositivo', [])
     this.$store.commit('reglas/setReglaActual', null)
     next()
   },

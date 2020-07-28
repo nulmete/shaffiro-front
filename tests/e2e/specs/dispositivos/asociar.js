@@ -16,7 +16,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
   })
 
   beforeEach(() => {
-    cy.wait(3000)
+    cy.wait(1000)
     cy
       .visit('/dispositivos', {
         // dirigirse a 'Listado de Dispositivos' y guardar el JWT en localStorage

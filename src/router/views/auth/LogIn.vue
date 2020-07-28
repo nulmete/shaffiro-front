@@ -33,7 +33,7 @@
         >Por favor, ingrese su nombre de usuario</span>
       </div>
 
-      <div class="form__group margin-bottom-medium">
+      <div class="form__group">
         <label
           class="form__label"
           for="password"
