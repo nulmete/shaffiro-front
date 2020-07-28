@@ -43,7 +43,7 @@ export default {
   },
   data () {
     return {
-      headings: ['MAC', 'UUID'],
+      headings: ['MAC', 'IP'],
       fields: ['mac', 'uuid'],
       selectedItem: null
     }

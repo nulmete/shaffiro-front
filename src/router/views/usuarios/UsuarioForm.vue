@@ -120,6 +120,10 @@ export default {
       vm.selectedAuthorities = authorities
     })
   },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('usuarios/setCurrentUser', null)
+    next()
+  },
   data () {
     return {
       pageTitle: 'Crear',
@@ -135,10 +139,6 @@ export default {
       id: '',
       activated: null
     }
-  },
-  beforeRouteLeave (to, from, next) {
-    this.$store.commit('usuarios/setCurrentUser', null)
-    next()
   },
   computed: {
     authoritiesOptionsSpanish () {
@@ -167,7 +167,6 @@ export default {
       }
 
       try {
-        // await this.$store.dispatch('auth/createUser', data)
         await axios({
           method,
           url: endpoint,
@@ -176,7 +175,6 @@ export default {
         this.$router.push({ name: 'usuarios' })
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          // throw new Error(error.response.data.errorKey)
           const errorKey = error.response.data.errorKey
           if (errorKey === 'userexists') {
             this.usernameError = true
@@ -186,16 +184,6 @@ export default {
         } else {
           this.networkError = 'Hubo un problema de conexión. Intente nuevamente.'
         }
-        // switch (error.message) {
-        //   case 'userexists':
-        //     this.usernameError = true
-        //     break
-        //   case 'emailexists':
-        //     this.emailError = true
-        //     break
-        //   default:
-        //     break
-        // }
       }
     }
   },

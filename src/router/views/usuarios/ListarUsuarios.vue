@@ -12,11 +12,15 @@
     </template>
 
     <template v-slot:buttons>
-      <base-button @click="crear">
+      <base-button
+        ref="crear"
+        @click="crear"
+      >
         Crear usuario
       </base-button>
 
       <base-button
+        ref="editar"
         :disabled="selectedItem === null"
         @click="editar(usuarios[selectedItem])"
       >
@@ -35,6 +39,7 @@
       </template>
       <template v-else-if="field === 'activated'">
         <span
+          id="modificar"
           :class="[row[field] === 'Deshabilitado' ? 'disabled' : 'enabled']"
           @click="modificarEstado(usuarios[index])"
         >
@@ -119,7 +124,7 @@ export default {
     },
     editar (usuario) {
       this.$store.commit('usuarios/setCurrentUser', usuario)
-      this.$router.push({ name: 'editarUsuario', params: { identificador: usuario.id.toString() } })
+      this.$router.push({ name: 'editarUsuario' })
     },
     async modificarEstado (usuario) {
       const usuarioModificado = { ...usuario, activated: !usuario.activated }
