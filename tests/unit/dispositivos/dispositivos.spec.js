@@ -8,6 +8,54 @@ localVue.use(Vuex)
 describe('Componente: ListarDispositivos', () => {
   let wrapper
 
+  const dispositivos = [
+    {
+      id: 1,
+      nombre: 'Sensor_Lampara',
+      tipo: 'SENSOR',
+      activo: true,
+      configuracion: 'LUMENES',
+      reglas: []
+    },
+    {
+      id: 2,
+      nombre: 'Actuador_Lampara',
+      tipo: 'ACTUADOR',
+      activo: true,
+      configuracion: 'Lámpara',
+      reglas: []
+    }
+  ]
+
+  describe('prueba catch block', () => {
+    const mockDispatchErr = jest.fn(() => Promise.reject(Error('error')))
+    const $store = { dispatch: mockDispatchErr }
+
+    const methods = { fetchData: jest.fn() }
+
+    it('debe hacer dispatch de `dispositivos/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`', async () => {
+      wrapper = mount(Dispositivos, {
+        localVue,
+        mocks: { $store },
+        methods,
+        data () {
+          return {
+            selectedItem: 0
+          }
+        },
+        computed: {
+          dispositivos () { return dispositivos },
+          dispositivosParseados () { return [] },
+          dispositivosFiltrados () { return dispositivos }
+        }
+      })
+
+      // const dispositivo = { ...dispositivos[0], activated: !dispositivos[0].activated }
+      await wrapper.find('#modificar').trigger('click')
+      expect(wrapper.vm.error).toBe('error')
+    })
+  })
+
   describe('con methods mockeados', () => {
     const methods = {
       detectar: jest.fn(),
@@ -68,24 +116,6 @@ describe('Componente: ListarDispositivos', () => {
   })
 
   describe('sin methods mockeados', () => {
-    const dispositivos = [
-      {
-        id: 1,
-        nombre: 'Sensor_Lampara',
-        tipo: 'SENSOR',
-        activo: true,
-        configuracion: 'LUMENES',
-        reglas: []
-      },
-      {
-        id: 2,
-        nombre: 'Actuador_Lampara',
-        tipo: 'ACTUADOR',
-        activo: true,
-        configuracion: 'Lámpara',
-        reglas: []
-      }
-    ]
     const actions = { getAllDispositivos: jest.fn() }
     const getters = { getAllDispositivos: (state) => state.dispositivos }
     const mutations = { setDispositivoActual: jest.fn() }
@@ -149,7 +179,7 @@ describe('Componente: ListarDispositivos', () => {
     it('Debe hacer commit de `dispositivos/setDispositivoActual` y redirigir a `editarDispositivo` luego de hacer click en el botón `Editar`', async () => {
       await wrapper.vm.$refs.editar.$emit('click')
       expect(mockCommit).toHaveBeenCalledWith('dispositivos/setDispositivoActual', dispositivos[0])
-      expect(mockPush).toHaveBeenCalledWith({ name: 'editarDispositivo', params: { identificador: '1' } })
+      expect(mockPush).toHaveBeenCalledWith({ name: 'editarDispositivo' })
     })
 
     it('Debe hacer dispatch de `dispositivos/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`', async () => {

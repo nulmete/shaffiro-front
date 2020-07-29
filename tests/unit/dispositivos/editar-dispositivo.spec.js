@@ -1,63 +1,79 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import EditarDispositivo from '@/router/views/dispositivos/EditarDispositivo'
+import Vuex from 'vuex'
 import Vuelidate from 'vuelidate'
 import axios from 'axios'
+
+const localVue = createLocalVue()
+localVue.use(Vuelidate)
+localVue.use(Vuex)
 
 jest.mock('axios')
 
 describe('Componente: EditarDispositivo', () => {
-  const localVue = createLocalVue()
-  localVue.use(Vuelidate)
   let wrapper
+
+  const dispositivos = [
+    {
+      id: 1,
+      nombre: 'Sensor_Lampara',
+      tipo: 'SENSOR',
+      activo: true,
+      configuracion: 'LUMENES',
+      reglas: []
+    },
+    {
+      id: 2,
+      nombre: 'Actuador_Lampara',
+      tipo: 'ACTUADOR',
+      activo: true,
+      configuracion: 'Lámpara',
+      reglas: []
+    }
+  ]
+
+  const getters = { getDispositivoActual: (state) => state.dispositivoActual }
+  const mutations = { setDispositivoActual: jest.fn() }
+  const state = { dispositivoActual: dispositivos[0] }
+  const dispositivosModule = {
+    namespaced: true,
+    state,
+    getters,
+    mutations
+  }
+
+  const store = new Vuex.Store({
+    modules: {
+      dispositivos: dispositivosModule
+    }
+  })
+
+  const mockCommit = jest.fn()
+  store.commit = mockCommit
 
   const mockPush = jest.fn()
   const $router = {
     push: mockPush
   }
 
-  const mockCommit = jest.fn()
-  const mockGetters = jest.fn(() => {
-    return {
-      id: '1',
-      nombre: 'Sensor_Lampara',
-      tipo: 'SENSOR',
-      activo: true,
-      configuracion: 'LUMENES'
-    }
-  })
-  const $store = {
-    commit: mockCommit,
-    getters: mockGetters
-  }
-
   beforeEach(() => {
     wrapper = mount(EditarDispositivo, {
       localVue,
+      store,
       mocks: {
-        $router,
-        $store
-      },
-      propsData: {
-        identificador: '1'
+        $router
       }
-      // data () {
-      //   return {
-      //     id: '1',
-      //     nombre: 'Sensor_Lampara',
-      //     tipo: 'SENSOR',
-      //     activo: true,
-      //     configuracion: 'LUMENES'
-      //   }
-      // }
     })
   })
 
-  it('debe asignar las propiedades recibidas de `getters[dispositivos/getDispositivoActual]` a data() ', async () => {
+  it('debe asignar las propiedades recibidas de `getters[dispositivos/getDispositivoActual]` a data() antes de renderizar', async () => {
     const beforeRouteEnter = wrapper.vm.$options.beforeRouteEnter
-    const nextMock = jest.fn()
-    beforeRouteEnter.call(wrapper.vm, 'toObj', 'fromObj', nextMock)
-    await wrapper.vm.$nextTick()
-    expect(nextMock).toHaveBeenCalled()
+    beforeRouteEnter.call(wrapper.vm, 'to', 'from', cb => cb(wrapper.vm))
+    expect(wrapper.vm.id).toBe('1')
+    expect(wrapper.vm.nombre).toBe('Sensor_Lampara')
+    expect(wrapper.vm.tipo).toBe('SENSOR')
+    expect(wrapper.vm.activo).toBe(true)
+    expect(wrapper.vm.configuracion).toBe('LUMENES')
   })
 
   it('error debe ser null si el método editarDispositivo() no falla', async () => {

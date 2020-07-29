@@ -1,14 +1,49 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import AsociarDispositivo from '@/router/views/dispositivos-no-asociados/AsociarDispositivo'
 import Vuelidate from 'vuelidate'
+import Vuex from 'vuex'
 import axios from 'axios'
+
+const localVue = createLocalVue()
+localVue.use(Vuelidate)
+localVue.use(Vuex)
 
 jest.mock('axios')
 
 describe('Componente: AsociarDispositivo', () => {
-  const localVue = createLocalVue()
-  localVue.use(Vuelidate)
   let wrapper
+
+  const dispositivos = [
+    {
+      id: 1,
+      mac: 'AAAAA',
+      uuid: 'qwertyuiop-asdfghj0123'
+    },
+    {
+      id: 2,
+      mac: 'BBBBB',
+      uuid: 'zxcvbnmpoiuy8765'
+    }
+  ]
+
+  const getters = { getDispositivoNoAsociadoActual: (state) => state.dispositivoNoAsociadoActual }
+  const mutations = { setDispositivoNoAsociadoActual: jest.fn() }
+  const state = { dispositivoNoAsociadoActual: dispositivos[0] }
+  const dispositivosNoAsociadosModule = {
+    namespaced: true,
+    state,
+    getters,
+    mutations
+  }
+
+  const store = new Vuex.Store({
+    modules: {
+      dispositivosNoAsociados: dispositivosNoAsociadosModule
+    }
+  })
+
+  const mockCommit = jest.fn()
+  store.commit = mockCommit
 
   const mockPush = jest.fn()
 
@@ -20,6 +55,7 @@ describe('Componente: AsociarDispositivo', () => {
     beforeEach(() => {
       wrapper = mount(AsociarDispositivo, {
         localVue,
+        store,
         mocks: {
           $router
         },
@@ -30,6 +66,22 @@ describe('Componente: AsociarDispositivo', () => {
           }
         }
       })
+    })
+
+    it('debe asignar las propiedades recibidas de `getters[dispositivosNoAsociados/getDispositivoNoAsociadoActual]` a data() antes de renderizar', async () => {
+      const beforeRouteEnter = wrapper.vm.$options.beforeRouteEnter
+      beforeRouteEnter.call(wrapper.vm, { name: 'editarUsuario' }, 'from', cb => cb(wrapper.vm))
+      expect(wrapper.vm.id).toBe(dispositivos[0].id)
+      expect(wrapper.vm.mac).toBe(dispositivos[0].mac)
+      expect(wrapper.vm.uuid).toBe(dispositivos[0].uuid)
+    })
+
+    it('debe hacer commit de `dispositivosNoAsociados/setDispositivoNoAsociadoActual(null)` al dejar la ruta', () => {
+      const nextMock = jest.fn()
+      const beforeRouteLeave = wrapper.vm.$options.beforeRouteLeave
+      beforeRouteLeave.call(wrapper.vm, 'to', 'from', nextMock)
+      expect(mockCommit).toHaveBeenCalledWith('dispositivosNoAsociados/setDispositivoNoAsociadoActual', null)
+      expect(nextMock).toHaveBeenCalled()
     })
 
     it('error debe ser null si el método asociar no falla', async () => {

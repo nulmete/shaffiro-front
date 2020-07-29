@@ -117,13 +117,12 @@ export default [
     }
   },
   {
-    path: '/dispositivos/editar/:identificador',
+    path: '/dispositivos/editar',
     name: 'editarDispositivo',
     component: () => import('@/router/views/dispositivos/EditarDispositivo.vue'),
     meta: {
       requiresAuth: true
-    },
-    props: true
+    }
   },
   {
     path: '/dispositivos/detectar',

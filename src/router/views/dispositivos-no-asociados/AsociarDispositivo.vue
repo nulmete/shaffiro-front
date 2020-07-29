@@ -75,7 +75,6 @@ export default {
       vm.id = id
       vm.mac = mac
       vm.uuid = uuid
-      vm.configuracion = ''
     })
   },
   beforeRouteLeave (to, from, next) {

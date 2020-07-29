@@ -49,12 +49,6 @@ import axios from 'axios'
 
 export default {
   components: { MainForm },
-  props: {
-    identificador: {
-      type: String,
-      required: true
-    }
-  },
   beforeRouteEnter (to, from, next) {
     next(vm => {
       const { id, nombre, tipo, activo, configuracion } = vm.$store.getters['dispositivos/getDispositivoActual']

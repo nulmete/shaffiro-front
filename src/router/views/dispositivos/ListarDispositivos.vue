@@ -117,16 +117,19 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('dispositivos/getAllDispositivos')
+    this.fetchData()
   },
   methods: {
     obtenerMagnitud,
+    fetchData () {
+      this.$store.dispatch('dispositivos/getAllDispositivos')
+    },
     detectar () {
       this.$router.push({ name: 'detectarDispositivos' })
     },
     editar (dispositivo) {
       this.$store.commit('dispositivos/setDispositivoActual', dispositivo)
-      this.$router.push({ name: 'editarDispositivo', params: { identificador: dispositivo.id.toString() } })
+      this.$router.push({ name: 'editarDispositivo' })
     },
     async modificarEstado (dispositivo) {
       const dispositivoModificado = { ...dispositivo, activo: !dispositivo.activo }

@@ -25,6 +25,7 @@
         <base-input
           id="email"
           v-model="email"
+          :disabled="editMode"
           type="email"
           :v="$v.email"
         />
@@ -50,6 +51,7 @@
         <base-input
           id="username"
           v-model="username"
+          :disabled="editMode"
           :v="$v.username"
         />
         <span
@@ -126,6 +128,7 @@ export default {
   },
   data () {
     return {
+      error: null,
       pageTitle: 'Crear',
       username: '',
       email: '',
@@ -147,9 +150,9 @@ export default {
   },
   methods: {
     async guardarUsuario () {
-      this.emailError = false
-      this.usernameError = false
-      this.networkError = false
+      this.emailError = null
+      this.usernameError = null
+      this.networkError = null
 
       const data = {
         login: this.username,

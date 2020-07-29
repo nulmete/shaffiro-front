@@ -85,6 +85,23 @@ describe('Store auth module', () => {
     expect(store.getters.isLoggedIn).toEqual(false)
   })
 
+  it('getters.isAdmin retorna true si el usuario logeado es un administrador', () => {
+    store.commit('setCurrentUser', user)
+    expect(store.getters.isAdmin).toEqual(true)
+  })
+
+  it('getters.getSessionExpired retorna true si la sesión está expirada', () => {
+    expect(store.getters.getSessionExpired).toEqual(false)
+    store.commit('setSessionExpired', true)
+    expect(store.getters.getSessionExpired).toEqual(true)
+  })
+
+  it('getters.getActivationEmail retorna state.email', () => {
+    expect(store.getters.getActivationEmail).toEqual(null)
+    store.commit('setActivationEmail', 'test@test.com')
+    expect(store.getters.getActivationEmail).toEqual('test@test.com')
+  })
+
   it('actions.signup hace un commit de mutations.setActivationEmail y la información del usuario dado de alta se guarda en state.currentUser', async () => {
     const mock = new MockAdapter(axios)
 
@@ -104,6 +121,19 @@ describe('Store auth module', () => {
       await store.dispatch('signup', signupData)
     } catch (error) {
       expect(error.message).toEqual('Hubo un problema de conexión. Intente nuevamente.')
+    }
+  })
+
+  it('actions.signup hace throw de error.response.data.errorKey ante un statusCode 400', async () => {
+    expect.assertions(1)
+
+    const mock = new MockAdapter(axios)
+    mock.onPost('/api/register').replyOnce(400, { errorKey: 'userexists' })
+
+    try {
+      await store.dispatch('signup', signupData)
+    } catch (error) {
+      expect(error.message).toEqual('userexists')
     }
   })
 
@@ -134,6 +164,19 @@ describe('Store auth module', () => {
       await store.dispatch('login', { username: 'random', password: 'random' })
     } catch (error) {
       expect(error.message).toEqual('Hubo un problema de conexión. Intente nuevamente.')
+    }
+  })
+
+  it('actions.login retorna el mensaje de error "Hubo un problema de conexión. Intente nuevamente." si un usuario intenta iniciar sesión y ocurre un problema de conexión', async () => {
+    expect.assertions(1)
+
+    const mock = new MockAdapter(axios)
+    mock.onPost('/api/authenticate').replyOnce(400)
+
+    try {
+      await store.dispatch('login', { username: 'random', password: 'random' })
+    } catch (error) {
+      expect(error.message).toEqual('Nombre de usuario o contraseña incorrectos.')
     }
   })
 

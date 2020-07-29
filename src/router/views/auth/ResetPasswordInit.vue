@@ -1,31 +1,51 @@
 <template>
-  <h2>Restablecer contraseña</h2>
+  <MainForm>
+    <template v-slot:heading>
+      Restablecer contraseña
+    </template>
 
-  <!-- <p>
+    <template v-slot:paragraph>
       Ingrese el <strong>e-mail</strong> con el que se registró.
       Enviaremos un correo electrónico con un código para restablecer su contraseña.
-    </p>
+    </template>
 
-    <BaseForm @submit.prevent="resetPasswordInit">
-      <BaseFormGroup>
+    <base-card
+      v-if="serverError"
+      :error="serverError"
+    >
+      <template v-slot:paragraph>
+        {{ serverError }}
+      </template>
+    </base-card>
+
+    <form
+      class="form"
+      @submit.prevent="resetPasswordInit"
+    >
+      <div class="form__group">
+        <label
+          class="form__label"
+          for="email"
+        >E-mail</label>
         <base-input
+          id="email"
           v-model="email"
-          name="email"
-          label="E-mail"
+          type="email"
           :v="$v.email"
         />
-        <BaseLabelError>
-          <template v-if="$v.email.$dirty && !$v.email.required">
-            Por favor, ingrese su e-mail
-          </template>
-          <template v-else-if="$v.email.$dirty && !$v.email.email">
-            Ingrese un e-mail válido <i>(ejemplo: shaffiro@gmail.com)</i>
-          </template>
-          <template v-else-if="errors.email">
-            La dirección de e´mail no corresponde a ningún usuario activo
-          </template>
-        </BaseLabelError>
-      </BaseFormGroup>
+        <span
+          v-if="$v.email.$dirty && !$v.email.required"
+          class="input-error"
+        >Por favor, ingrese su e-mail</span>
+        <span
+          v-else-if="$v.email.$dirty && !$v.email.email"
+          class="input-error"
+        >Ingrese un e-mail válido <em>(ejemplo: shaffiro@gmail.com)</em></span>
+        <span
+          v-else-if="emailError"
+          class="input-error"
+        >{{ emailError }} </span>
+      </div>
 
       <base-button
         :disabled="$v.$invalid"
@@ -33,22 +53,29 @@
       >
         Enviar
       </base-button>
-    </BaseForm> -->
+    </form>
+  </MainForm>
 </template>
 
 <script>
+import MainForm from '@/router/views/layouts/MainForm'
 import { required, email } from 'vuelidate/lib/validators'
 import axios from 'axios'
 
 export default {
+  components: { MainForm },
   data () {
     return {
       email: '',
-      error: false
+      emailError: null,
+      serverError: null
     }
   },
   methods: {
     async resetPasswordInit () {
+      this.emailError = null
+      this.serverError = null
+
       try {
         await axios.post('/api/account/reset-password/init', this.email, {
           headers: {
@@ -57,7 +84,11 @@ export default {
         })
         this.$router.push({ name: 'resetPasswordFinish' })
       } catch (error) {
-        this.error = true
+        if (error.response.status === 400) {
+          this.emailError = 'La dirección de email no corresponde a ningún usuario activo.'
+        } else {
+          this.serverError = 'Hubo un problema de conexión. Intente nuevamente.'
+        }
       }
     }
   },
