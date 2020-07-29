@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\auth\reset-password-init.spec.js">
+    <testCase name="Componente: ResetPasswordInit redirige a `resetPasswordFinish` si la llamada de axios luego de enviar el formulario es exitosa" duration="108"/>
+    <testCase name="Componente: ResetPasswordInit si el e-mail no corresponde a un usuario activo, el formulario debe retornar un error" duration="66"/>
+    <testCase name="Componente: ResetPasswordInit si ocurre un problema de conexión al enviar el formulario, debe retornar un error" duration="59"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\auth\reset-password-finish.spec.js">
+    <testCase name="Componente: ResetPasswordFinish Guarda resetted:true en localstorage si la llamada de axios luego de enviar el formulario es exitosa y redirectToLogin() funciona" duration="132"/>
+    <testCase name="Componente: ResetPasswordFinish Guarda resetted: true en localstorage si la llamada de axios luego de enviar el formulario es exitosa" duration="87"/>
+    <testCase name="Componente: ResetPasswordFinish Guarda resetted: true en localstorage si la llamada de axios luego de enviar el formulario es exitosa" duration="41"/>
+    <testCase name="Componente: ResetPasswordFinish debe limpiar localstorage al dejar la ruta" duration="53"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\usuarios\usuarios-form.spec.js">
+    <testCase name="Componente: UsuarioForm debe asignar las propiedades recibidas de `getters[usuarios/getUser]` a data() si la ruta es /editar" duration="144"/>
+    <testCase name="Componente: UsuarioForm no debe asignar ninguna propiedad a data() si la ruta es /crear" duration="38"/>
+    <testCase name="Componente: UsuarioForm authoritiesOptionsSpanish muestra los roles del usuario en español" duration="29"/>
+    <testCase name="Componente: UsuarioForm debe hacer commit de `usuarios/setCurrentUser(null)` al dejar la ruta" duration="31"/>
+    <testCase name="Componente: UsuarioForm usernameError, emailError y networkError deben ser null si la request de axios es exitosa" duration="97"/>
+    <testCase name="Componente: UsuarioForm usernameError debe ser true si la request de axios falla y devuelve errorKey: `userexists`" duration="80"/>
+    <testCase name="Componente: UsuarioForm emailError debe ser true si la request de axios falla y devuelve errorKey: `userexists`" duration="58"/>
+    <testCase name="Componente: UsuarioForm emailError debe ser true si la request de axios falla y devuelve errorKey: `userexists`" duration="65"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\dispositivos\dispositivos.spec.js">
+    <testCase name="Componente: ListarDispositivos prueba catch block debe hacer dispatch de `dispositivos/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`" duration="66"/>
+    <testCase name="Componente: ListarDispositivos con methods mockeados Se renderiza correctamente y en el hook created() hace dispatch de `dispositivos/getAllDispositivos`" duration="22"/>
+    <testCase name="Componente: ListarDispositivos con methods mockeados Debe invocar al método detectar luego de hacer click en el botón `Detectar dispositivos`" duration="25"/>
+    <testCase name="Componente: ListarDispositivos con methods mockeados Debe invocar al método editar luego de hacer click en el botón `Editar`" duration="30"/>
+    <testCase name="Componente: ListarDispositivos con methods mockeados Hacer click en el botón que muestra el estado de un dispositivo invoca al método modificarEstado" duration="28"/>
+    <testCase name="Componente: ListarDispositivos sin methods mockeados Las computed properties son correctas" duration="42"/>
+    <testCase name="Componente: ListarDispositivos sin methods mockeados Debe redirigir a `detectarDispositivos` luego de hacer click en el botón `Detectar dispositivos`" duration="26"/>
+    <testCase name="Componente: ListarDispositivos sin methods mockeados Debe hacer commit de `dispositivos/setDispositivoActual` y redirigir a `editarDispositivo` luego de hacer click en el botón `Editar`" duration="23"/>
+    <testCase name="Componente: ListarDispositivos sin methods mockeados Debe hacer dispatch de `dispositivos/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`" duration="19"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\store\store-auth.spec.js">
+    <testCase name="Store auth module mutations.setCurrentUser guarda en state la información del usuario con sesión iniciada" duration="9"/>
+    <testCase name="Store auth module mutations.setCurrentUser actualiza correctamente el header Authorization de axios" duration="2"/>
+    <testCase name="Store auth module mutations.setCurrentUser guarda en localStorage la información del usuario con sesión iniciada" duration="6"/>
+    <testCase name="Store auth module mutations.setActivationEmail guarda en state el e-mail del usuario recién dado de alta" duration="2"/>
+    <testCase name="Store auth module mutations.setActivationEmail guarda en localStorage el e-mail del usuario recién dado de alta" duration="2"/>
+    <testCase name="Store auth module mutations.setSessionExpired guarda el estado de la sesión de un usuario" duration="3"/>
+    <testCase name="Store auth module getters.isLoggedIn retorna true cuando state.currentUser es no nulo" duration="1"/>
+    <testCase name="Store auth module getters.isLoggedIn retorna false cuando state.currentUser es nulo" duration="1"/>
+    <testCase name="Store auth module getters.isAdmin retorna true si el usuario logeado es un administrador" duration="2"/>
+    <testCase name="Store auth module getters.getSessionExpired retorna true si la sesión está expirada" duration="4"/>
+    <testCase name="Store auth module getters.getActivationEmail retorna state.email" duration="2"/>
+    <testCase name="Store auth module actions.signup hace un commit de mutations.setActivationEmail y la información del usuario dado de alta se guarda en state.currentUser" duration="7"/>
+    <testCase name="Store auth module actions.signup retorna el mensaje de error &quot;Hubo un problema de conexión. Intente nuevamente.&quot; si un usuario intenta darse de alta y ocurre un problema de conexión" duration="4"/>
+    <testCase name="Store auth module actions.signup hace throw de error.response.data.errorKey ante un statusCode 400" duration="2"/>
+    <testCase name="Store auth module actions.login hace un commit de mutations.setCurrentUser y la información del usuario que inicia sesión se guarda en state.currentUser" duration="3"/>
+    <testCase name="Store auth module actions.login retorna el mensaje de error &quot;Hubo un problema de conexión. Intente nuevamente.&quot; si un usuario intenta iniciar sesión y ocurre un problema de conexión" duration="1"/>
+    <testCase name="Store auth module actions.login retorna el mensaje de error &quot;Hubo un problema de conexión. Intente nuevamente.&quot; si un usuario intenta iniciar sesión y ocurre un problema de conexión" duration="1"/>
+    <testCase name="Store auth module actions.login retorna el mensaje de error &quot;Nombre de usuario o contraseña incorrectos&quot; si un usuario intenta iniciar sesión con las credenciales incorrectas" duration="2"/>
+    <testCase name="Store auth module actions.login retorna un mensaje de error si un usuario intenta iniciar sesión pero no está habilitado" duration="2"/>
+    <testCase name="Store auth module actions.validate resuelve a `null` si no hay una sesión iniciada" duration="1"/>
+    <testCase name="Store auth module actions.validate hace un commit de mutations.setCurrentUser(`user`) y mutations.setSessionExpired(`false`) y valida su sesión" duration="8"/>
+    <testCase name="Store auth module actions.validate resuelve a `null` si la sesión del usuario contiene un token inválido" duration="2"/>
+    <testCase name="Store auth module actions.logout finaliza la sesión de un usuario, por lo que state.currentUser es `null`" duration="2"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\dispositivos-no-asociados\asociar-dispositivo.spec.js">
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados debe asignar las propiedades recibidas de `getters[dispositivosNoAsociados/getDispositivoNoAsociadoActual]` a data() antes de renderizar" duration="68"/>
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados debe hacer commit de `dispositivosNoAsociados/setDispositivoNoAsociadoActual(null)` al dejar la ruta" duration="35"/>
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados error debe ser null si el método asociar no falla" duration="49"/>
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados error debe ser distinto de null si el método asociar falla" duration="32"/>
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados al seleccionar el tipo de dispositivo `SENSOR`, configuracionesPosibles debe ser `LUMENES` y su label `el Flujo Luminoso`" duration="46"/>
+    <testCase name="Componente: AsociarDispositivo sin methods mockeados al seleccionar el tipo de dispositivo `ACTUADOR`, configuracionesPosibles y sus labels deben ser `Lámpara LED, Lámpara fluorescente, Lámpara halógena, Lámpara bajo consumo`" duration="39"/>
+    <testCase name="Componente: AsociarDispositivo con methods mockeado el método mostrarOpciones() debe ser invocado al seleccionar el tipo de dispositivo" duration="28"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\auth\signup.spec.js">
+    <testCase name="Componente: Signup sin store Es renderizado correctamente" duration="52"/>
+    <testCase name="Componente: Signup sin store Debe invocar al método signup luego de hacer click en el botón &quot;Registrarse&quot;" duration="52"/>
+    <testCase name="Componente: Signup con store Debe hacer dispatch de la acción `auth/signup` luego de hacer click en el botón &quot;Registrarse&quot;" duration="33"/>
+    <testCase name="Componente: Signup con store Si la acción `auth/signup` arroja el error `userexists`, usernameError debe ser true" duration="39"/>
+    <testCase name="Componente: Signup con store Si la acción `auth/signup` arroja el error `emailexists`, emailError debe ser true" duration="56"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\store\store-dispositivos.spec.js">
+    <testCase name="Store dispositivos module mutations.setDispositivo guarda en state.dispositivos uno o más dispositivos" duration="6"/>
+    <testCase name="Store dispositivos module mutations.setDispositivoActual guarda en state.dispositivoActual un dispositivo" duration="7"/>
+    <testCase name="Store dispositivos module mutations.setDispositivoActual guarda una regla en localStorage correctamente" duration="5"/>
+    <testCase name="Store dispositivos module mutations.modificarEstado guarda en modifica la propiedad `activo` de un dispositivo" duration="6"/>
+    <testCase name="Store dispositivos module actions.getAllDispositivos hace un commit de mutations.setDispositivo y los dispositivos se guardan en state.dispositivos" duration="5"/>
+    <testCase name="Store dispositivos module actions.getAllDispositivos retorna un mensaje de error si ocurre un problema de conexión" duration="1"/>
+    <testCase name="Store dispositivos module actions.modificarEstado hace un commit de mutations.modificarEstado y el dispositivo modificado se guarda en state.dispositivos" duration="2"/>
+    <testCase name="Store dispositivos module actions.modificarEstado retorna un mensaje de error si ocurre un problema de conexión" duration="2"/>
+    <testCase name="Store dispositivos module getters.getAllDispositivos retorna los dispositivos guardados en state.dispositivos" duration="3"/>
+    <testCase name="Store dispositivos module getters.getDispositivoActual retorna el dispositivo guardado en state.dispositivoActual" duration="5"/>
+    <testCase name="Store dispositivos module getters.getSensores retorna los dispositivos tipo SENSOR guardados en state.dispositivos" duration="2"/>
+    <testCase name="Store dispositivos module getters.getActuadores retorna los dispositivos tipo ACTUADOR guardados en state.dispositivos" duration="14"/>
+    <testCase name="Store dispositivos module getters.getSensoresLabels retorna los nombres de los dispositivos tipo SENSOR guardados en state.dispositivos" duration="3"/>
+    <testCase name="Store dispositivos module getters.getActuadoresLabels retorna los nombres de los dispositivos tipo ACTUADOR guardados en state.dispositivos" duration="3"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\store\store-usuarios.spec.js">
+    <testCase name="Store users module mutations.setUsers guarda usuarios en state.users" duration="8"/>
+    <testCase name="Store users module mutations.setCurrentUser guarda al usuario actual en state.currentUser" duration="3"/>
+    <testCase name="Store users module mutations.setCurrentUser guarda un usuario en localStorage correctamente" duration="3"/>
+    <testCase name="Store users module mutations.modificarEstado guarda un usuario con estado modificado en state.currentUser" duration="15"/>
+    <testCase name="Store users module getters.users retorna los usuarios guardados en state.users" duration="2"/>
+    <testCase name="Store users module getters.getUser retorna el usuario guardado en state.getUser" duration="11"/>
+    <testCase name="Store users module actions.getUsers hace un commit de mutations.setUsers y los usuarios se guardan en state.users" duration="6"/>
+    <testCase name="Store users module actions.getUser hace un commit de mutations.setCurrentUser y el usuario actual se guarda en state.currentUser" duration="7"/>
+    <testCase name="Store users module actions.modificarEstado hace un commit de mutations.modificarEstado y el usuario con estado modificado se guarda en state.users" duration="4"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\dispositivos\editar-dispositivo.spec.js">
+    <testCase name="Componente: EditarDispositivo debe asignar las propiedades recibidas de `getters[dispositivos/getDispositivoActual]` a data() antes de renderizar" duration="30"/>
+    <testCase name="Componente: EditarDispositivo error debe ser null si el método editarDispositivo() no falla" duration="21"/>
+    <testCase name="Componente: EditarDispositivo error no debe ser null si el método editarDispositivo() falla" duration="16"/>
+    <testCase name="Componente: EditarDispositivo debe haber un commit de dispositivos/setDispositivoActual al cambiar de ruta" duration="29"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\auth\login.spec.js">
+    <testCase name="Componente: Login Es renderizado correctamente" duration="28"/>
+    <testCase name="Componente: Login Debe invocar al método login luego de hacer click en el botón &quot;Iniciar Sesión&quot;" duration="31"/>
+    <testCase name="Componente: Login error no debe ser null si el método login falla" duration="81"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\usuarios\usuarios.spec.js">
+    <testCase name="Componente: ListarUsuarios debe redirigir a `crearUsuario` luego de hacer click en el botón `Crear Usuario`" duration="40"/>
+    <testCase name="Componente: ListarUsuarios debe hacer commit de `usuarios/setCurrentUser` y redirigir a `editarUsuario` luego de hacer click en el botón `Editar`" duration="30"/>
+    <testCase name="Componente: ListarUsuarios debe hacer dispatch de `usuarios/modificarEstado` luego de hacer click en el botón `Habilitado/Deshabilitado`" duration="50"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\backdrop.spec.js">
+    <testCase name="Componente: Backdrop Se renderiza correctamente" duration="19"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\utils\users.spec.js">
+    <testCase name="`ROLE_USER` se transforma en `Cliente`" duration="6"/>
+    <testCase name="`ROLE_ADMIN` se transforma en `Administrador`" duration="1"/>
+    <testCase name="`ROLE_UNKNOWN` no se transforma en `Cliente` ni `Administrador`" duration="2"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\reglas\reglas.spec.js">
+    <testCase name="Componente: Reglas con methods mockeado Es renderizado correctamente" duration="46"/>
+    <testCase name="Componente: Reglas con methods mockeado Debe invocar al método crear luego de hacer click en el botón `Crear regla`" duration="34"/>
+    <testCase name="Componente: Reglas con methods mockeado Debe invocar al método editar luego de hacer click en el botón `Editar`" duration="32"/>
+    <testCase name="Componente: Reglas sin methods mockeado Debe hacer dispatch de reglas.getAllReglas y dispositivos.getAllDispositivos al ser creado" duration="25"/>
+    <testCase name="Componente: Reglas sin methods mockeado Debe redirigir a `crearRegla` luego de hacer click en el botón `Crear regla`" duration="20"/>
+    <testCase name="Componente: Reglas sin methods mockeado Debe hacer commit de reglas/setReglaActual(regla) redirigir a `editarRegla` luego de hacer click en el botón `Crear regla`" duration="23"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\store\store-dispositivos-no-asociados.spec.js">
+    <testCase name="Store dispositivos no asociados module mutations.setDispositivosNoAsociados guarda en state.dispositivosNoAsociados uno o más dispositivos" duration="2"/>
+    <testCase name="Store dispositivos no asociados module mutations.setDispositivoNoAsociadoActual guarda en state.dispositivosNoAsociados un dispositivo" duration="2"/>
+    <testCase name="Store dispositivos no asociados module mutations.setDispositivoNoAsociadoActual guarda un dispositivo no asociado en localStorage correctamente" duration="2"/>
+    <testCase name="Store dispositivos no asociados module actions.getAllDispositivosNoAsociados hace un commit de mutations.setDispositivosNoAsociados y los dispositivos no asociados se guardan en state.dispositivosNoAsociados" duration="4"/>
+    <testCase name="Store dispositivos no asociados module getters.getAllDispositivosNoAsociados retorna los dispositivos no asociados guardados en state.dispositivosNoAsociados" duration="1"/>
+    <testCase name="Store dispositivos no asociados module getters.getDispositivoNoAsociadoActual retorna el dispositivo no asociado guardado en state.dispositivoNoAsociadoActual" duration="2"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\utils\reglas.spec.js">
+    <testCase name="`&gt;` se transforma en mayor a" duration="2"/>
+    <testCase name="`&gt;=` se transforma en mayor o igual a" duration="0"/>
+    <testCase name="`&lt;` se transforma en menor a" duration="0"/>
+    <testCase name="`&lt;=` se transforma en menor o igual a" duration="1"/>
+    <testCase name="`&lt;&gt;` se transforma en un string vacío" duration="1"/>
+    <testCase name="La magnitud de `horas` es `el Horario`" duration="2"/>
+    <testCase name="La magnitud de `LUMENES` es `el Flujo Luminoso`" duration="0"/>
+    <testCase name="La magnitud de `CELSIUS` es un string vacío" duration="0"/>
+    <testCase name="`&amp;&amp;` se transforma en `y`" duration="1"/>
+    <testCase name="`||` se transforma en `o`" duration="1"/>
+    <testCase name="`&amp;` se transforma en un string vacío" duration="1"/>
+    <testCase name="La acción `on` se transforma en `Encender`" duration="1"/>
+    <testCase name="La acción `off` se transforma en `Apagar`" duration="0"/>
+    <testCase name="La acción `activate` se transforma en un string vacío" duration="1"/>
+    <testCase name="Las reglas se parsean correctamente" duration="7"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\dispositivos-no-asociados\dispositivos-no-asociados.spec.js">
+    <testCase name="Componente: Dispositivos con methods mockeados Se renderiza correctamente y en el hook created() hace dispatch de `dispositivosNoAsociados/getAllDispositivosNoAsociados`" duration="40"/>
+    <testCase name="Componente: Dispositivos con methods mockeados Debe invocar al método asociar luego de hacer click en el botón `Asociar`" duration="32"/>
+    <testCase name="Componente: Dispositivos sin methods mockeados getters[`dispositivosNoAsociados/getAllDispositivosNoAsociados]` devuelve store.state.dispositivosNoAsociados" duration="20"/>
+    <testCase name="Componente: Dispositivos sin methods mockeados Debe hacer commit de `dispositivosNoAsociados/setDispositivoNoAsociadoActual` y redirigir a `asociarDispositivo` luego de hacer click en el botón `Asociar`" duration="25"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\utils\searchFilter.spec.js">
+    <testCase name="El filtro de búsqueda funciona" duration="1"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\store\store-reglas.spec.js">
+    <testCase name="Store reglas module mutations.setRegla guarda en state.reglas una regla" duration="3"/>
+    <testCase name="Store reglas module mutations.setReglaActual guarda en state.reglaActual una regla" duration="2"/>
+    <testCase name="Store reglas module mutations.setReglaActual guarda una regla en localStorage correctamente" duration="2"/>
+    <testCase name="Store reglas module actions.getAllReglas hace un commit de mutations.setRegla y las reglas se guardan en state.reglas" duration="4"/>
+    <testCase name="Store reglas module getters.getAllReglas retorna las reglas guardadas en state.reglas" duration="2"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\utils\validators.spec.js">
+    <testCase name="`test` es un nombre de usuario incorrecto" duration="2"/>
+    <testCase name="`shaffiro` es un nombre de usuario correcto" duration="2"/>
+    <testCase name="`nombreincorrecto` es un nombre de usuario incorrecto" duration="1"/>
+    <testCase name="`test` es una contraseña incorrecta" duration="1"/>
+    <testCase name="`Shaffiro123` es una contraseña correcta" duration="0"/>
+    <testCase name="`Contraseñamuylarga123` es una contraseña incorrecta" duration="1"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\layouts\listado.spec.js">
+    <testCase name="Componente: Listado Renderiza el contenido del slot heading" duration="77"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\auth\activate.spec.js">
+    <testCase name="Componente: Activate Se renderiza correctamente" duration="36"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\base\base-link.spec.js">
+    <testCase name="Componente: BaseLink Renderiza &lt;a&gt; cuando se le pasa como prop `href`" duration="36"/>
+    <testCase name="Componente: BaseLink Renderiza &lt;router-link&gt; cuando se le pasa como prop `name`" duration="7"/>
+    <testCase name="Componente: BaseLink Renderiza &lt;router-link&gt; cuando se le pasa como props `name` y `params`" duration="5"/>
+    <testCase name="Componente: BaseLink Renderiza &lt;router-link&gt; cuando se le pasa como prop `to`" duration="9"/>
+    <testCase name="Componente: BaseLink Renderiza &lt;router-link&gt; cuando se le pasa como prop `to` con `params`" duration="5"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\app.spec.js">
+    <testCase name="Componente: App Se renderiza correctamente" duration="23"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\navbar.spec.js">
+    <testCase name="Componente: NavBar Se renderiza correctamente" duration="24"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\base\base-input.spec.js">
+    <testCase name="Componente: BaseInput Funciona con v-model" duration="14"/>
+    <testCase name="Componente: BaseInput Permite type=&quot;password&quot;" duration="5"/>
+    <testCase name="Componente: BaseInput No permite type=checkbox&quot;" duration="6"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\login-error.spec.js">
+    <testCase name="Componente: LoginError Se renderiza correctamente" duration="11"/>
+    <testCase name="Componente: LoginError Al hacer click en `Iniciar sesión`, el modal se cierra" duration="11"/>
+    <testCase name="Componente: LoginError Al hacer click en `Iniciar sesión`, se hace un commit a `auth/setSessionExpired` con el parámetro `false`" duration="7"/>
+  </file>
+  <file path="C:\Proyectos\shaffiro-front\tests\unit\base\base-button.spec.js">
+    <testCase name="Componente: BaseButton Renderiza el contenido de su slot" duration="39"/>
+    <testCase name="Componente: BaseButton Emite el evento click al ser clickeado" duration="12"/>
+  </file>
+</testExecutions>

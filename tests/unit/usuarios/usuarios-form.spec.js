@@ -11,8 +11,10 @@ localVue.use(Vuex)
 localVue.use(Vuelidate)
 
 describe('Componente: UsuarioForm', () => {
+  // wrapper: instancia del componente a testear
   let wrapper
 
+  // datos de prueba
   const usuarios = [
     {
       id: 1,
@@ -30,6 +32,14 @@ describe('Componente: UsuarioForm', () => {
     }
   ]
 
+  // Store: permite la persistencia del estado global de la aplicación.
+  // Se puede separar en módulos
+  // - State.
+  // - Getters.
+  // - Mutations: sincrónicas, modifican al State. (COMMIT)
+  // - Actions: asincrónicas, invocan a una Mutation al final de su ejecución. (DISPATCH + COMMIT)
+
+  // Mock del Store
   const getters = { getUser: (state) => state.currentUser }
   const mutations = { setCurrentUser: jest.fn() }
   const state = { usuarios, currentUser: usuarios[1] }
@@ -46,6 +56,7 @@ describe('Componente: UsuarioForm', () => {
     }
   })
 
+  // Mocks de las funciones del router y store
   const mockPush = jest.fn()
   const $router = { push: mockPush }
 
@@ -67,6 +78,7 @@ describe('Componente: UsuarioForm', () => {
     })
   })
 
+  // ejemplo de inicialización del componente
   it('debe asignar las propiedades recibidas de `getters[usuarios/getUser]` a data() si la ruta es /editar', async () => {
     const beforeRouteEnter = wrapper.vm.$options.beforeRouteEnter
     beforeRouteEnter.call(wrapper.vm, { name: 'editarUsuario' }, 'from', cb => cb(wrapper.vm))
@@ -102,6 +114,7 @@ describe('Componente: UsuarioForm', () => {
     expect(nextMock).toHaveBeenCalled()
   })
 
+  // ejemplo de requests mockeadas
   it('usernameError, emailError y networkError deben ser null si la request de axios es exitosa', async () => {
     const mock = new MockAdapter(axios)
     mock.onPost('/api/users').reply(200)

@@ -5,14 +5,14 @@ describe('Administración de Reglas: Dar de Alta', () => {
       tipo: 'SENSOR',
       activo: true,
       configuracion: 'LUMENES',
-      reglas: []
+      puerto: 0
     },
     {
       nombre: 'Actuador_Lampara',
       tipo: 'ACTUADOR',
       activo: true,
       configuracion: 'Lámpara LED',
-      reglas: []
+      puerto: 0
     }
   ]
 

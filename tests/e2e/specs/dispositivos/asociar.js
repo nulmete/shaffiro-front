@@ -1,11 +1,30 @@
 describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
-  const dispositivoNoAsociado = {
-    mac: '00:A0:C9:14:DE:FG',
-    uuid: '3c69fa64-cfbc-asdqwe'
-  }
+  const dispositivosNoAsociados = [
+    {
+      mac: 'AAAA',
+      puerto: 0,
+      uuid: 'BBB'
+    },
+    {
+      mac: 'CCCC',
+      puerto: 0,
+      uuid: 'DDDD'
+    },
+    {
+      mac: 'EEEE',
+      puerto: 0,
+      uuid: 'FFFF'
+    },
+    {
+      mac: 'GGGG',
+      puerto: 0,
+      uuid: 'HHHH'
+    }
+  ]
 
-  let dispositivoId
   let user
+  let tercerDispositivo
+  let cuartoDispositivo
 
   before(() => {
     cy
@@ -13,10 +32,57 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
       .then(response => {
         user = response
       })
+      .then(() => {
+        return cy
+          .request({
+            method: 'POST',
+            url: 'http://localhost:8080/api/dispositivo-no-asociados',
+            body: dispositivosNoAsociados[0],
+            auth: {
+              bearer: user.token
+            }
+          })
+      })
+      .then(() => {
+        return cy
+          .request({
+            method: 'POST',
+            url: 'http://localhost:8080/api/dispositivo-no-asociados',
+            body: dispositivosNoAsociados[1],
+            auth: {
+              bearer: user.token
+            }
+          })
+      })
+      .then(() => {
+        return cy
+          .request({
+            method: 'POST',
+            url: 'http://localhost:8080/api/dispositivo-no-asociados',
+            body: dispositivosNoAsociados[2],
+            auth: {
+              bearer: user.token
+            }
+          })
+      })
+      .then(response => {
+        tercerDispositivo = response.body.id
+        return cy
+          .request({
+            method: 'POST',
+            url: 'http://localhost:8080/api/dispositivo-no-asociados',
+            body: dispositivosNoAsociados[3],
+            auth: {
+              bearer: user.token
+            }
+          })
+      })
+      .then(response => {
+        cuartoDispositivo = response.body.id
+      })
   })
 
   beforeEach(() => {
-    cy.wait(1000)
     cy
       .visit('/dispositivos', {
         // dirigirse a 'Listado de Dispositivos' y guardar el JWT en localStorage
@@ -24,20 +90,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
           window.localStorage.setItem('auth.currentUser', JSON.stringify(user))
         }
       })
-      .then(() => {
-        // crear dispositivo no asociado
-        return cy
-          .request({
-            method: 'POST',
-            url: 'http://localhost:8080/api/dispositivo-no-asociados',
-            body: dispositivoNoAsociado,
-            auth: {
-              bearer: user.token
-            }
-          })
-      })
       .then(response => {
-        dispositivoId = response.body.id
         // dirigirse a 'Listado de Dispositivos No Asociados'
         cy.get('.button').contains('Detectar dispositivos').click()
         cy.url('should.include', '/dispositivos/detectar')
@@ -45,79 +98,67 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
   })
 
   it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (1)', () => {
-    cy.contains(dispositivoNoAsociado.mac)
-    cy.get('.radio__input').check({ force: true })
+    cy.contains(dispositivosNoAsociados[0].mac)
+    cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
-    cy.get('#nombre').type('Sensor_Lámpara_Living')
+    cy.get('#nombre').type('Sensor_Detectado_1')
     cy.get('#tipo').select('SENSOR')
-    cy.get('#device-state').check({ force: true })
     cy.get('.button').contains('Asociar').click()
     cy.url().should('include', '/dispositivos', () => {
-      cy.get('.table').contains('Sensor_Lámpara_Living')
+      cy.get('.table').contains('Sensor_Detectado_1')
     })
     cy.visit('/dispositivos/detectar')
-    cy.contains('Sensor_Lámpara_Living').should('not.exist')
+    cy.contains('Sensor_Detectado_1').should('not.exist')
   })
 
   it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (2)', () => {
-    cy.contains(dispositivoNoAsociado.mac)
-    cy.get('.radio__input').check({ force: true })
+    cy.contains(dispositivosNoAsociados[1].mac)
+    cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
-    cy.get('#nombre').type('Actuador_Lámpara_Living')
+    cy.get('#nombre').type('Actuador_Detectado_1')
     cy.get('#tipo').select('ACTUADOR')
     cy.get('#configuracion').select('Lámpara LED')
-    cy.get('#device-state').check({ force: true })
     cy.get('.button').contains('Asociar').click()
     cy.url().should('include', '/dispositivos', () => {
-      cy.get('.table').contains('Actuador_Lámpara_Living')
+      cy.get('.table').contains('Actuador_Detectado_1')
     })
     cy.visit('/dispositivos/detectar')
-    cy.contains('Actuador_Lámpara_Living').should('not.exist')
+    cy.contains('Actuador_Detectado_1').should('not.exist')
   })
 
   it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (3)', () => {
-    cy.contains(dispositivoNoAsociado.mac)
-    cy.get('.radio__input').check({ force: true })
+    cy.contains(dispositivosNoAsociados[2].mac)
+    cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
-    cy.get('#nombre').type('Actuador_Lámpara_Living')
-    cy.get('#device-state').check({ force: true })
+    cy.get('#nombre').type('Actuador_Incompleto')
     cy.get('.button').contains('Asociar').should('be.disabled')
-
-    // borrar el dispositivo asociado creado en beforeEach()
+    // eliminar el tercer dispositivo ya que no fue asociado
     cy
       .request({
         method: 'DELETE',
-        url: `http://localhost:8080/api/dispositivo-no-asociados/${dispositivoId}`,
+        url: `http://localhost:8080/api/dispositivo-no-asociados/${tercerDispositivo}`,
         auth: {
           bearer: user.token
         }
-      })
-      .then(response => {
-        expect(response.status).to.eq(200)
       })
   })
 
   it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (4)', () => {
-    cy.contains(dispositivoNoAsociado.mac)
-    cy.get('.radio__input').check({ force: true })
+    cy.contains(dispositivosNoAsociados[3].mac)
+    cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
-    cy.get('#nombre').type('Actuador_Lámpara_Living')
-    cy.get('#device-state').check({ force: true })
+    cy.get('#nombre').type('Actuador_Vacio')
     cy.get('#nombre').focus().clear()
     cy.get('.input-error').should('exist').and('contain.text', 'Por favor, ingrese el nombre del dispositivo')
     cy.get('.button').contains('Asociar').should('be.disabled')
-
-    // borrar el dispositivo asociado creado en beforeEach()
+    // eliminar el cuarto dispositivo ya que no fue asociado
     cy
       .request({
         method: 'DELETE',
-        url: `http://localhost:8080/api/dispositivo-no-asociados/${dispositivoId}`,
+        url: `http://localhost:8080/api/dispositivo-no-asociados/${cuartoDispositivo}`,
         auth: {
           bearer: user.token
         }
-      })
-      .then(response => {
-        expect(response.status).to.eq(200)
       })
   })
 })

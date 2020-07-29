@@ -41,6 +41,11 @@
     "vue-jest": "^3.0.6",
     "vue-template-compiler": "^2.6.10"
   },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "report.xml",
+    "indent": 2
+  },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
