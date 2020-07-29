@@ -51,7 +51,7 @@
       </div>
 
       <base-button
-        :disabled="$v.$invalid || !tipo"
+        :disabled="$v.$invalid || !tipo || !configuracion"
         type="submit"
       >
         Asociar

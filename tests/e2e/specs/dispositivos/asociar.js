@@ -103,6 +103,7 @@ describe('Administración de Dispositivos: usuario administrador puede asociar d
     cy.get('.button').contains('Asociar').click()
     cy.get('#nombre').type('Sensor_Detectado_1')
     cy.get('#tipo').select('SENSOR')
+    cy.get('#configuracion').select('el Flujo Luminoso')
     cy.get('.button').contains('Asociar').click()
     cy.url().should('include', '/dispositivos', () => {
       cy.get('.table').contains('Sensor_Detectado_1')
