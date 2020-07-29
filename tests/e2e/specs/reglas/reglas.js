@@ -65,7 +65,7 @@ describe('Administración de Reglas: Dar de Alta', () => {
       })
   })
 
-  it('un usuario puede dar de alta una regla (1)', () => {
+  it('(1) - El usuario puede crear una regla si ingresa/selecciona todos los campos', () => {
     cy.get('#nombre').type('Prender la luz del living')
     cy.get('#sensor').select('Nombre: Sensor_Lampara')
     cy.get('#actuador').select('Nombre: Actuador_Lampara')

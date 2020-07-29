@@ -18,7 +18,7 @@ describe('Administración de Usuarios: Login', () => {
     cy.visit('/login')
   })
 
-  it('debe iniciar sesión y redirigir a /reglas (1)', () => {
+  it('(1) - si el usuario ingresa las credenciales correctas, debe iniciar sesión y ser redirigido a /reglas', () => {
     cy.get('#username').type(correctUsername)
     cy.get('#password').type(`${correctPassword}{enter}`)
 
@@ -27,7 +27,7 @@ describe('Administración de Usuarios: Login', () => {
     })
   })
 
-  it('debe mostrar `nombre de usuario o contraseña incorrectos` (2)', () => {
+  it('(2) - si el usuario ingresa una contraseña incorrecta, debe mostrar `nombre de usuario o contraseña incorrectos`', () => {
     cy.get('#username').type(correctUsername)
     cy.get('#password').type(`${incorrectPassword}{enter}`)
 
@@ -38,7 +38,7 @@ describe('Administración de Usuarios: Login', () => {
     cy.get('.error.card').contains(credentialsError)
   })
 
-  it('debe mostrar `nombre de usuario o contraseña incorrectos` (3)', () => {
+  it('(3) - si el usuario ingresa un nombre de usuario incorrecto, debe mostrar `nombre de usuario o contraseña incorrectos`', () => {
     cy.get('#username').type(incorrectUsername)
     cy.get('#password').type(`${correctPassword}{enter}`)
 
@@ -49,7 +49,7 @@ describe('Administración de Usuarios: Login', () => {
     cy.get('.error.card').contains(credentialsError)
   })
 
-  it('debe mostrar `el usuario ingresado no se encuentra habilitado. Por favor, revise su casilla de correo electrónico para completar el proceso de activación` (4)', () => {
+  it('(4) - si el nombre de usuario ingresado no está habilitado, debe mostrar un mensaje de error de activación', () => {
     // crear un usuario (por defecto tiene el estado deshabilitado)
     cy
       .request('POST', 'http://localhost:8080/api/register', notActivatedUser)

@@ -1,4 +1,4 @@
-describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
+describe('Administración de Dispositivos: usuario administrador puede asociar dispositivos (dar de alta)', () => {
   const dispositivosNoAsociados = [
     {
       mac: 'AAAA',
@@ -97,7 +97,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
       })
   })
 
-  it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (1)', () => {
+  it('(1) - Nombre correcto - Tipo Sensor - Magnitud Flujo Luminoso', () => {
     cy.contains(dispositivosNoAsociados[0].mac)
     cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
@@ -111,7 +111,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
     cy.contains('Sensor_Detectado_1').should('not.exist')
   })
 
-  it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (2)', () => {
+  it('(2) - Nombre correcto - Tipo Actuador - Artefacto Lámpara LED un usuario administrador puede asociar (dar de alta) un dispositivo detectado (2)', () => {
     cy.contains(dispositivosNoAsociados[1].mac)
     cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
@@ -126,7 +126,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
     cy.contains('Actuador_Detectado_1').should('not.exist')
   })
 
-  it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (3)', () => {
+  it('(3) - Nombre correcto - Tipo sin seleccionar', () => {
     cy.contains(dispositivosNoAsociados[2].mac)
     cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
@@ -143,7 +143,7 @@ describe('Administración de Dispositivos: Asociar (dar de alta)', () => {
       })
   })
 
-  it('un usuario administrador puede asociar (dar de alta) un dispositivo detectado (4)', () => {
+  it('(4) Nombre vacío - Tipo sin seleccionar', () => {
     cy.contains(dispositivosNoAsociados[3].mac)
     cy.get('.radio__input').first().check({ force: true })
     cy.get('.button').contains('Asociar').click()
