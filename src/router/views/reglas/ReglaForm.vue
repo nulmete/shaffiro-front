@@ -137,6 +137,7 @@
             />
           </div>
           <button
+            id="agregar"
             class="btn btn--condicion"
             @click.prevent="agregarCondicion"
           >
@@ -164,6 +165,7 @@
                 {{ condicion.unit }}
               </span>
               <button
+                id="eliminar"
                 class="btn btn--condicion"
                 @click.prevent="eliminarCondicion(index)"
               >
@@ -225,6 +227,7 @@
       </div>
 
       <base-button
+        id="submit"
         type="submit"
         :disabled="!nombre || !sensorAsociado || !actuadorAsociado || !condiciones.length"
       >

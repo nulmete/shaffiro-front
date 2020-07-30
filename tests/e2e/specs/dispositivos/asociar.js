@@ -23,6 +23,8 @@ describe('Administración de Dispositivos: usuario administrador puede asociar d
   ]
 
   let user
+  let primerDispositivo
+  let segundoDispositivo
   let tercerDispositivo
   let cuartoDispositivo
 
@@ -43,7 +45,8 @@ describe('Administración de Dispositivos: usuario administrador puede asociar d
             }
           })
       })
-      .then(() => {
+      .then(response => {
+        primerDispositivo = response.body.id
         return cy
           .request({
             method: 'POST',
@@ -54,7 +57,8 @@ describe('Administración de Dispositivos: usuario administrador puede asociar d
             }
           })
       })
-      .then(() => {
+      .then(response => {
+        segundoDispositivo = response.body.id
         return cy
           .request({
             method: 'POST',
@@ -160,6 +164,32 @@ describe('Administración de Dispositivos: usuario administrador puede asociar d
         auth: {
           bearer: user.token
         }
+      })
+  })
+
+  // eliminar dispositivos que fueron asociados
+  after(() => {
+    return cy
+      .request({
+        method: 'DELETE',
+        url: `http://localhost:8080/api/dispositivos/${primerDispositivo}`,
+        auth: {
+          bearer: user.token
+        }
+      })
+      .then(response => {
+        expect(response.status).to.eq(200)
+        return cy
+          .request({
+            method: 'DELETE',
+            url: `http://localhost:8080/api/dispositivos/${segundoDispositivo}`,
+            auth: {
+              bearer: user.token
+            }
+          })
+      })
+      .then(response => {
+        expect(response.status).to.eq(200)
       })
   })
 })

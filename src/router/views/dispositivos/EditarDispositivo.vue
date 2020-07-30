@@ -33,6 +33,7 @@
       </div>
 
       <base-button
+        id="submit"
         :disabled="$v.$invalid"
         type="submit"
       >
