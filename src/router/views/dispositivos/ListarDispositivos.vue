@@ -65,7 +65,7 @@ export default {
   data () {
     return {
       headings: ['Nombre', 'Tipo', 'Estado', 'Reglas'],
-      fields: ['nombre', 'tipo', 'activo', 'reglasParseadas'],
+      fields: ['nombre', 'tipo', 'activo', 'reglas'],
       search: '',
       selectedItem: null,
       error: null
@@ -75,10 +75,13 @@ export default {
     dispositivos () {
       return this.$store.getters['dispositivos/getAllDispositivos']
     },
+    reglas () {
+      return this.$store.getters['reglas/getAllReglas']
+    },
     dispositivosParseados () {
       const props = this.dispositivos.map(dispositivo => {
         const filtered = Object.keys(dispositivo)
-          .filter(key => ['activo', 'reglas'].includes(key))
+          .filter(key => ['activo'].includes(key))
           .reduce((obj, key) => {
             return {
               ...obj,
@@ -91,23 +94,15 @@ export default {
 
       const activo = props.map(prop => prop.activo ? 'Habilitado' : 'Deshabilitado')
 
-      // TODO: actualizar estructura de reglas segun nuevo motor de reglas
-      // const regla = props.map(prop => {
-      //   return prop.reglas.map(innerProp => {
-      //     return `
-      //       Si
-      //       ${this.obtenerMagnitud(innerProp.unidad)}
-      //       ${innerProp.operador}
-      //       ${innerProp.valor}
-      //       ${innerProp.unidad}
-      //       -> Encender Actuador_1
-      //     `
-      //   })
-      // })
+      const reglas = this.reglas.filter((regla, i) => {
+        return regla.antecedents[0].id1 === this.dispositivos[i].id || regla.consequences[0].id2 === this.dispositivos[i].id
+      })
+
+      const reglasName = reglas.map(r => r.name)
 
       const dispositivos = this.dispositivos.map((el, index) => {
         // return { ...el, activo: activo[index], reglasParseadas: regla[index] }
-        return { ...el, activo: activo[index] }
+        return { ...el, activo: activo[index], reglas: reglasName }
       })
 
       return dispositivos
@@ -123,6 +118,7 @@ export default {
     obtenerMagnitud,
     fetchData () {
       this.$store.dispatch('dispositivos/getAllDispositivos')
+      this.$store.dispatch('reglas/getAllReglas')
     },
     detectar () {
       this.$router.push({ name: 'detectarDispositivos' })

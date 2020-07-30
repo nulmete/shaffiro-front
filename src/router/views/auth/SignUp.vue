@@ -100,6 +100,7 @@
       </div>
 
       <base-button
+        id="submit"
         :disabled="$v.$invalid"
         type="submit"
         class="w-100"
